@@ -1,0 +1,187 @@
+.table {
+  max-width: 1080px;
+  width: 100%;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    margin-bottom: 10px;
+
+    .auxiliaryTools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 40%;
+
+      span {
+        display: flex;
+        align-items: center;
+      }
+
+      .title {
+        font-weight: 700;
+        font-size: var(--text_lg);
+      }
+
+      .filter {
+        display: flex;
+        align-items: center;
+        padding: 4px 10px;
+        margin-top: 5px;
+        gap: 15px;
+        border: 1px solid var(--gray_200);
+        border-radius: 20px;
+        height: max-content;
+      }
+    }
+  }
+
+  tr:hover {
+    td {
+      background: none !important;
+    }
+  }
+
+  :global(.ant-table-row) {
+    font-size: var(--text_tiny);
+    font-weight: 700;
+  }
+
+  .orderStatusRow {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  :global {
+    .ant-table-cell::before {
+      width: 0 !important;
+    }
+    .ant-table-container
+      > .ant-table-content
+      > table
+      > tbody
+      > tr
+      > .ant-table-cell
+      > div
+      > .Done {
+      font-weight: 500;
+      color: var(--green_100) !important ;
+    }
+
+    .ant-table-container
+      > .ant-table-content
+      > table
+      > tbody
+      > tr
+      > .ant-table-cell
+      > div
+      > .Pending {
+      font-weight: 500;
+      color: var(--yellow_700) !important;
+    }
+
+    .ant-table-container
+      > .ant-table-content
+      > table
+      > tbody
+      > tr
+      > .ant-table-cell
+      > div
+      > .Failed {
+      font-weight: 500;
+      color: var(--red_700) !important;
+    }
+
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td,
+    .ant-table tfoot > tr > th,
+    .ant-table tfoot > tr > td {
+      padding: 10px 15px;
+      font-weight: 400;
+    }
+
+    .ant-pagination-next .ant-pagination-item-link {
+      border: none;
+    }
+
+    .ant-pagination-prev .ant-pagination-item-link {
+      border: none;
+    }
+
+    .ant-table-pagination.ant-pagination {
+      padding: 0 200px;
+    }
+
+    .ant-table-container > .ant-table-content > table > thead {
+      padding: 9px;
+    }
+
+    .ant-pagination-item-active {
+      border: none;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+    }
+
+    .ant-pagination-item {
+      border: none;
+    }
+
+    .ant-pagination-item-active a {
+      color: var(--blue_100);
+    }
+
+    .ant-table-container
+      > .ant-table-content
+      > table
+      > thead
+      > tr:first-child
+      th:first-child {
+      border-left: 1px solid var(--gray_200);
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .ant-table-container table > thead > tr:first-child th:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      border-right: 1px solid var(--gray_200) !important;
+    }
+
+    .ant-table-container
+      > .ant-table-content
+      > table
+      > thead
+      > tr
+      > .ant-table-cell {
+      border: 1px solid var(--gray_200);
+      border-left: none;
+      color: var(--gray_500);
+    }
+
+    .ant-table-container
+      > .ant-table-content
+      > table
+      > tbody
+      > tr
+      > .ant-table-cell {
+      color: var(--blue_100);
+    }
+
+    .ant-table.ant-table-bordered
+      > .ant-table-container
+      > .ant-table-content
+      > table {
+      border: none;
+    }
+  }
+
+  :global(.ant-table-wrapper) {
+    max-width: 1200px;
+  }
+
+  :global(.ant-table) {
+    overflow: auto;
+  }
+}

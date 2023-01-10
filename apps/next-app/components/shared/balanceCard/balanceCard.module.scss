@@ -1,0 +1,105 @@
+.container {
+  width: 405px;
+  height: 200px;
+  background: var(--white_900);
+  border-radius: 10px;
+  padding: 20px 15px 20px 10px;
+
+  .balanceSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-right: 70px;
+
+    .balance {
+      display: flex;
+      flex-direction: column;
+
+      .balanceTitle {
+        font-weight: 400;
+        font-size: var(--text_tiny);
+        line-height: 19px;
+        color: var(--blue_100);
+        margin-bottom: 10px !important;
+      }
+
+      .balanceCount {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-weight: 600;
+        font-size: var(--text_xx);
+        line-height: 41px;
+        display: flex;
+        color: var(--blue_100);
+        margin-bottom: 15px !important;
+      }
+
+      .updateDate {
+        font-weight: 500;
+        font-size: var(--text_xsm);
+        line-height: 12px;
+        letter-spacing: 0.02em;
+        color: var(--gray_950);
+        margin-bottom: 0px !important;
+      }
+    }
+
+    .conversion {
+      display: flex;
+      flex-direction: column;
+
+      p {
+        font-weight: 500;
+        font-size: var(--text_xs);
+        line-height: 18px;
+        letter-spacing: 0.02em;
+        color: var(-blue_100);
+        margin-bottom: 5px !important;
+      }
+
+      div {
+        display: flex;
+        gap: 5px;
+      }
+    }
+  }
+
+  .footer {
+    width: 100%;
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+
+    button {
+      border-radius: 40px !important;
+      height: 50px !important;
+    }
+
+    .paymentButton {
+      width: 195px !important;
+      background: var(--button_gradient);
+      font-weight: 500;
+      font-size: var(--text_m);
+      line-height: 21px;
+      display: flex;
+      color: var(--white_900);
+
+      &:hover:enabled {
+        img {
+          filter: var(--white_900) !important;
+        }
+      }
+    }
+
+    .balanceButton {
+      color: var(--gray_850);
+      font-weight: 500;
+      font-size: var(--text_m);
+      line-height: 21px;
+      width: 180px !important;
+      border-color: var(--purple_100) !important;
+    }
+  }
+}

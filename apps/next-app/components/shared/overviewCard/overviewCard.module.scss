@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  height: 120px;
+  padding: 10px 6px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--box_shadow_black);
+  border-radius: 6px;
+
+  .title {
+    font-weight: 500;
+    font-size: var(--text_sm);
+    line-height: 16px;
+    color: var(--blue_100);
+    margin-bottom: 0px !important;
+    margin-top: 10px !important;
+  }
+
+  .total {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 0px !important;
+
+    .totalPrice {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      height: 100%;
+      font-size: var(--text_x);
+      line-height: 35px;
+      color: var(--blue_100);
+      margin-bottom: 0px !important;
+    }
+
+    .promotionPercent {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      height: 100%;
+      font-size: var(--text_sm);
+      line-height: 16px;
+      color: var(--green_100);
+      margin-bottom: 0px !important;
+    }
+
+    .downgradePercent {
+      @extend .promotionPercent;
+      color: var(--red_900);
+    }
+  }
+}

@@ -1,0 +1,99 @@
+html:root {
+  --rose_500: #e386e4;
+  --black_300: #151515;
+  --black_400: #202020;
+  --black_500: #333232;
+  --black_550: #3D3D3D;
+  --white_300: #b9b9b9;
+  --white_400: #f5f5f5;
+  --white_900: #ffffff;
+  --blue_200: #7ac9f5;
+  --blue_900: #202F56;
+  --blue_500: #2f80ed;
+  --yellow_700: #dfa95f;
+  --yellow_900: #ffc700;
+  --blue_100: #202f56;
+  --red_700: #ea3357;
+  --red_900: #ff0000;
+  --purple_100:#b284eb ;
+  --green_100: #079e48;
+  --green_900: #41e970;
+  --gray_100: #f4f4f4;
+  --gray_150: #e8e8e8;
+  --gray_250: #e1e1e1;
+  --gray_200: #bababa;
+  --gray_300: #2c2c2c;
+  --gray_400: #f9f9f9;
+  --gray_500: #969696;
+  --gray_700: #c5c5c5;
+  --button_copy_link: #219653;
+  --gray_750: #c8c8c8;
+  --gray_800: #949494;
+  --gray_850: #a1a1a1;
+  --gray_900: #d6d6d6;
+  --grey_950: #707070;
+  --button_hover_dark: #393939;
+  --button_hover_blue: #579fff;
+  --button_hover_white: #eeeeee;
+  --button_disabled_blue: #c1dcff;
+  --box_shadow_black: 0px 0px 4px rgba(0, 0, 0, 0.1);
+  --button_gradient: linear-gradient(90deg, #b083eb 0%, #e184e3 100%);
+  --icon_filter_blue: invert(52%) sepia(70%) saturate(1028%) hue-rotate(192deg)
+    brightness(101%) contrast(101%);
+  --icon_breadcrumb_filter: invert(100%) sepia(0%) saturate(7491%)
+    hue-rotate(263deg) brightness(100%) contrast(98%);
+  --image_hover_enabled: invert(60%) sepia(56%) saturate(4186%)
+    hue-rotate(216deg) brightness(88%) contrast(93%);
+  --background_opacity: rgba(44, 44, 44, 0.5);
+  --shadow_black: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  --image-filter: invert(96%) sepia(69%) saturate(40%) hue-rotate(393deg)
+    brightness(273%) contrast(101%);
+  --image-black-filter: invert(96%) sepia(69%) saturate(40%) hue-rotate(393deg)
+    brightness(1%) contrast(101%);
+  --filter_profile_image: invert(62%) sepia(5%) saturate(8%) hue-rotate(1deg)
+    brightness(96%) contrast(85%);
+  --darkToWhiteGradient: linear-gradient(
+    90.02deg,
+    #151515 7.49%,
+    rgba(255, 255, 255, 0) 98.6%
+  );
+  --purple_gradient: linear-gradient(90deg, #b083eb 0%, #e184e3 100%);
+  --modal_item_shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+html:root {
+  --text_min: 8px;
+  --text_xsm: 10px;
+  --text_xs: 12px;
+  --text_sm: 14px;
+  --text_tiny: 16px;
+  --text_m: 18px;
+  --text_base: 20px;
+  --text_lg: 24px;
+  --text_x: 30px;
+  --text_xl: 32px;
+  --text_xx: 35px;
+  --text_l: 55px;
+}
+
+html,
+body {
+  --antd-wave-shadow-color: none;
+  --primary-font: Roboto;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  user-select: initial;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  margin: 0;
+  padding: 0;
+}

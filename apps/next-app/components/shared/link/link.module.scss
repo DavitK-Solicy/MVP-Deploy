@@ -1,0 +1,15 @@
+.linkBox {
+  list-style: none;
+  font-size: var(--text_tiny);
+  color: var(--blue_500);
+
+  a:hover {
+    color: var(--blue_500);
+  }
+}
+
+@media screen and(max-width: 456px) {
+  .linkBox {
+    height: 25px;
+  }
+}
