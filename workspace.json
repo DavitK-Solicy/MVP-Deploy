@@ -190,6 +190,56 @@
           }
         }
       }
+    },
+    "custodial": {
+      "root": "apps/custodial",
+      "sourceRoot": "apps/custodial/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/custodial",
+            "main": "apps/custodial/src/main.ts",
+            "tsConfig": "apps/custodial/tsconfig.app.json",
+            "assets": ["apps/custodial/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/custodial/src/environments/environment.ts",
+                  "with": "apps/custodial/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "custodial:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/custodial/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/custodial"],
+          "options": {
+            "jestConfig": "apps/custodial/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

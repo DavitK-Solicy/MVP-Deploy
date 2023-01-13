@@ -7,7 +7,7 @@ export default function Footer(): JSX.Element {
   return (
     <div className={styles.footerContainer}>
       <div className={styles.footerText}>
-        © 2024 . All rights are reserved by CryptoPool
+        © 2023 . All rights are reserved by CryptoPool
       </div>
       <div className={styles.footerNavLinks}>
         {footerNavLinks?.map((exp) => (

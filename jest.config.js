@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/apps/next-app',
     '<rootDir>/apps/next-app-admin',
     '<rootDir>/libs/shared-types',
+    '<rootDir>/apps/custodial',
   ],
 };

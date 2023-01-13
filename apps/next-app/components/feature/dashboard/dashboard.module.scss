@@ -1,0 +1,16 @@
+.dashboardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px;
+
+  .topSection {
+    display: flex;
+    gap: 20px;
+  }
+
+  .bottomSection {
+    display: flex;
+    gap: 20px;
+  }
+}

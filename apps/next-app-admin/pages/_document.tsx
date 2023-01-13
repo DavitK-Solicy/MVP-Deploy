@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
   ): Promise<{
     styles: JSX.Element;
     html: string;
-    head?: (JSX.Element | null)[];
+    head?: Array<JSX.Element | null>;
   }> {
     const initialProps = await Document.getInitialProps(ctx);
     return {

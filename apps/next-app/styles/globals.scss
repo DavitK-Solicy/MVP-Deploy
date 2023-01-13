@@ -1,43 +1,75 @@
 html:root {
   --rose_500: #e386e4;
+  --rose_600: #b183ea;
   --black_300: #151515;
   --black_400: #202020;
   --black_500: #333232;
-  --black_550: #3D3D3D;
+  --black_550: #3d3d3d;
+  --black_600: #1c1c1e;
+  --black_900: #000000;
+  --white_200: #fdfcfc;
   --white_300: #b9b9b9;
   --white_400: #f5f5f5;
+  --white_500: #fbfbfd;
+  --white_600: #dbdbdb;
   --white_900: #ffffff;
   --blue_200: #7ac9f5;
-  --blue_900: #202F56;
+  --blue_900: #202f56;
   --blue_500: #2f80ed;
+  --blue_700: #4b48e8;
   --yellow_700: #dfa95f;
   --yellow_900: #ffc700;
   --blue_100: #202f56;
+  --purple_200: #e287e5;
+  --purple_500: #b385ec;
+  --purple_900: #5438dd;
   --red_700: #ea3357;
   --red_900: #ff0000;
-  --purple_100:#b284eb ;
+  --purple_100: #b284eb;
+  --purple_200: #dd84e3;
   --green_100: #079e48;
+  --green_150: #39ce8a;
+  --green_250: #24cc6c;
+  --green_200: #05b817;
   --green_900: #41e970;
   --gray_100: #f4f4f4;
   --gray_150: #e8e8e8;
   --gray_250: #e1e1e1;
   --gray_200: #bababa;
   --gray_300: #2c2c2c;
+  --gray_350: #e6e6e6;
   --gray_400: #f9f9f9;
+  --gray_450: #a3a3a3;
   --gray_500: #969696;
+  --gray_1000: #8b8b8b;
+  --gray_550: #d9d9d9;
+  --gray_600: #797979;
+  --gray_650: #646464;
   --gray_700: #c5c5c5;
   --button_copy_link: #219653;
   --gray_750: #c8c8c8;
   --gray_800: #949494;
   --gray_850: #a1a1a1;
   --gray_900: #d6d6d6;
+  --gray_200: #fdfcfc;
   --grey_950: #707070;
+  --gray_1050: #79838e;
+  --gray_1100: #676767;
+  --grey_900: #7c7c7a;
   --button_hover_dark: #393939;
   --button_hover_blue: #579fff;
   --button_hover_white: #eeeeee;
   --button_disabled_blue: #c1dcff;
   --box_shadow_black: 0px 0px 4px rgba(0, 0, 0, 0.1);
   --button_gradient: linear-gradient(90deg, #b083eb 0%, #e184e3 100%);
+  --title_border_gradient: linear-gradient(
+    90deg,
+    #dd84e3 -2.13%,
+    #af82ea 102.13%
+  );
+  --blue_icon: invert(85%) sepia(83%) saturate(648%) hue-rotate(191deg)
+    brightness(97%) contrast(92%);
+  --modal_button_gradient: linear-gradient(90deg, #a981e9 0.32%, #e484e1 100%);
   --icon_filter_blue: invert(52%) sepia(70%) saturate(1028%) hue-rotate(192deg)
     brightness(101%) contrast(101%);
   --icon_breadcrumb_filter: invert(100%) sepia(0%) saturate(7491%)

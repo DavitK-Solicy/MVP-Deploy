@@ -5,7 +5,10 @@ import Button from 'components/shared/button';
 import { ButtonType } from 'components/shared/button/type';
 import Input from 'components/shared/input';
 import notification from 'components/shared/notification';
+import Image from 'components/shared/image';
+import Icon from 'components/shared/icon';
 import { AuthServiceContext } from 'utils/services/service/authService';
+import { imagesSvg } from 'utils/constants/imagesSrc';
 import navBarPaths from 'utils/constants/navBarPaths';
 
 import styles from './newPassword.module.scss';
@@ -52,59 +55,81 @@ export default function NewPassword(): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <h2>New Password</h2>
-      <p>Your new password must be different from previous used passwords.</p>
-      <Form form={form} initialValues={{ remember: true }} onFinish={onFinish}>
-        <div className={styles.inputsContainer}>
-          <div className={styles.passwordContainer}>
-            <Form.Item name="password" className={styles.formItemPassword}>
-              <Input
-                className={styles.formInput}
-                type="password"
-                label="Password"
-                placeholder="Enter Password"
-              />
-            </Form.Item>
-            <Form.Item
-              name="confirm"
-              className={styles.formItemPassword}
-              rules={[
-                {
-                  required: true,
-                  message: 'Passwords don’t match.',
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue('password') === value) {
-                      return Promise.resolve();
-                    }
-
-                    return Promise.reject(new Error('Passwords don’t match.'));
-                  },
-                }),
-              ]}
-            >
-              <Input
-                className={styles.formInput}
-                type="password"
-                label="Confirm password"
-                placeholder="Confirm Password"
-              />
-            </Form.Item>
+      <div className={styles.imageSection}>
+        <div className={styles.whiteContainer}>
+          <div className={styles.logoContainer}>
+            <Image src={imagesSvg.cryptoPoolLogo} width="260" height="100" />
           </div>
-          <Form.Item shouldUpdate>
-            {() => (
-              <Button
-                text="Submit"
-                htmlType="submit"
-                disabled={isDisabled()}
-                className={styles.signUpButton}
-                btnType={ButtonType.black}
-              />
-            )}
-          </Form.Item>
+          <div className={styles.titleSection}>
+            <h1>Create New Password</h1>
+            <span>
+              Your new password must be having A capital, Small letter, Numeric
+              and at least 8 in length, to make it strong.
+            </span>
+          </div>
+          <div>
+            <Form
+              form={form}
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+            >
+              <div className={styles.passwordContainer}>
+                <Form.Item name="password" className={styles.formItem}>
+                  <div className={styles.eyeIcon}>
+                    <Icon src={imagesSvg.hiddenIcon} width={23} height={23} />
+                  </div>
+                  <Input
+                    className={styles.formInput}
+                    type="password"
+                    label="Enter New Password"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="confirm"
+                  className={styles.formItem}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Passwords don’t match.',
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('password') === value) {
+                          return Promise.resolve();
+                        }
+
+                        return Promise.reject(
+                          new Error('Passwords don’t match.')
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <div className={styles.eyeIcon}>
+                    <Icon src={imagesSvg.hiddenIcon} width={23} height={23} />
+                  </div>
+                  <Input
+                    className={styles.formInput}
+                    type="password"
+                    label="Confirm password"
+                  />
+                </Form.Item>
+              </div>
+              <Form.Item shouldUpdate>
+                {() => (
+                  <Button
+                    className={styles.buttonContainer}
+                    text="Done"
+                    htmlType="submit"
+                    btnType={ButtonType.black}
+                    disabled={isDisabled()}
+                  />
+                )}
+              </Form.Item>
+            </Form>
+          </div>
         </div>
-      </Form>
+      </div>
     </div>
   );
 }

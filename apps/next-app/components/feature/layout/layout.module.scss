@@ -1,13 +1,19 @@
 .generalModeBg {
+  display: flex;
   background-color: var(--white_900);
   height: 100%;
-  display: flex;
+
   .rightSection {
     width: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    
+    .header{
+      height: 60px;
+      background-color: var(--white_900);
+    }
   }
 }
 .context {

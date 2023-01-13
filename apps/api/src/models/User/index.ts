@@ -2,32 +2,33 @@ import * as mongoose from 'mongoose';
 import * as shortid from 'shortid';
 
 export enum UserRoles {
-  BASIC = 'basic',
+  MERCHANT = 'merchant',
   ADMIN = 'admin',
 }
 
 export enum AuthProviders {
   BASIC = 'basic',
-  TWITTER = 'twitter',
   GOOGLE = 'google',
 }
 
 const Schema = mongoose.Schema;
+const bankAccountSchema = new Schema({
+  accountNumber: {
+    type: String,
+    default: null,
+  },
+  ifscOrSwiftCode: {
+    type: String,
+    default: null,
+  },
+  cardNumber: {
+    type: String,
+    default: null,
+  },
+});
 
 const userSchema = new Schema({
-  name: {
-    type: String,
-    default: null,
-  },
-  surname: {
-    type: String,
-    default: null,
-  },
-  country: {
-    type: String,
-    default: null,
-  },
-  nationality: {
+  username: {
     type: String,
     default: null,
   },
@@ -45,27 +46,19 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    default: UserRoles.BASIC,
+    default: UserRoles.MERCHANT,
     enum: UserRoles,
+  },
+  bankAccount: {
+    type: bankAccountSchema,
+    default: null,
   },
   authProvider: {
     type: String,
     default: AuthProviders.BASIC,
     enum: AuthProviders,
   },
-  walletAddresses: {
-    type: [String],
-    default: null,
-  },
   emailVerificationToken: {
-    type: String,
-    default: null,
-  },
-  twitterId: {
-    type: String,
-    default: null,
-  },
-  primaryWalletAddress: {
     type: String,
     default: null,
   },

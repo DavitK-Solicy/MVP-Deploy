@@ -1,0 +1,293 @@
+.container {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  .kycModal {
+    width: 300px;
+  }
+
+  .searchItem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .downloadSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+
+    button {
+      max-width: 100px;
+    }
+
+    .downloadKycText {
+      cursor: pointer;
+    }
+  }
+
+  .headerText {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .searchForm {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+
+    label {
+      font-size: var(--text_ms);
+    }
+
+    .formSelect {
+      @extend .searchItem;
+      width: 25%;
+    }
+  }
+  .userEmail {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .buttons {
+    display: flex !important;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 478px) {
+    padding: 25px;
+  }
+
+  @media screen and (max-width: 382px) {
+    padding: 5px;
+  }
+}
+
+.table {
+  margin-top: 30px;
+
+  :global(.ant-table-cell) {
+    border-bottom: none;
+    background: transparent;
+
+    @media screen and (max-width: 585px) {
+      font-size: var(--text_xsm);
+    }
+
+    @media screen and (max-width: 452px) {
+      padding: 8px;
+      font-size: var(--text_min);
+    }
+
+    @media screen and (max-width: 404px) {
+      padding: 4px;
+      font-size: var(--text_xmin);
+      text-align: center;
+    }
+  }
+}
+
+.title {
+  position: relative;
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--text_xl);
+  line-height: 38px;
+  color: var(--black_300);
+  margin-bottom: 40px;
+}
+
+.makeAdminButton {
+  width: 180px !important;
+  height: 50px !important;
+  border-radius: 5px;
+}
+
+.modalButtons {
+  width: 100px !important;
+  height: 30px !important;
+}
+
+.modal {
+  :global(.ant-modal-content) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 640px) {
+      font-size: var(--text_xs);
+    }
+  }
+}
+
+.modalButtonsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  column-gap: 10px;
+
+  @media screen and (max-width: 650px) {
+    justify-content: space-between;
+  }
+}
+
+.buttonsContainer {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+}
+
+.createUserButton {
+  cursor: pointer !important;
+  width: 100px !important;
+  height: 30px !important;
+}
+
+.inputsContainer {
+  display: flex;
+  flex-direction: column;
+
+  :global(.ant-form-item-label) {
+    padding: 0;
+  }
+
+  .passwordContainer {
+    width: 100%;
+    display: flex;
+    column-gap: 20px;
+    justify-content: space-between;
+
+    :global(.ant-input-suffix) {
+      svg {
+        fill: var(--black_500) !important;
+      }
+    }
+  }
+
+  .formItem {
+    width: 100%;
+
+    label {
+      margin-bottom: 6px;
+    }
+  }
+
+  .formItemPassword {
+    label {
+      margin-bottom: 6px;
+    }
+  }
+
+  .formInput {
+    border-radius: 5px;
+    height: 40px;
+    border: 1px solid var(--gray_900);
+  }
+
+  .formEmailInput {
+    display: flex;
+    flex-direction: row-reverse;
+    border-radius: 5px;
+    height: 40px;
+    border: 1px solid var(--gray_900);
+  }
+
+  .formEmailSuccess {
+    display: flex;
+    flex-direction: row-reverse;
+    border-radius: 5px;
+    height: 40px;
+    border: 1px solid var(--button_copy_link);
+    box-shadow: none;
+  }
+
+  .recaptcha {
+    transform: scale(0.71);
+    -webkit-transform: scale(0.71);
+    transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    margin: 15px 80px 0 0;
+  }
+}
+
+.buttonSection {
+  display: flex;
+  column-gap: 30px;
+  justify-content: space-between;
+
+  .submitButton {
+    width: 200px;
+  }
+
+  .rightButton {
+    width: 200px;
+  }
+
+  @media screen and (max-width: 500px) {
+    .submitButton {
+      width: 100px !important;
+    }
+
+    .rightButton {
+      width: 100px !important;
+    }
+  }
+}
+
+.investors {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
+
+.labelModal {
+  font-size: var(--text_m);
+  font-weight: bold;
+}
+
+.radioForm {
+  margin: 0;
+
+  :global(.ant-form-item-label) {
+    label {
+      font-size: var(--text_m);
+      font-weight: bold;
+    }
+  }
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .infoRows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .searchForm {
+    flex-direction: column !important;
+
+    button {
+      margin: 0 auto;
+    }
+
+    .formSelect {
+      width: 100% !important;
+    }
+  }
+}

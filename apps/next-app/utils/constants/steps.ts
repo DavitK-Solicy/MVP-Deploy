@@ -8,6 +8,9 @@ export const currentPath = (path: string): boolean => {
   switch (path) {
     case '/signup':
     case '/login':
+    case '/resetPassword':
+    case '/checkMail':
+    case '/createNewPassword':
       return false;
     default:
       return true;

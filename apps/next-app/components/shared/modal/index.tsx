@@ -9,10 +9,19 @@ export default function Modal({
 }: ModalProps): JSX.Element {
   return (
     <AntdModal
+      centered
       visible={isModalVisible}
       onCancel={onCancel}
       footer={null}
       {...rest}
+      maskStyle={{
+        background: 'rgba(255, 255, 255, 0.2)',
+        backdropFilter: 'blur(15px)',
+        zIndex: 100,
+      }}
+      style={{
+        marginLeft: '200px',
+      }}
     >
       {children}
     </AntdModal>

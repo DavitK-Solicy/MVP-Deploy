@@ -1,4 +1,5 @@
 import { Context } from 'react';
+import { hashPassword } from 'utils';
 import { axiosInstance } from 'utils/services/service/axiosService';
 import { ContextProps } from 'types/user';
 import { AuthResponse } from 'types/authResponse';
@@ -13,7 +14,7 @@ export interface IAuthService {
     success: boolean;
     message?: string;
     error?: string;
-  }>
+  }>;
 }
 
 export const AuthServiceContext: Context<
@@ -27,9 +28,9 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
   const authService = {
     async login(email: string, password: string): Promise<AuthResponse> {
       try {
-        const response = await axiosInstance.post('/users/login', {
+        const response = await axiosInstance.post('/users/login/admin', {
           email,
-          password,
+          password: hashPassword(password),
         });
 
         if (response.data.success && response.data.token) {

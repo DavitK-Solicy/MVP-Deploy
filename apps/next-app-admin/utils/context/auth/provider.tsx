@@ -3,17 +3,16 @@ import { useRouter } from 'next/router';
 import { AuthContext } from './context';
 import * as localStorage from 'utils/services/localStorageService';
 import localStorageKeys from 'utils/constants/localStorageKeys';
+import navBarPaths from 'utils/constants/navBarPaths';
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
-import navBarPaths from "utils/constants/navBarPaths";
 
 const withoutAuthRoutes: Array<string> = [
   navBarPaths.login,
   navBarPaths.recoverPassword,
 ];
-
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const router = useRouter();
@@ -40,6 +39,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     const authToken = localStorage.getItemFromLocalStorage(
       localStorageKeys.TOKEN_KEY
     );
+
     redirectTo(authToken, router.asPath);
   }, [router.pathname]);
 

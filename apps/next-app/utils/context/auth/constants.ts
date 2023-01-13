@@ -1,9 +1,11 @@
-import navBarPaths from "utils/constants/navBarPaths";
+import navBarPaths from 'utils/constants/navBarPaths';
 
 export const withoutAuthRoutes: Array<string> = [
-    '/',
-    navBarPaths.login,
-    navBarPaths.signUp,
-    navBarPaths.recoverPassword,
-    navBarPaths.newPassword,
+  navBarPaths.login,
+  navBarPaths.signUp,
+  navBarPaths.recoverPassword,
+  navBarPaths.newPassword,
+  navBarPaths.resetPassword,
+  navBarPaths.checkMail,
+  navBarPaths.createNewPassword,
 ];

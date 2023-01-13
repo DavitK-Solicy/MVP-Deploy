@@ -4,8 +4,7 @@ import Icon from 'components/shared/icon';
 import notification from 'components/shared/notification';
 import { AuthContext } from 'utils/context/auth/context';
 import navBarPaths from 'utils/constants/navBarPaths';
-import localStorageKeys from 'utils/constants/localStorageKeys';
-import { removeItemFromLocalStorage } from 'utils/services/localStorageService';
+import { clearLocalStorage } from 'utils/services/localStorageService';
 import { AuthServiceContext } from 'utils/services/service/authService';
 
 import styles from './header.module.scss';
@@ -24,12 +23,7 @@ export default function Header(): JSX.Element {
       const logout = await authService.logout();
 
       if (logout?.success) {
-        notification({
-          messageType: 'success',
-          message: 'Success',
-          description: logout.message,
-        });
-        removeItemFromLocalStorage(localStorageKeys.TOKEN_KEY);
+        clearLocalStorage();
         router.push(navBarPaths.login);
       } else {
         notification({
@@ -60,6 +54,6 @@ export default function Header(): JSX.Element {
           </div>
         )}
       </div>
-    </header >
+    </header>
   );
 }

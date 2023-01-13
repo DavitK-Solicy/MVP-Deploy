@@ -10,8 +10,8 @@ export interface OrderType {
 export enum CoinType {
   BITCOIN = 'bitcoin',
   USD = 'usd',
-  ETHERIUM = 'etherium',
-  LITECOIN = 'litecoin',
+  ETHEREUM = 'ethereum',
+  LITECOIN = 'liteCoin',
 }
 
 export enum OrderStatus {
@@ -19,5 +19,3 @@ export enum OrderStatus {
   PENDING = 'Pending',
   FAILED = 'Failed',
 }
-
-

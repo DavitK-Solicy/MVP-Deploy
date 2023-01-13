@@ -11,14 +11,7 @@ export default function Input({ label, ...rest }: InputProps): JSX.Element {
           {label}
         </label>
       )}
-      {rest.type === 'password' ? (
-        <AntdInput.Password
-          className={`${styles.input} ${rest.className}`}
-          {...rest}
-        />
-      ) : (
-        <AntdInput className={`${styles.input} ${rest.className}`} {...rest} />
-      )}
+      <AntdInput className={`${styles.input} ${rest.className}`} {...rest} />
     </div>
   );
 }

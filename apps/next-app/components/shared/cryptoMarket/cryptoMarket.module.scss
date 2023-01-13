@@ -1,12 +1,22 @@
+.whiteBox {
+  padding: 10px 15px 15px 15px !important;
+  width: 20%;
+  height: max-content !important;
+}
+
+.verticalWhiteBox {
+  padding: 10px 15px 15px 15px !important;
+  width: 70%;
+  height: max-content !important;
+}
+
 .container {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  padding: 10px 15px 15px 15px;
-  max-width: 190px;
-  border-radius: 10px;
-  background-color: var(--white_900);
+  height: max-content;
 
   .title {
     width: 100%;
@@ -16,17 +26,20 @@
     color: var(--blue_100);
   }
 
+  .topSection {
+    width: 100%;
+  }
+
   .conversion {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    column-gap: 15px;
+    justify-content: space-between;
     height: 35px;
 
     p {
       font-weight: 400;
-      font-size: var(--text_xs);
+      font-size: var(--text_tiny);
       color: var(--blue_100);
       height: 100%;
       display: flex;
@@ -76,6 +89,7 @@
 
     .conversion {
       justify-content: flex-end;
+      gap: 20px;
     }
   }
 
@@ -87,13 +101,14 @@
     gap: 40px;
 
     .cards {
-      width: 50% !important;
+      width: 60% !important;
       flex-direction: row;
       gap: 25px;
     }
 
     .footer {
-      width: 170px !important;
+      width: auto !important ;
+      padding: 10px 40px !important;
     }
   }
 }

@@ -1,5 +1,5 @@
 import { TableProps } from 'antd';
-import { CoinType } from 'types/orders';
+import { CoinType, OrderStatus } from 'types/orders';
 
 export interface OrderDataType {
   key: string;
@@ -9,12 +9,18 @@ export interface OrderDataType {
   type: CoinType;
   amount: string;
   orderDate: string;
-  status: string;
+  status: OrderStatus;
 }
 
 export default interface DashboardTableProps extends TableProps<OrderDataType> {
-  tableTitle?: string;
+  tableTitle: string;
   countOfPage?: number;
   setCurrentPage?: (e: number) => void;
-  rowKey: string;
+  rowKey?: string;
+}
+
+export interface ModalContent {
+  title: string;
+  message: string;
+  cardType: string;
 }

@@ -1,7 +1,5 @@
-import React from 'react'
+import Settings from 'components/feature/settings';
 
 export default function index() {
-  return (
-    <div>Settings</div>
-  )
+  return <Settings />;
 }

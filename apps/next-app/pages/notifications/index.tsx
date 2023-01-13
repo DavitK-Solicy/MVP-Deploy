@@ -1,7 +1,5 @@
-import React from 'react'
+import Notification from 'components/feature/notification';
 
 export default function index() {
-  return (
-    <div>Notifications</div>
-  )
+  return <Notification />;
 }

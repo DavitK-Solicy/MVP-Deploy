@@ -1,33 +1,33 @@
 import { Context } from 'react';
 import { AuthResponse } from 'types/authResponse';
 import { UserRoles } from 'utils/constants/userRoles';
-import { User } from '../../model/user';
+import { User, UserBankAccount } from '../../model/user';
 import { Contextualizer } from '../contextualizer';
 import { ProvidedServices } from '../providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
+import { UserResponse } from 'types/user';
 
 export interface IUserService {
   getAllUsers(
     limit?: number,
     offset?: number
   ): Promise<{
-    users: User[];
+    data: Array<User>;
     count: number;
   }>;
-  updateUser(
-    user: User
-  ): Promise<{
-    success: boolean;
-    data: User;
-  }>;
+  getCurrentUser(): Promise<UserResponse>;
+  updateUser(user: User): Promise<UserResponse>;
   deleteUser(id: string): Promise<AuthResponse>;
   createUser(
     email: string,
     password: string,
-    role: UserRoles
+    role: UserRoles,
+    bankAccount: UserBankAccount,
+    username?: string
   ): Promise<{
     success: boolean;
-    data: User;
+    message?: string;
+    data?: UserResponse;
   }>;
 }
 
@@ -44,7 +44,7 @@ export const UserService = ({ children }: any) => {
       limit: number = 0,
       offset: number = 0
     ): Promise<{
-      users: User[];
+      data: Array<User>;
       count: number;
     }> {
       try {
@@ -58,19 +58,21 @@ export const UserService = ({ children }: any) => {
       }
     },
 
-    async updateUser(
-      user: User
-    ): Promise<{
-      success: boolean;
-      data: User;
-    }> {
+    async getCurrentUser(): Promise<UserResponse> {
+      const response = await axiosInstance.get(`/users/me`);
+
+      return response.data;
+    },
+
+    async updateUser(user: User): Promise<UserResponse> {
       try {
         const response = await axiosInstance.put(
           `/users/admin/update-user/${user._id}`,
           {
+            username: user.username,
             role: user.role,
             email: user.email,
-            userType: user.userType
+            bankAccount: user.bankAccount,
           }
         );
 
@@ -92,16 +94,21 @@ export const UserService = ({ children }: any) => {
     async createUser(
       email: string,
       password: string,
-      role: UserRoles
+      role: UserRoles,
+      bankAccount: UserBankAccount,
+      username: string = 'Yamparala Rahul'
     ): Promise<{
       success: boolean;
-      data: User;
+      message?: string;
+      data?: UserResponse;
     }> {
       try {
         const response = await axiosInstance.post('/users/admin', {
+          username,
           email,
           password,
           role,
+          bankAccount,
         });
 
         return response.data;

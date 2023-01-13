@@ -4,8 +4,8 @@ import { dateParser } from '../../util/helpers';
 export enum CoinType {
   BITCOIN = 'bitcoin',
   USD = 'usd',
-  ETHERIUM = 'etherium',
-  LITECOIN = 'litecoin',
+  ETHEREUM = 'ethereum',
+  LITECOIN = 'liteCoin',
 }
 
 export enum OrderStatus {

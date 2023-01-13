@@ -19,7 +19,7 @@ export const navItems: NavItemsTypes[] = [
     text: 'Dashboard',
     icon: 'dashboard.svg',
     activeIcon: 'dashboardActive.svg',
-    href: '/dashboard',
+    href: '/',
   },
   {
     text: 'Analytics',

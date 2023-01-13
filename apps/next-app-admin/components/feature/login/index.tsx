@@ -1,12 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
 import notification from 'components/shared/notification';
+import Image from 'components/shared/image';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
-import CheckBox from 'components/shared/checkbox';
-import Recaptcha from 'components/shared/recaptcha';
 import { AuthServiceContext } from 'utils/services/service/authService';
+import { imagesPng, imagesSvg } from 'utils/constants/imagesSrc';
+import { ButtonType } from 'components/shared/button/type';
 
 import styles from './login.module.scss';
 
@@ -15,7 +16,6 @@ export default function Login(): JSX.Element {
   const router = useRouter();
 
   const [form] = Form.useForm();
-  const [recaptchaIsSelected, setRecaptchaIsSelected] = useState<boolean>(true);
 
   const onFinish = async (): Promise<void> => {
     const { email, password } = form.getFieldsValue();
@@ -39,8 +39,7 @@ export default function Login(): JSX.Element {
   const isDisabled = (): boolean => {
     return (
       !form.isFieldsTouched(true) ||
-      !!form.getFieldsError().filter(({ errors }) => errors.length).length ||
-      !recaptchaIsSelected
+      !!form.getFieldsError().filter(({ errors }) => errors.length).length
     );
   };
 
@@ -49,59 +48,75 @@ export default function Login(): JSX.Element {
   }, []);
 
   return (
-    <div className={styles.loginFormContainer}>
-      <div className={styles.loginHeader}>Log In</div>
-      <Form form={form} initialValues={{ remember: true }} onFinish={onFinish}>
-        <div className={styles.inputsContainer}>
-          <Form.Item
-            name="email"
-            className={styles.formItem}
-            rules={[
-              {
-                type: 'email',
-                message: 'The input is not valid Email!',
-              },
-              { required: true, message: 'Please enter your email address.' },
-            ]}
-          >
-            <Input type="email" label="Email" className={styles.formInput} />
-          </Form.Item>
-
-          <Form.Item
-            name="password"
-            className={styles.formItem}
-            rules={[
-              {
-                message: 'The input is not valid password!',
-              },
-              { required: true, message: 'Please enter your password.' },
-            ]}
-          >
-            <Input
-              type="password"
-              label="Password"
-              className={styles.formInput}
-            />
-          </Form.Item>
-
-          <div className={styles.forgotPassword}>
-            <CheckBox text="Remember me" />
-          </div>
-          <div className={styles.recaptcha}>
-            <Recaptcha onChange={setRecaptchaIsSelected} />
-          </div>
+    <div>
+      <div className={styles.loginPage}>
+        <div className={styles.bannerImage}>
+          <Image src={imagesPng.loginPageBanner} width="830" height="750" />
         </div>
-        <Form.Item shouldUpdate>
-          {() => (
-            <Button
-              disabled={isDisabled()}
-              text="Log In"
-              htmlType="submit"
-              className={styles.loginButton}
-            />
-          )}
-        </Form.Item>
-      </Form>
+        <div className={styles.loginFormContainer}>
+          <div className={styles.logoContainer}>
+            <Image src={imagesSvg.cryptoPoolLogo} width="260" height="100" />
+          </div>
+          <div className={styles.loginHeader}>Login</div>
+          <Form
+            form={form}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+          >
+            <div className={styles.inputsContainer}>
+              <Form.Item
+                name="email"
+                className={styles.formItem}
+                rules={[
+                  {
+                    type: 'email',
+                    message: 'Invalid Email. Please try again.',
+                  },
+                  {
+                    required: true,
+                    message: 'Please enter your email address.',
+                  },
+                ]}
+              >
+                <Input
+                  type="email"
+                  label="Username"
+                  className={styles.formEmailInput}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                className={styles.formItem}
+                rules={[
+                  {
+                    message: 'The input is not valid password!',
+                  },
+                  { required: true, message: 'Please enter your password.' },
+                ]}
+              >
+                <Input
+                  type="password"
+                  label="Password"
+                  className={styles.formInput}
+                />
+              </Form.Item>
+            </div>
+
+            <Form.Item shouldUpdate>
+              {() => (
+                <Button
+                  className={styles.loginButton}
+                  text="Log In"
+                  htmlType="submit"
+                  disabled={isDisabled()}
+                  btnType={ButtonType.black}
+                />
+              )}
+            </Form.Item>
+          </Form>
+        </div>
+      </div>
     </div>
   );
 }

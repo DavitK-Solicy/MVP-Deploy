@@ -1,4 +1,7 @@
+import { imagesSvg } from './imagesSrc';
+
 export interface PaymentsModalProps {
+  type: PaymentModalType;
   icon: string;
   title: string;
   href: string;
@@ -12,30 +15,47 @@ export interface ConversionTypeProps {
   active: boolean;
 }
 
+export interface InvoiceItem {
+  icon: string;
+  title?: string;
+  active: boolean;
+}
+
+export enum PaymentModalType {
+  API = 'Api',
+  INVOICE = 'Invoice',
+  QR = 'QR',
+  SHARE = 'Share',
+}
+
 export const paymentsModal: Array<PaymentsModalProps> = [
   {
-    icon: '/icons/generator-api.svg',
+    type: PaymentModalType.API,
+    icon: imagesSvg.generatorApi,
     title: 'Generate API Button',
     href: '/',
     width: 45,
     height: 22,
   },
   {
-    icon: '/icons/invoice-link.svg',
+    type: PaymentModalType.INVOICE,
+    icon: imagesSvg.invoiceLink,
     title: 'Generate Invoice Link',
     href: '/',
     width: 26,
     height: 34,
   },
   {
-    icon: '/icons/generate-qr.svg',
+    type: PaymentModalType.QR,
+    icon: imagesSvg.generateQR,
     title: 'Generate QR',
     href: '/',
     width: 35,
     height: 33,
   },
   {
-    icon: '/icons/share-link.svg',
+    type: PaymentModalType.SHARE,
+    icon: imagesSvg.shareLink,
     title: 'Generate Share Link',
     href: '/',
     width: 30,
@@ -45,12 +65,25 @@ export const paymentsModal: Array<PaymentsModalProps> = [
 
 export const conversionType: Array<ConversionTypeProps> = [
   {
-    icon: '/icons/bitcoin-icon.svg',
+    icon: imagesSvg.bitcoinCash,
     active: false,
     title: 'Bitcoin',
   },
   {
-    icon: '/icons/dollar-icon.svg',
+    icon: imagesSvg.dollarIcon,
+    active: true,
+    title: 'Dollars',
+  },
+];
+
+export const invoiceItems: Array<InvoiceItem> = [
+  {
+    icon: imagesSvg.rupeeIcon,
+    active: false,
+    title: 'Rupee',
+  },
+  {
+    icon: imagesSvg.dollarIcon,
     active: true,
     title: 'Dollars',
   },

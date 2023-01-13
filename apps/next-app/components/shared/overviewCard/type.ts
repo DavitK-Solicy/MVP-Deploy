@@ -6,4 +6,5 @@ export interface OverviewCardProps {
   total: string;
   percent: string;
   type: PercentType;
+  chart?: string;
 }

@@ -1,15 +1,9 @@
 import { Request, Response } from 'express';
-import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import * as googleAuth from 'google-auth-library';
-import { AuthProviders, User } from '../../models/User';
+import { AuthProviders, User, UserRoles } from '../../models/User';
 import { MailOptions, sendEmail } from '../../util/email/email.util.nodemailer';
 import env from '../../util/constants/env';
-import {
-  getOAuthAccessToken,
-  getOAuthRequestToken,
-  getProtectedResource,
-} from '../lib/oauth-promise';
 
 const googleClient = new googleAuth.OAuth2Client(env.clientId);
 
@@ -23,7 +17,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const usersCount = await User.collection.countDocuments();
     const users = await User.find().skip(offset).limit(limit);
 
-    return res.send({ users, count: usersCount });
+    return res.send({ data: users, count: usersCount });
   } catch (err) {
     res.status(404);
     res.send({ success: false, error: err });
@@ -32,7 +26,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { email, password, role } = req.body;
+    const { username, email, password, role, bankAccount } = req.body;
 
     const isUserExist = await User.findOne({
       email,
@@ -43,9 +37,11 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     const user = await User.create({
+      username,
       email,
-      password: bcrypt.hashSync(password, 10),
+      password,
       role,
+      bankAccount,
     });
 
     return res.json({
@@ -115,10 +111,13 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const signup = async (req: Request, res: Response) => {
-  const { email, password, referralCode } = req.body;
+  const { username, email, password, referralCode } = req.body;
 
   if (!email || !password) {
-    return res.json({ success: false, error: 'Send needed params' });
+    return res.json({
+      success: false,
+      error: 'Submit all required parameters',
+    });
   }
 
   try {
@@ -128,8 +127,9 @@ export const signup = async (req: Request, res: Response) => {
     }
 
     const user = await User.create({
+      username,
       email,
-      password: bcrypt.hashSync(password, 10),
+      password,
     });
 
     const token = jwt.sign({ id: user._id, email: email }, SECRET_JWT_CODE);
@@ -151,7 +151,10 @@ export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.json({ success: false, error: 'Send needed params' });
+    return res.json({
+      success: false,
+      error: 'Submit all required parameters',
+    });
   }
 
   try {
@@ -163,7 +166,7 @@ export const login = async (req: Request, res: Response) => {
       });
     }
 
-    if (!bcrypt.compareSync(password, user.password)) {
+    if (password !== user.password) {
       return res.json({ success: false, error: 'Wrong password' });
     }
 
@@ -173,7 +176,49 @@ export const login = async (req: Request, res: Response) => {
       SECRET_JWT_CODE
     );
 
-    return res.json({ success: true, userData: { token, user } });
+    return res.json({ success: true, token, user });
+  } catch (err) {
+    res.json({ success: false, error: err });
+  }
+};
+
+export const loginForAdmin = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.json({
+      success: false,
+      error: 'Submit all required parameters',
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.json({
+        success: false,
+        error: `Account with ${email} doesn't exist`,
+      });
+    }
+
+    if (user.role !== UserRoles.ADMIN) {
+      return res.json({
+        success: false,
+        error: `Only admin can log in to the Admin dashboard`,
+      });
+    }
+
+    if (password !== user.password) {
+      return res.json({ success: false, error: 'Wrong password' });
+    }
+
+    user.password = undefined;
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      SECRET_JWT_CODE
+    );
+
+    return res.json({ success: true, token, user });
   } catch (err) {
     res.json({ success: false, error: err });
   }
@@ -259,25 +304,6 @@ export const loginByGoogle = async (req: Request, res: Response) => {
   }
 };
 
-const hashPassword = (
-  password: string,
-  saltRounds = 10
-): Promise<{
-  isUpdated: boolean;
-  hashedPassword: string;
-}> => {
-  if (!password) {
-    throw new Error('No password available in the instance');
-  }
-
-  return bcrypt.hash(password, saltRounds).then((hashedPassword) => {
-    return {
-      isUpdated: true,
-      hashedPassword,
-    };
-  });
-};
-
 export const changePassword = async (req: Request, res: Response) => {
   try {
     const currentUser = req['user'];
@@ -285,14 +311,11 @@ export const changePassword = async (req: Request, res: Response) => {
 
     const dbUser = await User.findById(currentUser.id).select('+password');
 
-    const isSame = await bcrypt.compare(oldPassword, dbUser.password);
-
-    if (!isSame) {
+    if (oldPassword !== dbUser.password) {
       return res.json({ success: false, error: 'Wrong password' });
     }
 
-    const newHash = await hashPassword(newPassword);
-    dbUser.password = newHash.hashedPassword;
+    dbUser.password = newPassword;
     await dbUser.save();
 
     dbUser.password = undefined;
@@ -314,7 +337,7 @@ export const changePassword = async (req: Request, res: Response) => {
 export const updateUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { email, role, primaryWalletAddress } = req.body;
+    const { username, email, role, bankAccount } = req.body;
 
     const user = await User.findById(id);
 
@@ -324,7 +347,8 @@ export const updateUserById = async (req: Request, res: Response) => {
 
     user.role = role;
     user.email = email;
-    user.primaryWalletAddress = primaryWalletAddress;
+    user.username = username;
+    user.bankAccount = bankAccount;
 
     await user.save();
     return res.send({ success: true, data: user });
@@ -440,99 +464,6 @@ export const sendRecoverPasswordEmail = async (req: Request, res: Response) => {
   }
 };
 
-export const twitter = async (req: Request, res: Response) => {
-  const io = req.app.get('socketio');
-  try {
-    const {
-      oauthRequestToken,
-      oauthRequestTokenSecret,
-    } = await getOAuthRequestToken();
-    req.session.oauthRequestToken = oauthRequestToken;
-    req.session.oauthRequestTokenSecret = oauthRequestTokenSecret;
-    req.session.socketId = req.query.socketId;
-    req.session.signUp = req.query.signUp.toString();
-    const authorizationUrl = `https://api.twitter.com/oauth/authenticate?oauth_token=${oauthRequestToken}`;
-    res.redirect(authorizationUrl);
-  } catch (err) {
-    const response = { success: false, error: err };
-    io.in(req.session.socketId).emit('user', response);
-    res.end();
-  }
-};
-
-export const twitterCallback = async (req: Request, res: Response) => {
-  const io = req.app.get('socketio');
-  let response;
-  try {
-    const { oauthRequestToken, oauthRequestTokenSecret } = req.session;
-    const { oauth_verifier: oauthVerifier } = req.query;
-    const {
-      oauthAccessToken,
-      oauthAccessTokenSecret,
-    } = await getOAuthAccessToken({
-      oauthRequestToken,
-      oauthRequestTokenSecret,
-      oauthVerifier,
-    });
-    req.session.oauthAccessToken = oauthAccessToken;
-    const { data } = await getProtectedResource(
-      'https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true',
-      'GET',
-      oauthAccessToken,
-      oauthAccessTokenSecret
-    );
-    const userData = JSON.parse(data);
-    const userEmail = userData.email;
-    const twitterId = userData.id_str;
-    if (userEmail == '') {
-      response = {
-        success: false,
-        error: 'User do not have email linked with Twitter',
-      };
-      io.in(req.session.socketId).emit('user', response);
-      return res.end();
-    }
-
-    const twitterConnectedUser = await User.findOne({ twitterId });
-    const emailRegisteredUser = await User.findOne({ email: userEmail });
-    if (emailRegisteredUser == null) {
-      const user = await User.create({
-        email: userEmail,
-        twitterId: twitterId,
-        authProvider: AuthProviders.TWITTER,
-      });
-      const token = jwt.sign(
-        { id: user._id, email: userEmail },
-        SECRET_JWT_CODE
-      );
-      response = { success: true, token: token, userData: user };
-      io.in(req.session.socketId).emit('user', response);
-      return res.end();
-    } else if (twitterConnectedUser == null) {
-      emailRegisteredUser.twitterId = twitterId;
-      await emailRegisteredUser.save();
-    } else if (req.session.signUp == 'true' && twitterConnectedUser) {
-      response = { success: false, error: 'user already registered' };
-      io.in(req.session.socketId).emit('user', response);
-    }
-    const token = jwt.sign(
-      {
-        id: emailRegisteredUser._id,
-        email: emailRegisteredUser.email,
-        role: emailRegisteredUser.role,
-      },
-      SECRET_JWT_CODE
-    );
-    response = { success: true, token: token, userData: emailRegisteredUser };
-    io.in(req.session.socketId).emit('user', response);
-    return res.end();
-  } catch (err) {
-    response = { success: false, error: err.message };
-    io.in(req.session.socketId).emit('user', response);
-    return res.end();
-  }
-};
-
 export const updateForgottenPassword = async (req: Request, res: Response) => {
   try {
     const { newPassword, emailVerificationToken } = req.body;
@@ -555,8 +486,7 @@ export const updateForgottenPassword = async (req: Request, res: Response) => {
       });
     }
 
-    const newHash = await hashPassword(newPassword);
-    user.password = newHash.hashedPassword;
+    user.password = newPassword;
 
     await user.save();
     user.password = undefined;
@@ -567,37 +497,5 @@ export const updateForgottenPassword = async (req: Request, res: Response) => {
     });
   } catch (err) {
     res.json({ success: false, error: err.message });
-  }
-};
-
-export const updateWallet = async (req: Request, res: Response) => {
-  try {
-    const { walletAddress } = req.body;
-    const user = req['user'];
-    const isWalletExist = user.walletAddresses.includes(walletAddress);
-    if (!isWalletExist) {
-      if (!user.primaryWalletAddress) {
-        user.primaryWalletAddress = walletAddress;
-      }
-      await user.walletAddresses.push(walletAddress);
-      await user.save();
-    }
-
-    return res.send(user);
-  } catch (err) {
-    return res.json({ success: false, error: err });
-  }
-};
-
-export const getUserWallet = async (req: Request, res: Response) => {
-  try {
-    const user = req['user'];
-
-    return res.json({
-      success: true,
-      walletAddresses: user.walletAddresses,
-    });
-  } catch (err) {
-    return res.json({ success: false, error: err });
   }
 };

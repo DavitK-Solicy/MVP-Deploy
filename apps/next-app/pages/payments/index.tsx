@@ -1,7 +1,5 @@
-import React from 'react'
+import Payment from 'components/feature/payments';
 
 export default function index() {
-  return (
-    <div>Payments</div>
-  )
+  return <Payment />;
 }

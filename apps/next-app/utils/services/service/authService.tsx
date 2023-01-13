@@ -1,16 +1,20 @@
 import { Context } from 'react';
 import { ContextProps } from 'types/user';
 import { AuthResponse } from 'types/auth';
+import { hashPassword } from 'utils';
 import * as localStorage from 'utils/services/localStorageService';
 import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import localStorageKeys from 'utils/constants/localStorageKeys';
 import { axiosInstance } from 'utils/services/service/axiosService';
-import env from 'utils/constants/env';
 
 export interface IAuthService {
   login(email: string, password: string): Promise<AuthResponse>;
-  signup(email: string, password: string): Promise<AuthResponse>;
+  signup(
+    email: string,
+    password: string,
+    username?: string
+  ): Promise<AuthResponse>;
   changePassword(
     oldPassword: string,
     newPassword: string
@@ -37,7 +41,7 @@ export interface IAuthService {
     message?: string;
     error?: string;
   }>;
-};
+}
 
 export const AuthServiceContext: Context<
   IAuthService | undefined
@@ -52,17 +56,18 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
       try {
         const response = await axiosInstance.post('/users/login', {
           email,
-          password,
+          password: hashPassword(password),
         });
 
-        if (response.data.token) {
+        const data = response?.data;
+        if (data?.token) {
           localStorage.setItemInLocalStorage(
             localStorageKeys.TOKEN_KEY,
-            response.data.token
+            data.token
           );
         }
 
-        return response.data;
+        return data;
       } catch (err) {
         console.log(err);
       }
@@ -106,11 +111,16 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
       }
     },
 
-    async signup(email: string, password: string): Promise<AuthResponse> {
+    async signup(
+      email: string,
+      password: string,
+      username: string = 'Yamparala Rahul'
+    ): Promise<AuthResponse> {
       try {
         const response = await axiosInstance.post('/users/signup', {
+          username,
           email,
-          password,
+          password: hashPassword(password),
         });
         if (response.data.token) {
           localStorage.setItemInLocalStorage(
@@ -131,8 +141,8 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
     ): Promise<AuthResponse> {
       try {
         const response = await axiosInstance.put('/users/change-password', {
-          oldPassword,
-          newPassword,
+          oldPassword: hashPassword(oldPassword),
+          newPassword: hashPassword(newPassword),
         });
 
         return response.data;
@@ -153,19 +163,6 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
       } catch (err) {
         console.log(err);
       }
-    },
-
-    async loginByTwitter(socketId: string): Promise<Window> {
-      const width = 600, height = 600;
-      const left = (window.innerWidth / 2) - (width / 2);
-      const top = (window.innerHeight / 2) - (height / 2);
-
-      const url = `${env.nextPublicApiBaseUrl}/users/login/twitter?socketId=${socketId}`;
-      return window.open(url, '',
-        `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-        scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
-        height=${height}, top=${top}, left=${left}`
-      )
     },
 
     async sendRecoverPasswordEmail(
@@ -198,7 +195,7 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
         const response = await axiosInstance.put(
           `/users/update-forgotten-password`,
           {
-            newPassword: password,
+            newPassword: hashPassword(password),
             emailVerificationToken: emailVerificationToken,
           }
         );
