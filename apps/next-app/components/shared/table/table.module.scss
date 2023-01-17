@@ -21,6 +21,16 @@
     padding: 0 30px;
     margin-bottom: 10px;
 
+    .search {
+      margin-top: 10px;
+      border: 1px solid var(--gray_850);
+      border-radius: 10px;
+
+      .searchContainer {
+        column-gap: 5px;
+      }
+    }
+
     .auxiliaryTools {
       display: flex;
       align-items: center;

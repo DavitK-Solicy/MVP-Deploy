@@ -5,62 +5,11 @@
   justify-content: center;
   position: relative;
 
-  .kycModal {
-    width: 300px;
-  }
-
-  .searchItem {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .downloadSection {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    column-gap: 10px;
-
-    button {
-      max-width: 100px;
-    }
-
-    .downloadKycText {
-      cursor: pointer;
-    }
-  }
-
   .headerText {
     display: flex;
     width: 100%;
     justify-content: center;
     align-items: center;
-  }
-
-  .searchForm {
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-
-    label {
-      font-size: var(--text_ms);
-    }
-
-    .formSelect {
-      @extend .searchItem;
-      width: 25%;
-    }
-  }
-  .userEmail {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .buttons {
-    display: flex !important;
-    justify-content: space-between;
-    width: 100%;
   }
 
   @media screen and (max-width: 478px) {
@@ -70,46 +19,6 @@
   @media screen and (max-width: 382px) {
     padding: 5px;
   }
-}
-
-.table {
-  margin-top: 30px;
-
-  :global(.ant-table-cell) {
-    border-bottom: none;
-    background: transparent;
-
-    @media screen and (max-width: 585px) {
-      font-size: var(--text_xsm);
-    }
-
-    @media screen and (max-width: 452px) {
-      padding: 8px;
-      font-size: var(--text_min);
-    }
-
-    @media screen and (max-width: 404px) {
-      padding: 4px;
-      font-size: var(--text_xmin);
-      text-align: center;
-    }
-  }
-}
-
-.title {
-  position: relative;
-  text-align: center;
-  font-weight: 700;
-  font-size: var(--text_xl);
-  line-height: 38px;
-  color: var(--black_300);
-  margin-bottom: 40px;
-}
-
-.makeAdminButton {
-  width: 180px !important;
-  height: 50px !important;
-  border-radius: 5px;
 }
 
 .modalButtons {
@@ -146,12 +55,6 @@
   column-gap: 5px;
 }
 
-.createUserButton {
-  cursor: pointer !important;
-  width: 100px !important;
-  height: 30px !important;
-}
-
 .inputsContainer {
   display: flex;
   flex-direction: column;
@@ -180,43 +83,6 @@
       margin-bottom: 6px;
     }
   }
-
-  .formItemPassword {
-    label {
-      margin-bottom: 6px;
-    }
-  }
-
-  .formInput {
-    border-radius: 5px;
-    height: 40px;
-    border: 1px solid var(--gray_900);
-  }
-
-  .formEmailInput {
-    display: flex;
-    flex-direction: row-reverse;
-    border-radius: 5px;
-    height: 40px;
-    border: 1px solid var(--gray_900);
-  }
-
-  .formEmailSuccess {
-    display: flex;
-    flex-direction: row-reverse;
-    border-radius: 5px;
-    height: 40px;
-    border: 1px solid var(--button_copy_link);
-    box-shadow: none;
-  }
-
-  .recaptcha {
-    transform: scale(0.71);
-    -webkit-transform: scale(0.71);
-    transform-origin: 0 0;
-    -webkit-transform-origin: 0 0;
-    margin: 15px 80px 0 0;
-  }
 }
 
 .buttonSection {
@@ -243,16 +109,14 @@
   }
 }
 
-.investors {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  word-break: keep-all;
-}
+.editUser {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-.labelModal {
-  font-size: var(--text_m);
-  font-weight: bold;
+  .formItem {
+    margin-bottom: 0;
+  }
 }
 
 .radioForm {
@@ -270,6 +134,11 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  .labelModal {
+    font-size: var(--text_m);
+    font-weight: bold;
+  }
 
   .infoRows {
     display: flex;

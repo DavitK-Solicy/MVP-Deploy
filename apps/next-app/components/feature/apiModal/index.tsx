@@ -1,6 +1,7 @@
 import Modal from 'components/shared/modal';
 import Icon from 'components/shared/icon';
 import Image from 'components/shared/image';
+import Notification from 'components/shared/notification';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import { ApiModalProps } from './types';
 
@@ -19,7 +20,8 @@ export default function ApiModal({
         setOpen(false);
       }}
       className={styles.apiModal}
-      closable={false}
+      closable={true}
+      closeIcon={<Icon src={imagesSvg.close} width={22} height={22} />}
     >
       <div className={styles.apiModalContent}>
         <div onClick={() => setOpen(false)} className={styles.modalCloseButton}>
@@ -45,7 +47,9 @@ export default function ApiModal({
           </div>
         </div>
         <div className={styles.copyButton}>
-          <span>Copy the API Link</span>
+          <span onClick={() => Notification('Link is copied to clipbord')}>
+            Copy the API Link
+          </span>
           <div className={styles.arrowRight}>
             <Icon src={imagesSvg.arrowRightSecond} width={20} height={10} />
           </div>

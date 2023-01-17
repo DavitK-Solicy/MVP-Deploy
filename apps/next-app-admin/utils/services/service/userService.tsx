@@ -19,11 +19,11 @@ export interface IUserService {
   updateUser(user: User): Promise<UserResponse>;
   deleteUser(id: string): Promise<AuthResponse>;
   createUser(
+    fullName: string,
     email: string,
     password: string,
     role: UserRoles,
-    bankAccount: UserBankAccount,
-    username?: string
+    bankAccount: UserBankAccount
   ): Promise<{
     success: boolean;
     message?: string;
@@ -69,7 +69,7 @@ export const UserService = ({ children }: any) => {
         const response = await axiosInstance.put(
           `/users/admin/update-user/${user._id}`,
           {
-            username: user.username,
+            fullName: user.fullName,
             role: user.role,
             email: user.email,
             bankAccount: user.bankAccount,
@@ -92,11 +92,11 @@ export const UserService = ({ children }: any) => {
     },
 
     async createUser(
+      fullName: string,
       email: string,
       password: string,
       role: UserRoles,
-      bankAccount: UserBankAccount,
-      username: string = 'Yamparala Rahul'
+      bankAccount: UserBankAccount
     ): Promise<{
       success: boolean;
       message?: string;
@@ -104,7 +104,7 @@ export const UserService = ({ children }: any) => {
     }> {
       try {
         const response = await axiosInstance.post('/users/admin', {
-          username,
+          fullName,
           email,
           password,
           role,

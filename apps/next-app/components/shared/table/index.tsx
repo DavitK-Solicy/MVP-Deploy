@@ -120,7 +120,7 @@ export default function DashboardTable({
               </span>
             </div>
             <div className={styles.search}>
-              <SearchInput searchIcon={imagesSvg.search} />
+              <SearchInput searchIcon={imagesSvg.search} className={styles.searchContainer} />
             </div>
           </div>
           <div className={className}>

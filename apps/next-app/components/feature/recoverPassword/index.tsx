@@ -1,10 +1,11 @@
 import { useContext, useState } from 'react';
 import { Form } from 'antd';
 import Button from 'components/shared/button';
-import { ButtonType } from 'components/shared/button/type';
 import Input from 'components/shared/input';
-import notification from 'components/shared/notification';
+import Notification from 'components/shared/notification';
 import { AuthServiceContext } from 'utils/services/service/authService';
+import { warningModalContent } from 'utils/constants/fakeData';
+import { ButtonType } from 'components/shared/button/type';
 
 import styles from './recoverPassword.module.scss';
 
@@ -26,17 +27,12 @@ export default function RecoverPassword(): JSX.Element {
     );
 
     if (res?.success) {
-      notification({
-        messageType: 'success',
-        message: 'Success',
-        description: res.message,
-      });
+      Notification(res.message, warningModalContent.acceptModalIcon);
     } else {
-      notification({
-        messageType: 'error',
-        message: 'Oops!',
-        description: res?.error ?? 'Something went wrong, please try again',
-      });
+      Notification(
+        res?.error ?? 'Something went wrong, please try again',
+        warningModalContent.filedModalIcon
+      );
     }
 
     setEmailSentSuccessfully(res?.success);

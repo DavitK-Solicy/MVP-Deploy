@@ -41,11 +41,25 @@ export default function Users(): JSX.Element {
   const [firstRefresh, setFirstRefresh] = useState<boolean>(true);
   const [modalType, setModalType] = useState<ModalType>();
 
+  const usersTableData: Array<User> = useMemo(
+    (): Array<User> =>
+      users?.map((item: User) => {
+        const data = {
+          accountNumber: item?.bankAccount?.accountNumber,
+          cardNumber: item?.bankAccount?.cardNumber,
+          ifscOrSwiftCode: item?.bankAccount?.ifscOrSwiftCode,
+        };
+
+        return (item = { ...item, ...data });
+      }),
+    [users]
+  );
+
   const columns = [
     {
-      title: 'Username',
-      dataIndex: 'username',
-      key: 'username',
+      title: 'Full Name',
+      dataIndex: 'fullName',
+      key: 'fullName',
       tooltip: true,
     },
     {
@@ -72,6 +86,29 @@ export default function Users(): JSX.Element {
       dataIndex: 'authProvider',
       key: 'authProvider',
       tooltip: true,
+    },
+    {
+      title: 'Bank Account',
+      children: [
+        {
+          title: 'Account Number',
+          dataIndex: 'accountNumber',
+          key: 'accountNumber',
+          tooltip: true,
+        },
+        {
+          title: 'Card Number',
+          dataIndex: 'cardNumber',
+          key: 'cardNumber',
+          tooltip: true,
+        },
+        {
+          title: 'IFSC Or SwiftCode',
+          dataIndex: 'ifscOrSwiftCode',
+          key: 'ifscOrSwiftCode',
+          tooltip: true,
+        },
+      ],
     },
     {
       width: '100px',
@@ -142,23 +179,21 @@ export default function Users(): JSX.Element {
   const handleEdit = (user: User): void => {
     setDefaultUser({
       _id: user._id,
-      username: user.username,
+      fullName: user.fullName,
       email: user.email,
       role: user.role,
       bankAccount: user.bankAccount,
       authProvider: user.authProvider,
-      emailVerificationToken: user.emailVerificationToken,
       referralCode: user.referralCode,
     });
 
     setSelectedUser({
       _id: user._id,
-      username: user.username,
+      fullName: user.fullName,
       email: user.email,
       role: user.role,
       bankAccount: user.bankAccount,
       authProvider: user.authProvider,
-      emailVerificationToken: user.emailVerificationToken,
       referralCode: user.referralCode,
     });
 
@@ -176,7 +211,7 @@ export default function Users(): JSX.Element {
   const disableButton = useMemo((): boolean => {
     if (
       defaultUser?.role === selectedUser?.role &&
-      defaultUser?.username === selectedUser?.username &&
+      defaultUser?.fullName === selectedUser?.fullName &&
       defaultUser?.bankAccount === selectedUser?.bankAccount
     ) {
       return true;
@@ -226,6 +261,7 @@ export default function Users(): JSX.Element {
 
   const handleCreateUser = async (): Promise<void> => {
     const {
+      fullName,
       email,
       password,
       role,
@@ -233,11 +269,17 @@ export default function Users(): JSX.Element {
       cardNumber,
       ifscOrSwiftCode,
     } = createForm.getFieldsValue();
-    const createdUser = await userService.createUser(email, password, role, {
-      accountNumber,
-      ifscOrSwiftCode,
-      cardNumber,
-    });
+    const createdUser = await userService.createUser(
+      fullName,
+      email,
+      password,
+      role,
+      {
+        accountNumber,
+        ifscOrSwiftCode,
+        cardNumber,
+      }
+    );
     if (createdUser?.success) {
       notification({
         messageType: 'success',
@@ -291,7 +333,7 @@ export default function Users(): JSX.Element {
       </div>
       <PageTable
         columns={columns}
-        dataSource={users}
+        dataSource={usersTableData}
         limit={limit}
         creatingItem="User"
         countOfPage={countOfPage}
@@ -314,13 +356,13 @@ export default function Users(): JSX.Element {
         />
         {modalType === ModalType.EDIT && (
           <Form
+            layout="vertical"
             className={styles.editUser}
             form={editForm}
             initialValues={{
-              username: selectedUser?.username,
+              fullName: selectedUser?.fullName,
               email: selectedUser?.email,
               role: selectedUser?.role,
-              emailVerificationToken: selectedUser?.emailVerificationToken,
               accountNumber: selectedUser?.bankAccount?.accountNumber,
               cardNumber: selectedUser?.bankAccount?.cardNumber,
               ifscOrSwiftCode: selectedUser?.bankAccount?.ifscOrSwiftCode,
@@ -336,13 +378,13 @@ export default function Users(): JSX.Element {
               )}
             </div>
             <Form.Item
-              name="username"
-              label="Username"
+              name="fullName"
+              label="Full Name"
               className={styles.formItem}
               rules={[
                 {
                   required: true,
-                  message: 'Please enter Username',
+                  message: 'Please enter Full Name',
                 },
                 {
                   validator: (_, value) => validator(_, value),
@@ -354,7 +396,7 @@ export default function Users(): JSX.Element {
                 onChange={(e) => {
                   setSelectedUser({
                     ...selectedUser,
-                    username: e,
+                    fullName: e,
                   });
                 }}
               />
@@ -492,6 +534,7 @@ export default function Users(): JSX.Element {
         )}
         {modalType === ModalType.CREATE && (
           <Form
+            layout="vertical"
             form={createForm}
             initialValues={{
               remember: true,
@@ -501,13 +544,13 @@ export default function Users(): JSX.Element {
           >
             <div className={styles.inputsContainer}>
               <Form.Item
-                name="username"
-                label="Username"
+                name="fullName"
+                label="Full Name"
                 className={styles.formItem}
                 rules={[
                   {
                     required: true,
-                    message: 'Please input Username',
+                    message: 'Please input Full Name',
                   },
                   {
                     validator: (_, value) => validator(_, value),
@@ -584,7 +627,6 @@ export default function Users(): JSX.Element {
                 <Form.Item
                   name="password"
                   label="Password"
-                  labelCol={{ span: 24 }}
                   className={styles.formItem}
                   rules={[
                     () => ({

@@ -26,7 +26,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, password, role, bankAccount } = req.body;
+    const { fullName, email, password, role, bankAccount } = req.body;
 
     const isUserExist = await User.findOne({
       email,
@@ -37,7 +37,7 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     const user = await User.create({
-      username,
+      fullName,
       email,
       password,
       role,
@@ -111,9 +111,9 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const signup = async (req: Request, res: Response) => {
-  const { username, email, password, referralCode } = req.body;
+  const { fullName, email, password, referralCode } = req.body;
 
-  if (!email || !password) {
+  if (!email || !password || !fullName) {
     return res.json({
       success: false,
       error: 'Submit all required parameters',
@@ -127,20 +127,20 @@ export const signup = async (req: Request, res: Response) => {
     }
 
     const user = await User.create({
-      username,
+      fullName,
       email,
       password,
     });
 
-    const token = jwt.sign({ id: user._id, email: email }, SECRET_JWT_CODE);
+    const token = jwt.sign({ id: user._id, email }, SECRET_JWT_CODE);
 
-    // const mailOptions: MailOptions = {
-    //   to: email,
-    //   subject: 'You have successfully registered',
-    //   text: 'Welcome to CryptoPool',
-    // };
+    const mailOptions: MailOptions = {
+      to: email,
+      subject: 'You have successfully registered',
+      text: 'Welcome to CryptoPool',
+    };
 
-    // await sendEmail(mailOptions);
+    await sendEmail(mailOptions);
     return res.json({ success: true, token, user });
   } catch (err) {
     res.json({ success: false, error: err.message });
@@ -337,7 +337,7 @@ export const changePassword = async (req: Request, res: Response) => {
 export const updateUserById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { username, email, role, bankAccount } = req.body;
+    const { fullName, email, role, bankAccount } = req.body;
 
     const user = await User.findById(id);
 
@@ -347,7 +347,7 @@ export const updateUserById = async (req: Request, res: Response) => {
 
     user.role = role;
     user.email = email;
-    user.username = username;
+    user.fullName = fullName;
     user.bankAccount = bankAccount;
 
     await user.save();
@@ -431,52 +431,67 @@ export const sendRecoverPasswordEmail = async (req: Request, res: Response) => {
       });
     }
 
-    const emailVerificationToken = jwt.sign(
-      { id: user._id, email },
-      SECRET_JWT_CODE
-    );
+    const code = Math.floor(1000 + Math.random() * 9000);
+    user.emailVerificationCode = code;
 
     const mailOptions: MailOptions = {
       to: email,
       subject: 'Recover Password',
       html: `<div>
-              <div>Visit this link to change your password</div>
-              <div>
-                <a href=${env.deployedFrontendUrl}/newPassword?emailVerificationToken=${emailVerificationToken} target="_blank">
-                  Recover Password
-                </a>
-              </div>
+              <div>Change your password</div>
+              <div>Your code - ${code}</div>
              </div>`,
     };
 
     await sendEmail(mailOptions);
 
-    user.emailVerificationToken = emailVerificationToken;
     await user.save();
 
     return res.send({
       success: true,
-      emailVerificationToken: user.emailVerificationToken,
       message: `It was successfully sent to ${email}`,
     });
   } catch (err) {
-    res.json({ success: false, error: err });
+    res.json({
+      success: false,
+      error: 'Something went wrong, please try again',
+    });
+  }
+};
+
+export const checkVerificationCode = async (req: Request, res: Response) => {
+  try {
+    const { emailVerificationCode, email } = req.body;
+    const user = await User.findOne({
+      email,
+    });
+
+    if (user.emailVerificationCode === emailVerificationCode) {
+      return res.json({ success: true, user });
+    } else {
+      return res.json({
+        success: false,
+        message: 'Entered code is not correct, please try again',
+      });
+    }
+  } catch (err) {
+    res.json({ success: false, error: err.message });
   }
 };
 
 export const updateForgottenPassword = async (req: Request, res: Response) => {
   try {
-    const { newPassword, emailVerificationToken } = req.body;
+    const { newPassword, email } = req.body;
 
-    if (!newPassword || !emailVerificationToken) {
+    if (!newPassword || !email) {
       return res.send({
         success: false,
-        error: 'Send password and emailVerificationToken',
+        error: 'Send all necessary parameters',
       });
     }
 
     const user = await User.findOne({
-      emailVerificationToken,
+      email,
     }).select('+password');
 
     if (!user) {
@@ -487,6 +502,7 @@ export const updateForgottenPassword = async (req: Request, res: Response) => {
     }
 
     user.password = newPassword;
+    user.emailVerificationCode = null;
 
     await user.save();
     user.password = undefined;

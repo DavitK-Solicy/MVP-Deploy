@@ -28,7 +28,7 @@ const bankAccountSchema = new Schema({
 });
 
 const userSchema = new Schema({
-  username: {
+  fullName: {
     type: String,
     default: null,
   },
@@ -58,7 +58,7 @@ const userSchema = new Schema({
     default: AuthProviders.BASIC,
     enum: AuthProviders,
   },
-  emailVerificationToken: {
+  emailVerificationCode: {
     type: String,
     default: null,
   },

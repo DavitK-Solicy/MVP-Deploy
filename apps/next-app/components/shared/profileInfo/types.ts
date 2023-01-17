@@ -1,4 +1,4 @@
 export interface ProfileInfoProps {
-  username: string;
+  fullName: string;
   email: string;
 }

@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import Icon from 'components/shared/icon';
 import SearchInput from 'components/shared/searchInput';
-import Image from 'components/shared/image';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import navBarPaths from 'utils/constants/navBarPaths';
+import { HeaderProps } from './types';
 
 import styles from './header.module.scss';
 
-export default function Header(): JSX.Element {
+export default function Header({ fullName }: HeaderProps): JSX.Element {
   const router = useRouter();
 
   return (
@@ -30,8 +30,8 @@ export default function Header(): JSX.Element {
           className={styles.userSection}
           onClick={() => router.push(navBarPaths.profile)}
         >
-          <Image width={29} height={29} src={imagesSvg.profilePhoto} />
-          <div className={styles.userName}>Yamparala Rahul</div>
+          <p className={styles.userLogo}>{fullName?.trimStart()[0]}</p>
+          <div className={styles.userName}>{fullName}</div>
           <div className={styles.arrowRightBtn}>
             <Icon src={imagesSvg.arrowRightFirst} width={6} height={10} />
           </div>

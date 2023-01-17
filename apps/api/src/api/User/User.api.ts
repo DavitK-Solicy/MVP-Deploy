@@ -17,6 +17,7 @@ import {
   signupByGoogle,
   loginByGoogle,
   sendRecoverPasswordEmail,
+  checkVerificationCode,
   updateForgottenPassword,
   loginForAdmin,
 } from './User.api.handlers';
@@ -26,6 +27,7 @@ const router = Router();
 router.get('/admin', requireAuthAdmin, getAllUsers);
 router.get('/me', requireAuth, getCurrentUser);
 router.post('/recover-password', sendRecoverPasswordEmail);
+router.post('/check-mail', checkVerificationCode);
 router.post('/admin', requireAuthAdmin, createUser);
 router.post('/logout', requireAuth, logout);
 router.post('/login/admin', loginForAdmin);

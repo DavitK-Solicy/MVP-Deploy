@@ -14,7 +14,13 @@ export default function AnalyticsHeader(): JSX.Element {
   const menu: JSX.Element = (
     <Menu selectable={true}>
       {timeFrameDates.map((item: TimeFrameDate) => (
-        <Menu.Item onClick={() => setOption(item.date)}>{item.date}</Menu.Item>
+        <Menu.Item
+          key={item.date}
+          className={styles.menuItem}
+          onClick={() => setOption(item.date)}
+        >
+          {item.date}
+        </Menu.Item>
       ))}
     </Menu>
   );

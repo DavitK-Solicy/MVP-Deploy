@@ -20,8 +20,9 @@ export default function TransactionFee({
         <p className={styles.title}>Transaction Fees</p>
         {buttons && (
           <div className={styles.buttons}>
-            {buttons.map((button: FeeButton) => (
+            {buttons.map((button: FeeButton, index: number) => (
               <Button
+                key={index}
                 text={button.text}
                 onClick={() => setActive(button.type)}
                 className={

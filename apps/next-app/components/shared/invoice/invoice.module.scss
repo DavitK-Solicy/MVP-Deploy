@@ -14,6 +14,14 @@
     background-color: var(--gray_200);
   }
 
+  .formElement::placeholder {
+    font-weight: 400 !important;
+    font-size: var(--text_sm) !important;
+    line-height: 16px !important;
+    letter-spacing: 0.02em !important;
+    color: var(--gray_1000) !important;
+  }
+
   label {
     text-align: start !important;
   }
@@ -56,6 +64,14 @@
       background-color: var(--gray_200);
       border-radius: 5px;
       width: 230px;
+    }
+
+    .formElementAmount::placeholder {
+      font-weight: 400 !important;
+      font-size: var(--text_sm) !important;
+      line-height: 16px !important;
+      letter-spacing: 0.02em !important;
+      color: var(--gray_1000) !important;
     }
 
     .conversionType {

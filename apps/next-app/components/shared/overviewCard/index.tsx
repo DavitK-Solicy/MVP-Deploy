@@ -58,7 +58,7 @@ export default function OverviewCard({
                 : styles.downgradePercent
             }
           >
-            ${percent}%
+            {percent}%
           </p>
         </div>
         {chart && <Image src={chart} width={100} height={30} />}

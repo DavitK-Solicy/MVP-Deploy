@@ -14,6 +14,7 @@ import styles from './sidebar.module.scss';
 export default function SideBar() {
   const router = useRouter();
   const authService = useContext(AuthServiceContext);
+  const currentRoute = router.asPath.split('?')[0];
 
   const redirectTo = async (): Promise<void> => {
     const logout = await authService.logout();
@@ -41,7 +42,7 @@ export default function SideBar() {
               icon={item.icon}
               text={item.text}
               activeIcon={item.activeIcon}
-              active={router.asPath === item.href}
+              active={currentRoute === item.href}
             />
           ))}
         </div>

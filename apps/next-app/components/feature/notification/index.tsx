@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import NotificationCard from 'components/shared/notificationCard';
-import PageTitle from 'components/shared/pageTitle';
+import ContentLayout from 'components/feature/contentLayout';
 import { notificationsData, NotificationModel } from './type';
 
 import styles from './notification.module.scss';
@@ -19,18 +19,19 @@ export default function Notification(): JSX.Element {
   };
 
   return (
-    <div className={styles.container}>
-      <PageTitle title="Notifactions" />
-      <div className={styles.notification}>
-        {notifications.map((notification: NotificationModel) => (
-          <NotificationCard
-            title={notification.title}
-            message={notification.message}
-            cardType={notification.cardType}
-            onClose={() => removeNotification(notification.id)}
-          />
-        ))}
+    <ContentLayout title="Notifactions" isClock={true}>
+      <div className={styles.container}>
+        <div className={styles.notification}>
+          {notifications.map((notification: NotificationModel) => (
+            <NotificationCard
+              title={notification.title}
+              message={notification.message}
+              cardType={notification.cardType}
+              onClose={() => removeNotification(notification.id)}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </ContentLayout>
   );
 }

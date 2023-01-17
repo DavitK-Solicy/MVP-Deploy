@@ -1,6 +1,7 @@
 import Icon from 'components/shared/icon';
 import Button from 'components/shared/button';
 import Image from 'components/shared/image';
+import Notification from 'components/shared/notification';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 
 import styles from './scan.module.scss';
@@ -20,7 +21,12 @@ export default function ScanQR(): JSX.Element {
         <div className={styles.link}>
           <p>random-mail@gmail.com</p>
         </div>
-        <Button className={styles.button} img={imagesSvg.copy} text="Copy" />
+        <Button
+          className={styles.button}
+          img={imagesSvg.copy}
+          text="Copy"
+          onClick={() => Notification('Link is copied to clipbord')}
+        />
       </div>
     </div>
   );

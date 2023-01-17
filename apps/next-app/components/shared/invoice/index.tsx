@@ -31,6 +31,7 @@ export default function Invoice(): JSX.Element {
                   type="text"
                   label="Name"
                   className={styles.formElement}
+                  placeholder="Name of the person"
                 />
               </Form.Item>
               <Form.Item name="emailId" className={styles.formItem}>
@@ -38,6 +39,7 @@ export default function Invoice(): JSX.Element {
                   type="email"
                   label="Email Id"
                   className={styles.formElement}
+                  placeholder="Personemailid@gmail.com"
                 />
               </Form.Item>
               <Form.Item name="walletAddress" className={styles.formItem}>
@@ -45,6 +47,7 @@ export default function Invoice(): JSX.Element {
                   type="text"
                   label="Wallet Address"
                   className={styles.formElement}
+                  placeholder="2MwxNhM96fey5BzNfyNvt..."
                 />
               </Form.Item>
               <div className={styles.amountSection}>
@@ -53,6 +56,7 @@ export default function Invoice(): JSX.Element {
                     type="text"
                     label="Amount"
                     className={styles.formElementAmount}
+                    placeholder="$245.56"
                   />
                 </Form.Item>
                 {invoiceItems.map(

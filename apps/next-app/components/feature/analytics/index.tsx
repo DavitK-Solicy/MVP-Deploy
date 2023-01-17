@@ -8,22 +8,20 @@ import styles from './analytics.module.scss';
 
 export default function Analytics(): JSX.Element {
   return (
-    <div className={styles.container}>
-      <ContentLayout
-        title="Analytics"
-        headerChildren={<AnalyticsHeader />}
-        isClock={false}
-      >
-        <div>
-          <div className={styles.topSection}>
-            <AnalyticsCards />
-            <OverviewChart />
-          </div>
-          <div className={styles.bottomSection}>
-            <DashboardTable rowKey="key" tableTitle="Withdrawl Table" />
-          </div>
+    <ContentLayout
+      title="Analytics"
+      headerChildren={<AnalyticsHeader />}
+      isClock={false}
+    >
+      <div className={styles.container}>
+        <div className={styles.topSection}>
+          <AnalyticsCards />
+          <OverviewChart />
         </div>
-      </ContentLayout>
-    </div>
+        <div className={styles.bottomSection}>
+          <DashboardTable rowKey="key" tableTitle="Withdrawl Table" />
+        </div>
+      </div>
+    </ContentLayout>
   );
 }

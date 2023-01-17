@@ -14,13 +14,13 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const router = useRouter();
 
   const [authData, setAuthorized] = useState({
-    authorized: false,
+    authorized: !!getAuthToken(),
     path: '/',
   });
 
-  const getAuthToken = (): string | JSON => {
+  function getAuthToken(): string | JSON {
     return localStorage.getItemFromLocalStorage(localStorageKeys.TOKEN_KEY);
-  };
+  }
 
   const redirectTo = (path: string): void => {
     const authToken = getAuthToken();
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         authorized: true,
         path: '/',
       });
-      
+
       if (path === navBarPaths.login || path === navBarPaths.signUp) {
         router.push('/');
       }

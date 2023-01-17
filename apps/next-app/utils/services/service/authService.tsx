@@ -7,13 +7,14 @@ import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import localStorageKeys from 'utils/constants/localStorageKeys';
 import { axiosInstance } from 'utils/services/service/axiosService';
+import { User } from 'utils/model/user';
 
 export interface IAuthService {
   login(email: string, password: string): Promise<AuthResponse>;
   signup(
+    fullName: string,
     email: string,
-    password: string,
-    username?: string
+    password: string
   ): Promise<AuthResponse>;
   changePassword(
     oldPassword: string,
@@ -33,9 +34,17 @@ export interface IAuthService {
     message?: string;
     error?: string;
   }>;
+  checkVerificationCode(
+    emailVerificationCode: number,
+    email: string | Array<string>
+  ): Promise<{
+    success: boolean;
+    message?: string;
+    user?: User;
+  }>;
   updateForgottenPassword(
     password: string,
-    emailVerificationToken: string
+    email: string
   ): Promise<{
     success: boolean;
     message?: string;
@@ -112,13 +121,13 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
     },
 
     async signup(
+      fullName: string,
       email: string,
-      password: string,
-      username: string = 'Yamparala Rahul'
+      password: string
     ): Promise<AuthResponse> {
       try {
         const response = await axiosInstance.post('/users/signup', {
-          username,
+          fullName,
           email,
           password: hashPassword(password),
         });
@@ -143,6 +152,22 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
         const response = await axiosInstance.put('/users/change-password', {
           oldPassword: hashPassword(oldPassword),
           newPassword: hashPassword(newPassword),
+        });
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async checkVerificationCode(
+      emailVerificationCode: number,
+      email: string
+    ): Promise<{ success: boolean; message?: string; user?: User }> {
+      try {
+        const response = await axiosInstance.post('/users/check-mail', {
+          emailVerificationCode,
+          email,
         });
 
         return response.data;
@@ -185,7 +210,7 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
 
     async updateForgottenPassword(
       password: string,
-      emailVerificationToken: string
+      email: string
     ): Promise<{
       success: boolean;
       message?: string;
@@ -196,7 +221,7 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
           `/users/update-forgotten-password`,
           {
             newPassword: hashPassword(password),
-            emailVerificationToken: emailVerificationToken,
+            email,
           }
         );
 

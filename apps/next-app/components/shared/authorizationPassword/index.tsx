@@ -1,3 +1,4 @@
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
 import Icon from 'components/shared/icon';
@@ -5,9 +6,12 @@ import Image from 'components/shared/image';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
 import Link from 'components/shared/link';
+import Notification from 'components/shared/notification';
 import { ButtonType } from 'components/shared/button/type';
+import { AuthServiceContext } from 'utils/services/service/authService';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import navBarPaths from 'utils/constants/navBarPaths';
+import { warningModalContent } from 'utils/constants/fakeData';
 import { AuthorizationPasswordProps, PageType } from './types';
 
 import styles from './authorizationPassword.module.scss';
@@ -15,28 +19,46 @@ import styles from './authorizationPassword.module.scss';
 export default function AuthorizationPassword({
   pageType = PageType.RESET_PASSWORD,
 }: AuthorizationPasswordProps): JSX.Element {
-  const [form] = Form.useForm();
   const router = useRouter();
-  // TODO {check user found or not}
-  const userDefine = true;
+  const [form] = Form.useForm();
+  const authService = useContext(AuthServiceContext);
 
-  const onFinish = async (): Promise<void> => {
-    const { email, code } = form.getFieldsValue();
-    // TODO {get input value}
-    console.log(email, code);
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [emailSentSuccessfully, setEmailSentSuccessfully] = useState<boolean>(
+    false
+  );
+
+  const onFinishCode = async (): Promise<void> => {
+    const email = router?.query?.email;
+    const { emailVerificationCode } = form.getFieldsValue();
+    const res = await authService.checkVerificationCode(
+      emailVerificationCode,
+      email
+    );
+    if (res?.success) {
+      router.push(`${navBarPaths.createNewPassword}?email=${email}`);
+    } else {
+      setErrorMessage(res?.message);
+    }
+  };
+
+  const onFinishMail = async (): Promise<void> => {
+    const { email } = form.getFieldsValue();
+    const res = await authService.sendRecoverPasswordEmail(email);
+    if (res?.success) {
+      router.push(`${navBarPaths.checkMail}?email=${email}`);
+    } else {
+      Notification(res?.error, warningModalContent.filedModalIcon);
+    }
+    setEmailSentSuccessfully(res?.success);
   };
 
   const isDisabled = (): boolean => {
     return (
+      emailSentSuccessfully ||
       !form.isFieldsTouched(true) ||
       !!form.getFieldsError().filter(({ errors }) => errors.length).length
     );
-  };
-
-  const checkEmail = (): void => {
-    if (userDefine && pageType === PageType.RESET_PASSWORD) {
-      router.push(navBarPaths.checkMail);
-    } else router.push(navBarPaths.createNewPassword);
   };
 
   return (
@@ -44,7 +66,12 @@ export default function AuthorizationPassword({
       <div className={styles.imageSection}>
         <div className={styles.whiteContainer}>
           <div className={styles.logoContainer}>
-            <Image src={imagesSvg.cryptoPoolLogo} width="260" height="100" />
+            <Image
+              src={imagesSvg.cryptoPoolLogo}
+              onClick={() => router.push(navBarPaths.login)}
+              width="260"
+              height="100"
+            />
           </div>
           <div className={styles.titleSection}>
             <div className={styles.titleIconContainer}>
@@ -67,10 +94,18 @@ export default function AuthorizationPassword({
             <Form
               form={form}
               initialValues={{ remember: true }}
-              onFinish={onFinish}
+              onFinish={
+                pageType === PageType.RESET_PASSWORD
+                  ? onFinishMail
+                  : onFinishCode
+              }
             >
               <Form.Item
-                name={pageType === PageType.RESET_PASSWORD ? 'email' : 'code'}
+                name={
+                  pageType === PageType.RESET_PASSWORD
+                    ? 'email'
+                    : 'emailVerificationCode'
+                }
                 className={styles.formItem}
               >
                 <Input
@@ -85,6 +120,9 @@ export default function AuthorizationPassword({
                   className={styles.formInput}
                 />
               </Form.Item>
+              {errorMessage && (
+                <span className={styles.errorMessage}>{errorMessage}</span>
+              )}
               <Form.Item shouldUpdate>
                 {() => (
                   <Button
@@ -97,7 +135,6 @@ export default function AuthorizationPassword({
                     htmlType="submit"
                     disabled={isDisabled()}
                     btnType={ButtonType.black}
-                    onClick={() => checkEmail()}
                   />
                 )}
               </Form.Item>

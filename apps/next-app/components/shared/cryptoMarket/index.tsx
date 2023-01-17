@@ -55,7 +55,7 @@ export default function CryptoMarket({
             <MarketCard
               imageSrc={imagesSvg.ethereum}
               status={Status.UPCOMING}
-              title="1 Ether Value :"
+              title="1 Ether Value:"
               value="$ 2,723.78"
             />
           </div>

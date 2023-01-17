@@ -1,6 +1,8 @@
 html:root {
+  --light_gray_100: #dccdcd;
   --rose_500: #e386e4;
   --rose_600: #b183ea;
+  --rose_700: #6d80f3;
   --black_300: #151515;
   --black_400: #202020;
   --black_500: #333232;
@@ -42,6 +44,8 @@ html:root {
   --gray_450: #a3a3a3;
   --gray_500: #969696;
   --gray_1000: #8b8b8b;
+  --gray_1050: #bcbcbc;
+  --gray_1100: #6a6a6a;
   --gray_550: #d9d9d9;
   --gray_600: #797979;
   --gray_650: #646464;
@@ -128,4 +132,9 @@ a {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   margin: 0;
   padding: 0;
+
+  .ant-notification-notice-closable .ant-notification-notice-message {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
 }

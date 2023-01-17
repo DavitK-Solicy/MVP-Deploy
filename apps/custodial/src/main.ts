@@ -32,7 +32,7 @@ app.use(
   })
 );
 
-mongoose.connect(env.databaseConnnectionUrl, {
+mongoose.connect(env.databaseConnectionUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,

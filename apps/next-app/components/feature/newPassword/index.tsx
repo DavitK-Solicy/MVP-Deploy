@@ -1,15 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
 import Button from 'components/shared/button';
 import { ButtonType } from 'components/shared/button/type';
 import Input from 'components/shared/input';
-import notification from 'components/shared/notification';
+import Notification from 'components/shared/notification';
 import Image from 'components/shared/image';
 import Icon from 'components/shared/icon';
 import { AuthServiceContext } from 'utils/services/service/authService';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import navBarPaths from 'utils/constants/navBarPaths';
+import { warningModalContent } from 'utils/constants/fakeData';
 
 import styles from './newPassword.module.scss';
 
@@ -18,31 +19,26 @@ export default function NewPassword(): JSX.Element {
   const authService = useContext(AuthServiceContext);
   const [form] = Form.useForm();
 
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(
+    false
+  );
+
   const onFinish = async (): Promise<void> => {
     const { password } = form.getFieldsValue();
-    const emailVerificationToken = router.asPath.split('=')[1];
+    const email = router.asPath.split('=')[1];
 
-    const res = await authService.updateForgottenPassword(
-      password,
-      emailVerificationToken
-    );
+    const res = await authService.updateForgottenPassword(password, email);
 
     if (res?.success) {
-      notification({
-        messageType: 'success',
-        message: 'Success',
-        description: res.message,
-        className: styles.notification,
-      });
+      Notification(res.message, warningModalContent.acceptModalIcon);
 
       router.push(navBarPaths.login);
     } else {
-      notification({
-        messageType: 'error',
-        message: 'Oops!',
-        description: res?.error ?? 'Something went wrong, please try again',
-        className: styles.notification,
-      });
+      Notification(
+        res?.error ?? 'Something went wrong, please try again',
+        warningModalContent.filedModalIcon
+      );
     }
   };
 
@@ -74,46 +70,66 @@ export default function NewPassword(): JSX.Element {
               onFinish={onFinish}
             >
               <div className={styles.passwordContainer}>
-                <Form.Item name="password" className={styles.formItem}>
+                <div className={styles.formItem}>
                   <div className={styles.eyeIcon}>
-                    <Icon src={imagesSvg.hiddenIcon} width={23} height={23} />
+                    <Icon
+                      src={imagesSvg.hiddenIcon}
+                      className={styles.eye}
+                      width={23}
+                      height={23}
+                      onClick={() => {
+                        setPasswordVisible((prevState) => !prevState);
+                      }}
+                    />
                   </div>
-                  <Input
-                    className={styles.formInput}
-                    type="password"
-                    label="Enter New Password"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="confirm"
-                  className={styles.formItem}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Passwords don’t match.',
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve();
-                        }
-
-                        return Promise.reject(
-                          new Error('Passwords don’t match.')
-                        );
+                  <Form.Item name="password" className={styles.formItem}>
+                    <Input
+                      className={styles.formInput}
+                      type={passwordVisible ? 'text' : 'password'}
+                      label="Enter New Password"
+                    />
+                  </Form.Item>
+                </div>
+                <div className={styles.formItem}>
+                  <div className={styles.eyeIcon}>
+                    <Icon
+                      className={styles.eye}
+                      src={imagesSvg.hiddenIcon}
+                      width={23}
+                      height={23}
+                      onClick={() => {
+                        setConfirmPasswordVisible((prevState) => !prevState);
+                      }}
+                    />
+                  </div>
+                  <Form.Item
+                    name="confirm"
+                    className={styles.formItem}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Passwords don’t match.',
                       },
-                    }),
-                  ]}
-                >
-                  <div className={styles.eyeIcon}>
-                    <Icon src={imagesSvg.hiddenIcon} width={23} height={23} />
-                  </div>
-                  <Input
-                    className={styles.formInput}
-                    type="password"
-                    label="Confirm password"
-                  />
-                </Form.Item>
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('password') === value) {
+                            return Promise.resolve();
+                          }
+
+                          return Promise.reject(
+                            new Error('Passwords don’t match.')
+                          );
+                        },
+                      }),
+                    ]}
+                  >
+                    <Input
+                      className={styles.formInput}
+                      type={confirmPasswordVisible ? 'text' : 'password'}
+                      label="Confirm password"
+                    />
+                  </Form.Item>
+                </div>
               </div>
               <Form.Item shouldUpdate>
                 {() => (

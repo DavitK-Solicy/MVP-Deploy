@@ -13,11 +13,10 @@ export enum AuthProviders {
 
 export interface User {
   _id: string;
-  username: string;
+  fullName: string;
   email: string;
   role: UserRoles;
   bankAccount: UserBankAccount;
   authProvider: AuthProviders;
-  emailVerificationToken: string;
   referralCode: string;
 }

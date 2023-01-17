@@ -1,17 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
 import Link from 'components/shared/link';
 import Button from 'components/shared/button';
 import { ButtonType } from 'components/shared/button/type';
 import Input from 'components/shared/input';
+import Icon from 'components/shared/icon';
 import Image from 'components/shared/image';
-import notification from 'components/shared/notification';
+import Notification from 'components/shared/notification';
 import * as localStorage from 'utils/services/localStorageService';
 import { AuthServiceContext } from 'utils/services/service/authService';
 import localStorageKeys from 'utils/constants/localStorageKeys';
 import navBarPaths from 'utils/constants/navBarPaths';
 import { imagesPng, imagesSvg } from 'utils/constants/imagesSrc';
+import { warningModalContent } from 'utils/constants/fakeData';
 import { AuthorizationProps } from './types';
 
 import styles from './authorization.module.scss';
@@ -23,6 +25,8 @@ export default function Authorization({
   const authService = useContext(AuthServiceContext);
   const router = useRouter();
 
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
   const isDisabled = (): boolean => {
     return (
       !form.isFieldsTouched(true) ||
@@ -31,27 +35,23 @@ export default function Authorization({
   };
 
   const onFinish = async (): Promise<void> => {
-    const { email, password } = form.getFieldsValue();
+    const { email, password, fullName } = form.getFieldsValue();
 
     let res;
     if (isLogin) {
       res = await authService.login(email, password);
     } else {
-      res = await authService.signup(email, password);
+      res = await authService.signup(fullName, email, password);
     }
 
     if (res?.success) {
-      router.push('/');
       localStorage.setItemInLocalStorage(
         localStorageKeys.EMAIL,
         res?.user?.email
       );
+      router.push('/');
     } else {
-      notification({
-        messageType: 'error',
-        message: 'Oops!',
-        description: res?.error,
-      });
+      Notification(res?.error, warningModalContent.filedModalIcon);
     }
   };
 
@@ -80,6 +80,25 @@ export default function Authorization({
             onFinish={onFinish}
           >
             <div className={styles.inputsContainer}>
+              {!isLogin && (
+                <Form.Item
+                  name="fullName"
+                  className={styles.formItem}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter Full Name',
+                    },
+                    {
+                      required: true,
+                      message: 'Please enter your email id address.',
+                    },
+                  ]}
+                >
+                  <Input label="Full Name" className={styles.formEmailInput} />
+                </Form.Item>
+              )}
+
               <Form.Item
                 name="email"
                 className={styles.formItem}
@@ -96,27 +115,39 @@ export default function Authorization({
               >
                 <Input
                   type="email"
-                  label="Username"
+                  label="Email"
                   className={styles.formEmailInput}
                 />
               </Form.Item>
-
-              <Form.Item
-                name="password"
-                className={styles.formItem}
-                rules={[
-                  {
-                    message: 'The input is not valid password!',
-                  },
-                  { required: true, message: 'Please enter your password.' },
-                ]}
-              >
-                <Input
-                  type="password"
-                  label="Password"
-                  className={styles.formInput}
-                />
-              </Form.Item>
+              <div className={styles.formItem}>
+                <div className={styles.eyeIcon}>
+                  <Icon
+                    src={imagesSvg.hiddenIcon}
+                    className={styles.eye}
+                    width={23}
+                    height={23}
+                    onClick={() => {
+                      setPasswordVisible(!passwordVisible);
+                    }}
+                  />
+                </div>
+                <Form.Item
+                  name="password"
+                  className={styles.formItem}
+                  rules={[
+                    {
+                      message: 'The input is not valid password!',
+                    },
+                    { required: true, message: 'Please enter your password.' },
+                  ]}
+                >
+                  <Input
+                    type={passwordVisible ? 'text' : 'password'}
+                    label="Password"
+                    className={styles.formInput}
+                  />
+                </Form.Item>
+              </div>
             </div>
             {isLogin && (
               <div className={styles.linkSection}>

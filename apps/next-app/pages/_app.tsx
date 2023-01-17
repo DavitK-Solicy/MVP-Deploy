@@ -15,11 +15,11 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <SEO />
       <GoogleOAuthProvider clientId={env.googleApiKey}>
         <AuthProvider>
-        <GlobalServices>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </GlobalServices>
+          <GlobalServices>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </GlobalServices>
         </AuthProvider>
       </GoogleOAuthProvider>
     </>

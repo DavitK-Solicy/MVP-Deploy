@@ -28,6 +28,7 @@ export const imagesSvg = {
   merchantIcon: `merchant.svg`,
   hiddenIcon: `hidden.svg`,
   successIcon: `successProfile.svg`,
+  rejectIcon: `reject.svg`,
   rupeeIcon: `rupi.svg`,
   edit: `edit.svg`,
   income: `sales.svg`,
@@ -75,4 +76,5 @@ export const imagesSvg = {
   search: 'search.svg',
   userCard: 'cardUserIcon.svg',
   bankCard: 'cardBankIcon.svg',
+  closeNotification: 'closeNotification.svg',
 };

@@ -107,6 +107,19 @@
         border: 1px solid var(--gray_600);
       }
 
+      .eyeIcon {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        top: 20px;
+  
+        .eye {
+          z-index: 50 !important;
+          cursor: pointer;
+        }
+      }
+
       .formEmailInput {
         border-radius: 10px;
         height: 40px;

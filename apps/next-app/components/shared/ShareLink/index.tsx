@@ -6,6 +6,7 @@ import {
 import Icon from 'components/shared/icon';
 import WhiteBox from 'components/shared/whiteBox';
 import Button from 'components/shared/button';
+import Notification from 'components/shared/notification';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 
 import styles from './sharedLink.module.scss';
@@ -52,6 +53,7 @@ export default function SharedLink(): JSX.Element {
               className={styles.button}
               img={imagesSvg.copy}
               text="Copy"
+              onClick={() => Notification('Link is copied to clipbord')}
             />
           </div>
         </div>

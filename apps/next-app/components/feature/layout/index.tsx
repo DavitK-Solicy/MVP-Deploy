@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import Footer from 'components/feature/footer';
 import Header from 'components/feature/header';
@@ -9,6 +9,7 @@ import { UserServiceContext } from 'utils/services/service/userService';
 import * as localStorage from 'utils/services/localStorageService';
 import { AuthContext } from 'utils/context/auth/context';
 import { getItemFromLocalStorage } from 'utils/services/localStorageService';
+import { User } from 'utils/model/user';
 import { LayoutProps } from './types';
 
 import styles from './layout.module.scss';
@@ -19,13 +20,19 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
   const userService = useContext(UserServiceContext);
   const isAuthorized = useContext(AuthContext).authorized;
 
+  const [currentUser, setCurrentUser] = useState<User>();
+
   const currentUserChecking = async (): Promise<void> => {
     const token = getItemFromLocalStorage(
       localStorageKeys.TOKEN_KEY
     ).toString();
     if (token) {
       const res = await userService.getCurrentUser();
-      if (!res?.success) localStorage.clearLocalStorage();
+      if (res?.success) {
+        setCurrentUser(res.data);
+      } else {
+        localStorage.clearLocalStorage();
+      }
     }
   };
 
@@ -37,7 +44,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
     <div className={styles.generalModeBg}>
       {isAuthPath && <SideBar />}
       <div className={styles.rightSection}>
-        {isAuthPath ? <Header /> : <div className={styles.header} />}
+        {isAuthPath && <Header fullName={currentUser?.fullName} />}
         <div className={styles.context}>{children}</div>
         <Footer />
       </div>

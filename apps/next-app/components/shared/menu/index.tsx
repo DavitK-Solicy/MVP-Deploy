@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import Icon from 'components/shared/icon';
-import notification from 'components/shared/notification';
+import Notification from 'components/shared/notification';
 import { AuthServiceContext } from 'utils/services/service/authService';
 import { removeItemFromLocalStorage } from 'utils/services/localStorageService';
 import localStorageKeys from 'utils/constants/localStorageKeys';
 import navBarPaths from 'utils/constants/navBarPaths';
+import { warningModalContent } from 'utils/constants/fakeData';
 import { MenuItemType, MenuType } from './types';
 
 import styles from './menu.module.scss';
@@ -20,19 +21,14 @@ export default function Menu({ menu, changeVisible }: MenuType): JSX.Element {
       const logout = await authService.logout();
 
       if (logout?.success) {
-        notification({
-          messageType: 'success',
-          message: 'Success',
-          description: logout.message,
-        });
+        Notification(logout.message, warningModalContent.acceptModalIcon);
         removeItemFromLocalStorage(localStorageKeys.TOKEN_KEY);
         router.push(navBarPaths.login);
       } else {
-        notification({
-          messageType: 'error',
-          message: 'Oops!',
-          description: logout?.error ?? 'You are not registered',
-        });
+        Notification(
+          logout?.error ?? 'You are not registered',
+          warningModalContent.filedModalIcon
+        );
       }
     } else {
       router.push(path);

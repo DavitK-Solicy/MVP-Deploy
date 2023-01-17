@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import env from 'utils/constants/env';
 
 export default function SEO(): JSX.Element {
   return (
@@ -33,7 +32,6 @@ export default function SEO(): JSX.Element {
         key="twdescription"
       />
       <meta name="twitter:image" content="image/logo.png" key="twimage" />
-      <meta property="og:url" content={env.friendsInviteLink} key="ogurl" />
       <meta property="og:image" content="image/logo.png" key="ogimage" />
       <meta property="og:site_name" content="CryptoPool" key="ogsitename" />
     </Head>
