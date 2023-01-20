@@ -1,5 +1,5 @@
 .apiModal {
-  div {
+  div:nth-child(2) {
     border-radius: 30px;
     max-width: 375px;
   }
@@ -43,55 +43,28 @@
     }
 
     .otherPayments {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       max-width: 80px;
-      background: var(--modal_button_gradient);
-      padding: 5px 0 7px 0;
-      border-radius: 6px;
       margin-bottom: 20px;
+
+      .checkedIcon {
+        position: absolute;
+        right: -10px;
+        top: -10px;
+      }
     }
 
     .cryptoCurrency {
-      display: flex;
-      max-width: 290px;
-      width: 100%;
-      padding: 4px 0;
-      column-gap: 3px;
-      background: var(--modal_button_gradient);
-      border-radius: 6px;
-      margin-bottom: 30px;
       position: relative;
-
-      .textSection {
-        display: flex;
-        flex-direction: column;
-        row-gap: 1px;
-
-        span:nth-child(1) {
-          color: var(--white_900);
-          font-weight: 500;
-          font-size: 22px;
-          line-height: 26px;
-        }
-
-        span:nth-child(2) {
-          color: var(--white_900);
-          font-weight: 400;
-          font-size: 10px;
-          line-height: 12px;
-        }
-      }
+      margin-bottom: 25px;
 
       .checkedIcon {
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 2px solid var(--white_500);
-        background-color: var(--green_150);
-        width: 23px;
-        height: 23px;
         position: absolute;
         right: -13px;
         top: -11px;
@@ -109,6 +82,7 @@
       justify-content: center;
       align-items: center;
       margin: 0 auto;
+      cursor: pointer;
 
       .arrowRight {
         width: 40px;

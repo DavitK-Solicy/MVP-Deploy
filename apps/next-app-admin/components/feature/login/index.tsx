@@ -1,35 +1,40 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
-import notification from 'components/shared/notification';
 import Image from 'components/shared/image';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
+import NotificationCard from 'components/shared/notificationCard';
+import Modal from 'components/shared/modal';
+import { ButtonType } from 'components/shared/button/type';
+import Icon from 'components/shared/icon';
 import { AuthServiceContext } from 'utils/services/service/authService';
 import { imagesPng, imagesSvg } from 'utils/constants/imagesSrc';
-import { ButtonType } from 'components/shared/button/type';
 
 import styles from './login.module.scss';
 
 export default function Login(): JSX.Element {
   const authService = useContext(AuthServiceContext);
   const router = useRouter();
-
   const [form] = Form.useForm();
+
+  const [openNotificationModal, setOpenNotificationModal] = useState<boolean>(
+    false
+  );
+  const [error, setError] = useState<string>();
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
 
   const onFinish = async (): Promise<void> => {
     const { email, password } = form.getFieldsValue();
 
     try {
       const res = await authService.login(email, password);
-      if (res.success) {
+      if (res?.success) {
         router.push('/');
       } else {
-        notification({
-          messageType: 'error',
-          message: 'Oops!',
-          description: res?.error,
-        });
+        setOpenNotificationModal(true);
+        setError(res?.error);
       }
     } catch (err) {
       console.log(err);
@@ -49,13 +54,34 @@ export default function Login(): JSX.Element {
 
   return (
     <div>
+      {openNotificationModal && (
+        <Modal
+          closable={false}
+          bodyStyle={{
+            paddingTop: 25,
+            paddingLeft: 30,
+            paddingBottom: 15,
+            paddingRight: 20,
+          }}
+          isModalVisible={openNotificationModal}
+          onCancel={() => setOpenNotificationModal(false)}
+          className={styles.modal}
+        >
+          <NotificationCard
+            title="error"
+            message={error}
+            setOpen={setOpenNotificationModal}
+            isModal
+          />
+        </Modal>
+      )}
       <div className={styles.loginPage}>
         <div className={styles.bannerImage}>
           <Image src={imagesPng.loginPageBanner} width="830" height="750" />
         </div>
         <div className={styles.loginFormContainer}>
           <div className={styles.logoContainer}>
-            <Image src={imagesSvg.cryptoPoolLogo} width="260" height="100" />
+            <Image src={imagesSvg.websiteLogo} width="260" height="100" />
           </div>
           <div className={styles.loginHeader}>Login</div>
           <Form
@@ -84,23 +110,35 @@ export default function Login(): JSX.Element {
                   className={styles.formEmailInput}
                 />
               </Form.Item>
-
-              <Form.Item
-                name="password"
-                className={styles.formItem}
-                rules={[
-                  {
-                    message: 'The input is not valid password!',
-                  },
-                  { required: true, message: 'Please enter your password.' },
-                ]}
-              >
-                <Input
-                  type="password"
-                  label="Password"
-                  className={styles.formInput}
-                />
-              </Form.Item>
+              <div className={styles.formItem}>
+                <div className={styles.eyeIcon}>
+                  <Icon
+                    src={imagesSvg.hiddenIcon}
+                    className={styles.eye}
+                    width={23}
+                    height={23}
+                    onClick={() => {
+                      setPasswordVisible(!passwordVisible);
+                    }}
+                  />
+                </div>
+                <Form.Item
+                  name="password"
+                  className={styles.formItem}
+                  rules={[
+                    {
+                      message: 'The input is not valid password!',
+                    },
+                    { required: true, message: 'Please enter your password.' },
+                  ]}
+                >
+                  <Input
+                    type={passwordVisible ? 'text' : 'password'}
+                    label="Password"
+                    className={styles.formInput}
+                  />
+                </Form.Item>
+              </div>
             </div>
 
             <Form.Item shouldUpdate>

@@ -49,6 +49,10 @@ export default function Authorization({
         localStorageKeys.EMAIL,
         res?.user?.email
       );
+      localStorage.setItemInLocalStorage(
+        localStorageKeys.WALLET,
+        res?.user?.primaryWallet?.address
+      );
       router.push('/');
     } else {
       Notification(res?.error, warningModalContent.filedModalIcon);
@@ -88,10 +92,6 @@ export default function Authorization({
                     {
                       required: true,
                       message: 'Please enter Full Name',
-                    },
-                    {
-                      required: true,
-                      message: 'Please enter your email id address.',
                     },
                   ]}
                 >

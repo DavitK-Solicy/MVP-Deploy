@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { AuthContext } from './context';
+import { UserServiceContext } from 'utils/services/service/userService';
 import * as localStorage from 'utils/services/localStorageService';
 import localStorageKeys from 'utils/constants/localStorageKeys';
 import navBarPaths from 'utils/constants/navBarPaths';
@@ -12,17 +13,43 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const router = useRouter();
+  const userService = useContext(UserServiceContext);
 
-  const [authData, setAuthorized] = useState({
+  const getAuthToken = (): string | JSON => {
+    return localStorage.getItemFromLocalStorage(localStorageKeys.TOKEN_KEY);
+  };
+
+  const [authData, setAuthorized] = useState<AuthContext>({
     authorized: !!getAuthToken(),
     path: '/',
+    user: null,
   });
 
-  function getAuthToken(): string | JSON {
-    return localStorage.getItemFromLocalStorage(localStorageKeys.TOKEN_KEY);
-  }
+  const getContextUser = async (): Promise<void> => {
+    if (getAuthToken()) {
+      const res = await userService.getCurrentUser();
+
+      if (res?.error) {
+        setAuthorized({
+          ...authData,
+          authorized: false,
+          user: null,
+        });
+
+        localStorage.clearLocalStorage();
+        router.push(navBarPaths.login);
+      }
+
+      setAuthorized({
+        ...authData,
+        authorized: true,
+        user: res?.data,
+      });
+    }
+  };
 
   const redirectTo = (path: string): void => {
+    getContextUser();
     const authToken = getAuthToken();
 
     if (authToken === '') {
@@ -34,10 +61,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       if (withoutAuthRoutes.includes(path.split('?')[0])) {
         router.push(path);
       } else {
-        setAuthorized({
-          ...authData,
-          path: path,
-        });
+        localStorage.clearLocalStorage();
         router.push(navBarPaths.login);
       }
     } else {
@@ -52,6 +76,10 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       }
     }
   };
+
+  useEffect(() => {
+    getContextUser();
+  }, []);
 
   useEffect(() => {
     redirectTo(router.asPath);

@@ -1,3 +1,5 @@
+import Orders from 'components/feature/orders';
+
 export default function index(): JSX.Element {
-  return <div>Orders</div>;
+  return <Orders />;
 }

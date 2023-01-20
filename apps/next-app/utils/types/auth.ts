@@ -6,3 +6,9 @@ export interface AuthResponse {
   error?: string;
   user?: User;
 }
+
+export interface GeneralResponse {
+  success: boolean;
+  count?: number;
+  error?: string;
+}

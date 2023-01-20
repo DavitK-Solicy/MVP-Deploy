@@ -47,7 +47,7 @@ export default function Clock(): JSX.Element {
     <span className={styles.container}>
       <span>
         {date.getDate()} {monthNames[date.getMonth()]} {date.getFullYear()}
-        &nbsp; | &nbsp;
+        &nbsp; &nbsp;| &nbsp;
       </span>
       <span> {date.toLocaleTimeString()} IST</span>
     </span>

@@ -9,7 +9,14 @@ export interface IUserService {
   getCurrentUser(): Promise<{
     error?: string;
     success: boolean;
-    data: User;
+    data?: User;
+  }>;
+  updateEmbed(
+    embed: string
+  ): Promise<{
+    success: boolean;
+    data: string;
+    message: string;
   }>;
 }
 
@@ -25,10 +32,28 @@ export const UserService = ({ children }: ContextProps) => {
     async getCurrentUser(): Promise<{
       error?: string;
       success: boolean;
-      data: User;
+      data?: User;
     }> {
       try {
         const response = await axiosInstance.get(`/users/me`);
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async updateEmbed(
+      embed: string
+    ): Promise<{
+      success: boolean;
+      data: string;
+      message: string;
+    }> {
+      try {
+        const response = await axiosInstance.put('/users/update-embed', {
+          embed,
+        });
 
         return response.data;
       } catch (err) {

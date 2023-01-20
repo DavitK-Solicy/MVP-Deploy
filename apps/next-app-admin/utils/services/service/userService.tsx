@@ -5,6 +5,7 @@ import { User, UserBankAccount } from '../../model/user';
 import { Contextualizer } from '../contextualizer';
 import { ProvidedServices } from '../providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
+import { hashPassword } from 'utils';
 import { UserResponse } from 'types/user';
 
 export interface IUserService {
@@ -106,7 +107,7 @@ export const UserService = ({ children }: any) => {
         const response = await axiosInstance.post('/users/admin', {
           fullName,
           email,
-          password,
+          password: hashPassword(password),
           role,
           bankAccount,
         });

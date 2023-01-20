@@ -11,6 +11,11 @@ export enum AuthProviders {
   GOOGLE = 'google',
 }
 
+const embedType = {
+  otherPayment: '/image/otherPayments.svg',
+  cryptoCurrency: '/image/cryptoCurrency.svg',
+};
+
 const Schema = mongoose.Schema;
 const bankAccountSchema = new Schema({
   accountNumber: {
@@ -22,6 +27,25 @@ const bankAccountSchema = new Schema({
     default: null,
   },
   cardNumber: {
+    type: String,
+    default: null,
+  },
+});
+
+const walletSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    default: null,
+  },
+  address: {
+    type: String,
+    default: null,
+  },
+  mnemonic: {
+    type: String,
+    default: null,
+  },
+  privateKey: {
     type: String,
     default: null,
   },
@@ -66,6 +90,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
     default: shortid.generate,
+  },
+  embed: {
+    type: String,
+    default: embedType.otherPayment,
+  },
+  primaryWallet: {
+    type: walletSchema,
+    default: null,
   },
 });
 

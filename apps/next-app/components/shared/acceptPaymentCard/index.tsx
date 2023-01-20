@@ -4,7 +4,6 @@ import InvoiceModal from 'components/feature/invoiceModal';
 import ShareLinkModal from 'components/feature/shareLink';
 import ApiModal from 'components/feature/apiModal';
 import WhiteBox from 'components/shared/whiteBox';
-import ScanQRModal from 'components/feature/scanQRModal';
 import {
   PaymentModalType,
   paymentsModal,
@@ -20,7 +19,6 @@ export default function AcceptPaymentCard({
 }: AcceptPaymentCardProps): JSX.Element {
   const [openApiModal, setOpenApiModal] = useState<boolean>(false);
   const [openInvoiceModal, setOpenInvoiceModal] = useState<boolean>(false);
-  const [openScanQRModal, setOpenScanQRModal] = useState<boolean>(false);
   const [openLinkModal, setOpenLinkModal] = useState<boolean>(false);
 
   const handlePayments = (type: PaymentModalType): void => {
@@ -30,9 +28,6 @@ export default function AcceptPaymentCard({
         break;
       case PaymentModalType.INVOICE:
         setOpenInvoiceModal(true);
-        break;
-      case PaymentModalType.QR:
-        setOpenScanQRModal(true);
         break;
       case PaymentModalType.SHARE:
         setOpenLinkModal(true);
@@ -53,11 +48,6 @@ export default function AcceptPaymentCard({
       <InvoiceModal
         open={openInvoiceModal}
         setOpen={setOpenInvoiceModal}
-        setOpenParentModal={setOpen}
-      />
-      <ScanQRModal
-        open={openScanQRModal}
-        setOpen={setOpenScanQRModal}
         setOpenParentModal={setOpen}
       />
       <ShareLinkModal

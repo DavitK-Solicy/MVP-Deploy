@@ -20,6 +20,7 @@ import {
   checkVerificationCode,
   updateForgottenPassword,
   loginForAdmin,
+  updateEmbed,
 } from './User.api.handlers';
 
 const router = Router();
@@ -33,6 +34,7 @@ router.post('/logout', requireAuth, logout);
 router.post('/login/admin', loginForAdmin);
 router.put('/', requireAuth, updateCurrentUser);
 router.put('/admin/update-user/:id', requireAuthAdmin, updateUserById);
+router.put('/update-embed', requireAuth, updateEmbed);
 router.delete('/admin/:id', requireAuthAdmin, deleteUser);
 router.post('/signup', signup);
 router.post('/login', login);

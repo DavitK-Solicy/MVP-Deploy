@@ -3,17 +3,9 @@ import mongoose from 'mongoose';
 import bodyparser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
+import WalletRouter from '../src/api/WalletManager';
 import env from './util/constants/env';
-import WalletRouter from "../src/api/WalletManager";
 
-declare module 'express-session' {
-  interface SessionData {
-    oauthRequestToken?: string;
-    oauthRequestTokenSecret?: string;
-    oauthAccessToken?: string;
-  }
-}
 const app = express();
 
 app.use(express.json());
@@ -24,13 +16,6 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(
-  session({
-    secret: env.sessionSecret,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
 
 mongoose.connect(env.databaseConnectionUrl, {
   useNewUrlParser: true,
@@ -46,5 +31,5 @@ app.use(bodyparser.json());
 app.use('/wallets', WalletRouter);
 
 app.listen(env.port, () => {
-  console.log('Server running on port 8080');
+  console.log(`Server running on port ${env.port}`);
 });

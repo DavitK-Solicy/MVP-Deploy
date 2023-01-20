@@ -1,34 +1,30 @@
 import { Context } from 'react';
-import { Contextualizer } from 'utils/services/contextualizer';
+import { OrderDataResponse } from 'types/orders';
+import { Contextualizer } from 'utils/services//contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
-import { ContextProps } from 'types/user';
-import { OrderType } from 'types/orders';
 
-export interface IOrdersService {
-  getAllOrders(): Promise<{
-    success: boolean;
-    data: Array<OrderType>;
-    count: number;
-  }>;
+export interface IOrderService {
+  getAllOrders(limit?: number, offset?: number): Promise<OrderDataResponse>;
 }
 
-export const OrdersServiceContext: Context<IOrdersService> = Contextualizer.createContext(
-  ProvidedServices.OrderService
-);
+export const OrderServiceContext: Context<
+  IOrderService | undefined
+> = Contextualizer.createContext(ProvidedServices.OrderService);
 
-export const useOrdersServices = (): IOrdersService =>
-  Contextualizer.use<IOrdersService>(ProvidedServices.OrderService);
+export const useOrderServices = () =>
+  Contextualizer.use<IOrderService>(ProvidedServices.OrderService);
 
-export const OrderService = ({ children }: ContextProps) => {
+export const OrderService = ({ children }: any) => {
   const orderService = {
-    async getAllOrders(): Promise<{
-      success: boolean;
-      data: Array<OrderType>;
-      count: number;
-    }> {
+    async getAllOrders(
+      limit: number = 0,
+      offset: number = 0
+    ): Promise<OrderDataResponse> {
       try {
-        const response = await axiosInstance.get('/orders/');
+        const response = await axiosInstance.get(
+          `/orders?limit=${limit}&offset=${offset}`
+        );
 
         return response.data;
       } catch (err) {
@@ -36,10 +32,9 @@ export const OrderService = ({ children }: ContextProps) => {
       }
     },
   };
-
   return (
-    <OrdersServiceContext.Provider value={orderService}>
+    <OrderServiceContext.Provider value={orderService}>
       {children}
-    </OrdersServiceContext.Provider>
+    </OrderServiceContext.Provider>
   );
 };

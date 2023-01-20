@@ -1,17 +1,58 @@
+import { useContext, useState } from 'react';
 import Modal from 'components/shared/modal';
 import Icon from 'components/shared/icon';
 import Image from 'components/shared/image';
 import Notification from 'components/shared/notification';
+import { AuthContext } from 'utils/context/auth/context';
+import { UserServiceContext } from 'utils/services/service/userService';
 import { imagesSvg } from 'utils/constants/imagesSrc';
-import { ApiModalProps } from './types';
+import { ApiModalProps, EmbedType } from './types';
 
 import styles from './apiModal.module.scss';
+
+const embedType: EmbedType = {
+  otherPayment: '/image/otherPayments.svg',
+  cryptoCurrency: '/image/cryptoCurrency.svg',
+};
 
 export default function ApiModal({
   open,
   setOpen,
   setOpenParentModal,
 }: ApiModalProps): JSX.Element {
+  const userService = useContext(UserServiceContext);
+  const { user } = useContext(AuthContext);
+
+  const [selectedEmbed, setSelectedEmbed] = useState<{
+    otherPayment: boolean;
+    cryptoCurrency: boolean;
+  }>({
+    otherPayment: user?.embed === embedType.otherPayment,
+    cryptoCurrency: user?.embed === embedType.cryptoCurrency,
+  });
+
+  const setEmbed = (embed: string): void => {
+    switch (embed) {
+      case embedType.cryptoCurrency:
+        setSelectedEmbed({
+          otherPayment: false,
+          cryptoCurrency: true,
+        });
+        break;
+      default:
+        setSelectedEmbed({
+          otherPayment: true,
+          cryptoCurrency: false,
+        });
+        break;
+    }
+  };
+
+  const updateEmbed = async (embed: string): Promise<void> => {
+    const res = await userService.updateEmbed(embed);
+    if (res?.success) setEmbed(res.data);
+  };
+
   return (
     <Modal
       isModalVisible={open}
@@ -33,21 +74,31 @@ export default function ApiModal({
           application
         </p>
         <div className={styles.otherPayments}>
-          <Image src={imagesSvg.otherPaymentIcon} width={45} height={26} />
+          <Image
+            src={imagesSvg.otherPaymentIcon}
+            onClick={() => updateEmbed(embedType.otherPayment)}
+            width={100}
+            height={50}
+          />
+          {selectedEmbed.otherPayment && (
+            <div className={styles.checkedIcon}>
+              <Icon src={imagesSvg.mark} width={23} height={23} />
+            </div>
+          )}
         </div>
-
-        <div className={styles.cryptoCurrency}>
-          <Image src={imagesSvg.cryptoCurrency} width={49} height={49} />
-          <div className={styles.textSection}>
-            <span>Pay in Cryptocurrency</span>
-            <span>Safe & Secure by CryptoPool</span>
-          </div>
-          <div className={styles.checkedIcon}>
-            <Icon src={imagesSvg.checkIcon} width={11} height={8} />
-          </div>
+        <div
+          className={styles.cryptoCurrency}
+          onClick={() => updateEmbed(embedType.cryptoCurrency)}
+        >
+          <Image src={imagesSvg.cryptoCurrency} width={315} height={70} />
+          {selectedEmbed.cryptoCurrency && (
+            <div className={styles.checkedIcon}>
+              <Icon src={imagesSvg.mark} width={23} height={23} />
+            </div>
+          )}
         </div>
         <div className={styles.copyButton}>
-          <span onClick={() => Notification('Link is copied to clipbord')}>
+          <span onClick={() => Notification('Link is copied to clipboard')}>
             Copy the API Link
           </span>
           <div className={styles.arrowRight}>

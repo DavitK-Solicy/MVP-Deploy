@@ -1,17 +1,53 @@
-import { Form } from 'antd';
+import { useContext, useState } from 'react';
+import { Form, Radio } from 'antd';
 import Input from 'components/shared/input';
+import Notification from 'components/shared/notification';
 import Icon from 'components/shared/icon';
-import { invoiceItems, InvoiceItem } from 'utils/constants/paymentsModal';
+import { InvoiceServiceContext } from 'utils/services/service/invoiceService';
+import {
+  invoiceItems,
+  InvoiceItem,
+  InvoiceItemType,
+} from 'utils/constants/paymentsModal';
 import { imagesSvg } from 'utils/constants/imagesSrc';
+import { warningModalContent } from 'utils/constants/fakeData';
 
 import styles from './invoice.module.scss';
 
 export default function Invoice(): JSX.Element {
+  const invoiceService = useContext(InvoiceServiceContext);
   const [form] = Form.useForm();
 
+  const [currency, setCurrency] = useState<InvoiceItemType>(
+    InvoiceItemType.Dollar
+  );
+
   const onFinish = async (): Promise<void> => {
-    const { name, emailId, walletAddress, amount } = form.getFieldsValue();
-    console.log(name, emailId, walletAddress, amount);
+    const {
+      name,
+      emailId,
+      walletAddress,
+      amount,
+      currency,
+    } = form.getFieldsValue();
+
+    const res = await invoiceService.sendInvoice({
+      name,
+      emailId,
+      walletAddress,
+      amount: { value: amount, currency },
+    });
+
+    Notification(
+      res?.message,
+      res.success
+        ? warningModalContent.acceptModalIcon
+        : warningModalContent.filedModalIcon
+    );
+  };
+
+  const changeCurrency = (type: InvoiceItemType): void => {
+    setCurrency(type);
   };
 
   return (
@@ -25,55 +61,102 @@ export default function Invoice(): JSX.Element {
             initialValues={{ remember: true }}
             onFinish={onFinish}
           >
-            <div className={styles.inputsContainer}>
-              <Form.Item name="name" className={styles.formItem}>
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter  Name',
+                },
+              ]}
+            >
+              <Input
+                type="text"
+                label="Name"
+                className={styles.formElement}
+                placeholder="Name of the person"
+              />
+            </Form.Item>
+            <Form.Item
+              name="emailId"
+              rules={[
+                {
+                  type: 'email',
+                  message: 'Invalid Email. Please try again.',
+                },
+                {
+                  required: true,
+                  message: 'Please enter your email address.',
+                },
+              ]}
+            >
+              <Input
+                type="email"
+                label="Email Id"
+                className={styles.formElement}
+                placeholder="Personemailid@gmail.com"
+              />
+            </Form.Item>
+            <Form.Item
+              name="walletAddress"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter  Wallet Address',
+                },
+              ]}
+            >
+              <Input
+                type="text"
+                label="Wallet Address"
+                className={styles.formElement}
+                placeholder="2MwxNhM96fey5BzNfyNvt..."
+              />
+            </Form.Item>
+            <div className={styles.amountSection}>
+              <Form.Item
+                name="amount"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter  Amount',
+                  },
+                ]}
+              >
                 <Input
                   type="text"
-                  label="Name"
-                  className={styles.formElement}
-                  placeholder="Name of the person"
+                  label="Amount"
+                  className={styles.formElementAmount}
+                  placeholder="$245.56"
                 />
               </Form.Item>
-              <Form.Item name="emailId" className={styles.formItem}>
-                <Input
-                  type="email"
-                  label="Email Id"
-                  className={styles.formElement}
-                  placeholder="Personemailid@gmail.com"
-                />
+              <Form.Item
+                name="currency"
+                className={styles.formItem}
+                initialValue={InvoiceItemType.Dollar}
+              >
+                <Radio.Group
+                  name="currency"
+                  defaultValue={InvoiceItemType.Dollar}
+                  className={styles.currency}
+                >
+                  {invoiceItems.map(
+                    (e: InvoiceItem, index: number): JSX.Element => (
+                      <Radio.Button value={e.title}>
+                        <div
+                          key={index}
+                          className={`${styles.conversionType} ${
+                            currency === e.title && styles.activeConversion
+                          }`}
+                          onClick={() => changeCurrency(e.title)}
+                        >
+                          <Icon src={e.icon} width={25} height={25} />
+                        </div>
+                      </Radio.Button>
+                    )
+                  )}
+                </Radio.Group>
               </Form.Item>
-              <Form.Item name="walletAddress" className={styles.formItem}>
-                <Input
-                  type="text"
-                  label="Wallet Address"
-                  className={styles.formElement}
-                  placeholder="2MwxNhM96fey5BzNfyNvt..."
-                />
-              </Form.Item>
-              <div className={styles.amountSection}>
-                <Form.Item name="amount" className={styles.formItem}>
-                  <Input
-                    type="text"
-                    label="Amount"
-                    className={styles.formElementAmount}
-                    placeholder="$245.56"
-                  />
-                </Form.Item>
-                {invoiceItems.map(
-                  (e: InvoiceItem, index: number): JSX.Element => (
-                    <div>
-                      <div
-                        key={index}
-                        className={`${styles.conversionType} ${
-                          e.active && styles.activeConversion
-                        }`}
-                      >
-                        <Icon src={e.icon} width={25} height={25} />
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
             </div>
 
             <Form.Item shouldUpdate>

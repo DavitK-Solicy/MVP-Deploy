@@ -1,3 +1,5 @@
+import { Wallet } from 'types/wallet';
+
 export enum UserRoles {
   ADMIN = 'admin',
   MERCHANT = 'merchant',
@@ -21,5 +23,7 @@ export interface User {
   role: UserRoles;
   bankAccount: UserBankAccount;
   authProvider: AuthProviders;
+  primaryWalletId: Wallet;
   referralCode: string;
+  embed: string;
 }

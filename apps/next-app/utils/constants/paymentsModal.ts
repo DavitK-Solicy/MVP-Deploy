@@ -17,14 +17,17 @@ export interface ConversionTypeProps {
 
 export interface InvoiceItem {
   icon: string;
-  title?: string;
-  active: boolean;
+  title: InvoiceItemType;
+}
+
+export enum InvoiceItemType {
+  Dollar = 'Dollar',
+  Rupee = 'Rupee',
 }
 
 export enum PaymentModalType {
   API = 'Api',
   INVOICE = 'Invoice',
-  QR = 'QR',
   SHARE = 'Share',
 }
 
@@ -44,14 +47,6 @@ export const paymentsModal: Array<PaymentsModalProps> = [
     href: '/',
     width: 26,
     height: 34,
-  },
-  {
-    type: PaymentModalType.QR,
-    icon: imagesSvg.generateQR,
-    title: 'Generate QR',
-    href: '/',
-    width: 35,
-    height: 33,
   },
   {
     type: PaymentModalType.SHARE,
@@ -79,12 +74,10 @@ export const conversionType: Array<ConversionTypeProps> = [
 export const invoiceItems: Array<InvoiceItem> = [
   {
     icon: imagesSvg.rupeeIcon,
-    active: false,
-    title: 'Rupee',
+    title: InvoiceItemType.Rupee,
   },
   {
     icon: imagesSvg.dollarIcon,
-    active: true,
-    title: 'Dollars',
+    title: InvoiceItemType.Dollar,
   },
 ];

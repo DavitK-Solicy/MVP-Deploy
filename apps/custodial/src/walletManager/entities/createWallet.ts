@@ -1,11 +1,11 @@
-import { ethers } from "ethers"
-import { Wallet } from "../../models/Wallet";
+import { ethers } from 'ethers';
+import { Wallet } from '../../models/Wallet';
 
-const createWallet = () => {
+const createWallet = async () => {
   try {
-    const wallet = ethers.Wallet.createRandom()
-
-    return Wallet.create({
+    const wallet = ethers.Wallet.createRandom();
+    
+    return await Wallet.create({
       address: wallet.address,
       mnemonic: wallet.mnemonic.phrase,
       privateKey: wallet.privateKey,
@@ -14,6 +14,6 @@ const createWallet = () => {
     console.error(e);
     return false;
   }
-}
+};
 
 export default createWallet;

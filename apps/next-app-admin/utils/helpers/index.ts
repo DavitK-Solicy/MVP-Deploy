@@ -1,3 +1,8 @@
+import moment from 'moment';
+import { Moment } from 'moment';
+
+const dateFormat: string = 'YYYY-MM-DD';
+
 export const acceptWarningModal = (
   setWarningModalVisibility: () => void,
   setModalVisibility: () => void
@@ -18,4 +23,10 @@ export const handelCancel = (
   const formChanged =
     JSON.stringify(defaultValue) === JSON.stringify(selectedValue);
   formChanged ? UpdateModalVisibility() : WarningModalVisibility();
+};
+
+export const disabledCreateStartDate = (current: Moment): boolean => {
+  const customDate: Moment = moment(new Date(), dateFormat);
+
+  return current && current <= moment(customDate, dateFormat);
 };

@@ -1,19 +1,14 @@
 import { useState } from 'react';
 import { Menu, Table } from 'antd';
 import WhiteBox from 'components/shared/whiteBox';
-import Dropdown from 'components/shared/dropDown';
 import Modal from 'components/shared/modal';
 import NotificationCard from 'components/shared/notificationCard';
 import Icon from 'components/shared/icon';
-import SearchInput from 'components/shared/searchInput';
-import {
-  orderColumns,
-  tableData,
-  warningModalContent,
-} from 'utils/constants/fakeData';
+import ShareBar from 'components/shared/filterBar';
+import { orderColumns, warningModalContent } from 'utils/constants/fakeData';
 import { imagesSvg } from 'utils/constants/imagesSrc';
-import { OrderStatus } from 'types/orders';
-import DashboardTableProps, { ModalContent, OrderDataType } from './types';
+import { OrderData, OrderStatus } from 'types/orders';
+import DashboardTableProps, { ModalContent } from './types';
 
 import styles from './table.module.scss';
 
@@ -50,7 +45,7 @@ export default function DashboardTable({
     {
       title: 'Order Status',
       key: 'status',
-      render: (item: OrderDataType) => (
+      render: (item: OrderData) => (
         <div className={styles.orderStatusRow}>
           <span className={`${item.status}`}>{item.status}</span>
           {item.status != OrderStatus.DONE && (
@@ -87,7 +82,7 @@ export default function DashboardTable({
             paddingTop: 25,
             paddingLeft: 30,
             paddingBottom: 15,
-            paddingRight: 20,
+            paddingRight: 10,
           }}
           isModalVisible={open}
           onCancel={() => setOpen(false)}
@@ -104,31 +99,18 @@ export default function DashboardTable({
       )}
       <div className={styles.table}>
         <WhiteBox>
-          <div className={styles.header}>
-            <div className={styles.auxiliaryTools}>
+          {tableTitle && (
+            <div className={styles.header}>
               <span className={styles.title}>{tableTitle}</span>
-              <Dropdown overlay={menu}>
-                <span className={styles.filter}>
-                  <>
-                    <span>Filter</span>
-                    <Icon src={imagesSvg.filter} width={11} height={11} />
-                  </>
-                </span>
-              </Dropdown>
-              <span className={styles.arrows}>
-                <Icon src="arrows.svg" width={35} height={35} />
-              </span>
+              <ShareBar />
             </div>
-            <div className={styles.search}>
-              <SearchInput searchIcon={imagesSvg.search} className={styles.searchContainer} />
-            </div>
-          </div>
+          )}
           <div className={className}>
             <Table
-              dataSource={tableData}
+              dataSource={dataSource}
               columns={columns}
               pagination={{ total: countOfPage }}
-              // onChange={(e) => setCurrentPage(e.current)}
+              onChange={(e) => setCurrentPage(e.current)}
               rowKey={rowKey}
               {...rest}
             />

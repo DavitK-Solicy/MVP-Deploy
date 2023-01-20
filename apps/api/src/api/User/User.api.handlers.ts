@@ -3,6 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import * as googleAuth from 'google-auth-library';
 import { AuthProviders, User, UserRoles } from '../../models/User';
 import { MailOptions, sendEmail } from '../../util/email/email.util.nodemailer';
+import { axiosInstance } from '../../util/custodial';
 import env from '../../util/constants/env';
 
 const googleClient = new googleAuth.OAuth2Client(env.clientId);
@@ -15,7 +16,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const offset = Number(req.query.offset);
 
     const usersCount = await User.collection.countDocuments();
-    const users = await User.find().skip(offset).limit(limit);
+    const users = await User.find()
+      .skip(offset)
+      .limit(limit)
+      .populate('primaryWalletId');
 
     return res.send({ data: users, count: usersCount });
   } catch (err) {
@@ -36,12 +40,14 @@ export const createUser = async (req: Request, res: Response) => {
       return res.json({ success: false, message: `${email} already exist` });
     }
 
+    const response = await axiosInstance.post('/wallets/');
     const user = await User.create({
       fullName,
       email,
       password,
       role,
       bankAccount,
+      primaryWalletId: response?.data?._id,
     });
 
     return res.json({
@@ -126,10 +132,12 @@ export const signup = async (req: Request, res: Response) => {
       return res.json({ success: false, error: 'You already have an account' });
     }
 
+    const response = await axiosInstance.post('/wallets/');
     const user = await User.create({
       fullName,
       email,
       password,
+      primaryWallet: response?.data?.data,
     });
 
     const token = jwt.sign({ id: user._id, email }, SECRET_JWT_CODE);
@@ -391,7 +399,7 @@ export const inviteFriends = async (req: Request, res: Response) => {
       html: `<div>
                 <div>It will be very interesting</div>
                   <div>
-                    <a href=${env.deployedFrontendUrl}/signup?referralCode=${user.referralCode} target="_blank">
+                    <a href=http://localhost:4200/signup?referralCode=${user.referralCode} target="_blank">
                       Join to CryptoPool
                     </a>
                   </div>
@@ -513,5 +521,23 @@ export const updateForgottenPassword = async (req: Request, res: Response) => {
     });
   } catch (err) {
     res.json({ success: false, error: err.message });
+  }
+};
+
+export const updateEmbed = async (req: Request, res: Response) => {
+  try {
+    const user = req['user'];
+    const { embed } = req.body;
+
+    user.embed = embed;
+    await user.save();
+
+    return res.send({
+      success: true,
+      data: user.embed,
+      message: 'Embed has been updated successfully!',
+    });
+  } catch (err) {
+    res.send({ success: false, message: err.message });
   }
 };

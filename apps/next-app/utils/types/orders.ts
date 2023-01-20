@@ -1,3 +1,5 @@
+import { GeneralResponse } from "./auth";
+
 export interface OrderType {
   _id: string;
   title: string;
@@ -15,7 +17,20 @@ export enum CoinType {
 }
 
 export enum OrderStatus {
-  DONE = 'Done',
-  PENDING = 'Pending',
-  FAILED = 'Failed',
+  DONE = 'done',
+  PENDING = 'pending',
+  FAILED = 'failed',
+}
+
+export interface OrderData {
+  _id: string;
+  title: string;
+  amount: number;
+  type: CoinType;
+  status: OrderStatus;
+  orderDate: Date;
+}
+
+export interface OrderDataResponse extends GeneralResponse{
+  data?: Array<OrderData>;
 }

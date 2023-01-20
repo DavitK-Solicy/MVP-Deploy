@@ -11,8 +11,8 @@ export default function PageTitle({
   return (
     <div className={styles.container}>
       <p className={styles.title}>{title ?? 'Good Evening'}</p>
-      {isClock && <Clock />}
       {children}
+      {isClock && <Clock />}
     </div>
   );
 }

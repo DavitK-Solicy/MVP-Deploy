@@ -1,4 +1,4 @@
-export interface WarningModalProps {
+export interface NotificationCardProps {
   setOpen?: (arg: boolean) => void;
   title: string;
   message: string;

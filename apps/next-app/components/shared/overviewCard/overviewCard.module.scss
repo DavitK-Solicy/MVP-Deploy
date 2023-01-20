@@ -9,6 +9,7 @@
   align-items: center;
   box-shadow: var(--box_shadow_black);
   border-radius: 6px;
+  cursor: pointer;
 
   .bottomArrow {
     display: none;
@@ -24,7 +25,7 @@
       font-weight: 500;
       font-size: var(--text_sm);
       line-height: 16px;
-      color: var(--blue_100);
+      color: var(--blue_900);
       margin-bottom: 0px !important;
     }
   }
@@ -51,7 +52,7 @@
       height: 100%;
       font-size: var(--text_x);
       line-height: 35px;
-      color: var(--blue_100);
+      color: var(--blue_900);
       margin-bottom: 0px !important;
     }
 

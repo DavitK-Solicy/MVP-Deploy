@@ -1,14 +1,16 @@
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import Icon from 'components/shared/icon';
 import SearchInput from 'components/shared/searchInput';
+import { AuthContext } from 'utils/context/auth/context';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import navBarPaths from 'utils/constants/navBarPaths';
-import { HeaderProps } from './types';
 
 import styles from './header.module.scss';
 
-export default function Header({ fullName }: HeaderProps): JSX.Element {
+export default function Header(): JSX.Element {
   const router = useRouter();
+  const { user } = useContext(AuthContext);
 
   return (
     <header className={styles.headerContainer}>
@@ -30,8 +32,8 @@ export default function Header({ fullName }: HeaderProps): JSX.Element {
           className={styles.userSection}
           onClick={() => router.push(navBarPaths.profile)}
         >
-          <p className={styles.userLogo}>{fullName?.trimStart()[0]}</p>
-          <div className={styles.userName}>{fullName}</div>
+          <p className={styles.userLogo}>{user?.fullName?.trimStart()[0]}</p>
+          <div className={styles.userName}>{user?.fullName}</div>
           <div className={styles.arrowRightBtn}>
             <Icon src={imagesSvg.arrowRightFirst} width={6} height={10} />
           </div>

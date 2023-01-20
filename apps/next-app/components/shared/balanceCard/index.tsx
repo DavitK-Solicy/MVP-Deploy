@@ -1,23 +1,76 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import Web3 from 'web3';
 import Icon from 'components/shared/icon';
 import Button from 'components/shared/button';
 import PaymentModal from 'components/feature/paymentModal';
 import WithdrawModal from 'components/feature/withdrawModal';
 import WhiteBox from 'components/shared/whiteBox';
 import TransactionFeeModal from 'components/feature/transactionFeeModal';
+import * as localStorage from 'utils/services/localStorageService';
+import localStorageKeys from 'utils/constants/localStorageKeys';
 import { imagesSvg } from 'utils/constants/imagesSrc';
-import { BalanceCardProps } from './type';
+import { coins, getCoinPrice } from 'utils/constants/functions';
+import env from 'utils/constants/env';
+import { ConversionItem } from './type';
 
 import styles from './balanceCard.module.scss';
 
-export default function BalanceCard({
-  balance,
-}: BalanceCardProps): JSX.Element {
+export default function BalanceCard(): JSX.Element {
   const [openPaymentModal, setOpenPaymentModal] = useState<boolean>(false);
   const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false);
   const [openTransactionModal, setOpenTransactionModal] = useState<boolean>(
     false
   );
+  const [conversion, setConversion] = useState<ConversionItem>(
+    ConversionItem.DOLLAR
+  );
+  const [balance, setBalance] = useState<number>();
+  const iconUrl =
+    conversion === ConversionItem.BITCOIN
+      ? imagesSvg.bitcoin
+      : imagesSvg.dollarIcon;
+
+  const wallet = useMemo(
+    () =>
+      typeof window !== 'undefined' &&
+      localStorage.getItemFromLocalStorage(localStorageKeys.WALLET).toString(),
+    []
+  );
+
+  const changeConversion = (type: ConversionItem): void => {
+    setConversion(type);
+  };
+
+  const getWalletData = async (): Promise<void> => {
+    if (wallet) {
+      const web3 = await new Web3(env.web3Provider);
+      let balance = await web3.eth.getBalance(wallet);
+      balance = web3.utils.fromWei(balance, 'ether');
+
+      const price = await getCoinPrice(
+        coins.ethereum.base,
+        coins.ethereum.coinId
+      );
+      let availableBalance = Number(
+        (price[coins.ethereum.base] * Number(balance)).toFixed(2)
+      );
+
+      if (conversion === ConversionItem.BITCOIN) {
+        const price = await getCoinPrice(
+          coins.bitcoin.base,
+          coins.bitcoin.coinId
+        );
+        availableBalance = Number(
+          (Number(availableBalance) / price[coins.bitcoin.base]).toFixed(4)
+        );
+      }
+      setBalance(availableBalance);
+    }
+  };
+
+  useEffect(() => {
+    getWalletData();
+  }, [conversion]);
 
   return (
     <>
@@ -44,7 +97,7 @@ export default function BalanceCard({
                   <Icon
                     width={20}
                     height={34}
-                    src={imagesSvg.dollarIcon}
+                    src={iconUrl}
                     className={styles.dollarIcon}
                   />
                   {balance}
@@ -56,8 +109,24 @@ export default function BalanceCard({
             <div className={styles.conversion}>
               <p>Conversion</p>
               <div>
-                <Icon width={35} height={35} src={imagesSvg.rupeeConversion} />
-                <Icon width={35} height={35} src={imagesSvg.dollarConversion} />
+                <div
+                  className={`${styles.conversionType} ${
+                    ConversionItem.BITCOIN === conversion &&
+                    styles.activeConversion
+                  }`}
+                  onClick={() => changeConversion(ConversionItem.BITCOIN)}
+                >
+                  <Icon width={25} height={25} src={imagesSvg.bitcoinCash} />
+                </div>
+                <div
+                  className={`${styles.conversionType} ${
+                    ConversionItem.DOLLAR === conversion &&
+                    styles.activeConversion
+                  }`}
+                  onClick={() => changeConversion(ConversionItem.DOLLAR)}
+                >
+                  <Icon width={11} height={20} src={imagesSvg.dollarIcon} />
+                </div>
               </div>
             </div>
           </div>

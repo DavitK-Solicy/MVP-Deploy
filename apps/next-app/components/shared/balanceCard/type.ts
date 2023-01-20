@@ -1,3 +1,4 @@
-export interface BalanceCardProps {
-  balance: string;
+export enum ConversionItem {
+  DOLLAR = 'Dollar',
+  BITCOIN = 'Bitcoin',
 }

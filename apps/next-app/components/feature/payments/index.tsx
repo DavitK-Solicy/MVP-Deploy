@@ -5,7 +5,7 @@ import PaymentSettings from 'components/shared/paymentSettings';
 import DashboardTable from 'components/shared/table';
 import TransactionFee from 'components/shared/transactionFees';
 import ContentLayout from 'components/feature/contentLayout';
-import { feeButtons } from 'utils/constants/fakeData';
+import { feeButtons, tableData } from 'utils/constants/fakeData';
 
 import styles from './payments.module.scss';
 
@@ -23,7 +23,11 @@ export default function Payment(): JSX.Element {
           <TransactionFee buttons={feeButtons} />
         </div>
         <div className={styles.bottomSection}>
-          <DashboardTable rowKey="key" tableTitle="Recent Orders" />
+          <DashboardTable
+            rowKey="_id"
+            tableTitle="Recent Orders"
+            dataSource={tableData}
+          />
         </div>
       </div>
     </ContentLayout>

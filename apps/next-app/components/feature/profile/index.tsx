@@ -1,35 +1,23 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import ProfileInfo from 'components/shared/profileInfo';
 import InfoCard from 'components/feature/profileInfoCard';
 import ProfileDetails from 'components/feature/profileDetails';
 import HelpFeedback from 'components/feature/helpFeedback';
 import InviteFriend from 'components/feature/inviteFriend';
 import ContentLayout from 'components/feature/contentLayout';
-import { UserServiceContext } from 'utils/services/service/userService';
-import { User } from 'utils/model/user';
+import { AuthContext } from 'utils/context/auth/context';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 
 import styles from './profile.module.scss';
 
 export default function Profile(): JSX.Element {
-  const userService = useContext(UserServiceContext);
-
-  const [userInfo, setUserInfo] = useState<User>();
-
-  const getCurrentUser = async (): Promise<void> => {
-    const res = await userService.getCurrentUser();
-    if (res) setUserInfo(res.data);
-  };
-
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
+  const { user } = useContext(AuthContext);
 
   return (
     <ContentLayout title="Good Evening" isClock={true}>
       <div className={styles.container}>
         <div className={styles.profileInfoSection}>
-          <ProfileInfo fullName={userInfo?.fullName} email={userInfo?.email} />
+          <ProfileInfo fullName={user?.fullName} email={user?.email} />
         </div>
         <div className={styles.cardsSection}>
           <InfoCard
@@ -38,11 +26,11 @@ export default function Profile(): JSX.Element {
             data={[
               {
                 dataTitle: 'Username',
-                dataInfo: userInfo?.fullName,
+                dataInfo: user?.fullName,
               },
               {
                 dataTitle: 'Email Id',
-                dataInfo: userInfo?.email,
+                dataInfo: user?.email,
               },
               {
                 dataTitle: 'Password',
@@ -57,15 +45,15 @@ export default function Profile(): JSX.Element {
             data={[
               {
                 dataTitle: 'Account Number',
-                dataInfo: userInfo?.bankAccount?.accountNumber,
+                dataInfo: user?.bankAccount?.accountNumber,
               },
               {
                 dataTitle: 'IFSC Code Or Swift Code',
-                dataInfo: userInfo?.bankAccount?.ifscOrSwiftCode,
+                dataInfo: user?.bankAccount?.ifscOrSwiftCode,
               },
               {
                 dataTitle: 'Card Number',
-                dataInfo: userInfo?.bankAccount?.cardNumber,
+                dataInfo: user?.bankAccount?.cardNumber,
                 isHidden: true,
                 isStrong: false,
               },

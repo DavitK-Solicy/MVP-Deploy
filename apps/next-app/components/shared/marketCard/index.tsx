@@ -20,7 +20,7 @@ export default function MarketCard({
             style={{
               background: `${
                 status === Status.LIVE
-                  ? 'var( --green_900)'
+                  ? 'var( --green_300)'
                   : 'var(  --red_900)'
               }`,
             }}

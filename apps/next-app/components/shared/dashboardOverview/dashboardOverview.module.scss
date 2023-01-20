@@ -16,20 +16,21 @@
       font-weight: 500;
       font-size: var(--text_base);
       line-height: 30px;
-      color: var(--blue_100);
+      color: var(--blue_900);
       margin-bottom: 0px !important;
     }
 
     .button {
       width: 60px;
-      padding: 0px;
       height: 20px !important;
       background: var(--white_900);
       border-radius: 10px !important;
       font-weight: 400;
       font-size: var(--text_xs);
       line-height: 14px;
-      color: var(--blue_100);
+      color: var(--blue_900);
+      width: max-content;
+      padding: 0px 5px;
     }
   }
 

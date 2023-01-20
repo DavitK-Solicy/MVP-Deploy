@@ -2,7 +2,7 @@ import Icon from 'components/shared/icon';
 import WhiteBox from 'components/shared/whiteBox';
 import Button from 'components/shared/button';
 import { imagesSvg } from 'utils/constants/imagesSrc';
-import { WarningModalProps } from './type';
+import { NotificationCardProps } from './type';
 
 import styles from './notificationCard.module.scss';
 
@@ -13,7 +13,7 @@ export default function NotificationCard({
   cardType,
   isModal,
   onClose,
-}: WarningModalProps): JSX.Element {
+}: NotificationCardProps): JSX.Element {
   return (
     <WhiteBox style={styles.whiteBox}>
       <div

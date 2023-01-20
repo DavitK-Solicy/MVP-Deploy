@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import {Wallet} from "../../models/Wallet";
-import generateAndStoreWallet from "../../walletManager/entities/createWallet";
+import { Wallet } from '../../models/Wallet';
+import generateAndStoreWallet from '../../walletManager/entities/createWallet';
 
 export const getAllWallets = async (req: Request, res: Response) => {
   try {
@@ -13,37 +13,42 @@ export const getAllWallets = async (req: Request, res: Response) => {
     return res.send({ wallets, count: walletsCount });
   } catch (err) {
     res.status(404);
-    res.send({ success: false, error: err });
+    res.send({ success: false, error: err.message });
   }
 };
 
 export const createWallet = async (req: Request, res: Response) => {
   try {
     const wallet = await generateAndStoreWallet();
+
     return res.json({ success: true, data: wallet });
   } catch (err) {
     res.status(404);
-    res.send({ success: false, error: err });
+    res.send({ success: false, error: err.message });
   }
 };
 
 export const getWallet = async (req: Request, res: Response) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
+
     const wallet = await Wallet.findById(id);
+
     return res.send(wallet);
   } catch (err) {
-    res.send({success: false, error: err});
+    res.send({ success: false, error: err.message });
   }
 };
 
 export const deleteWallet = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
     await Wallet.deleteOne({ _id: id });
+
     return res.send({ success: true });
   } catch (err) {
     res.status(404);
-    res.send({ success: false, error: err });
+    res.send({ success: false, error: err.message });
   }
 };

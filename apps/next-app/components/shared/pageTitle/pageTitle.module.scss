@@ -4,13 +4,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  white-space: nowrap;
 
   .title {
-    min-width: 250px;
+    min-width: 100px;
     font-weight: 500;
     font-size: var(--text_x);
     line-height: 45px;
-    color: var(--blue_100);
+    color: var(--blue_900);
     margin: 0;
   }
 }

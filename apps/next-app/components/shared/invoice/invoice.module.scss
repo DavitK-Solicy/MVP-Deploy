@@ -6,12 +6,20 @@
     h1 {
       margin-bottom: -15px;
     }
+
+    .formItem {
+      margin: 0;
+    }
+
+    :global(.ant-form-item-explain-error) {
+      text-align: start;
+    }
   }
 
   .formElement {
     height: 45px;
     border-radius: 5px;
-    background-color: var(--gray_200);
+    background-color: var(--white_200);
   }
 
   .formElement::placeholder {
@@ -19,7 +27,7 @@
     font-size: var(--text_sm) !important;
     line-height: 16px !important;
     letter-spacing: 0.02em !important;
-    color: var(--gray_1000) !important;
+    color: var(--gray_300) !important;
   }
 
   label {
@@ -61,7 +69,7 @@
 
     .formElementAmount {
       height: 45px;
-      background-color: var(--gray_200);
+      background-color: var(--white_200);
       border-radius: 5px;
       width: 230px;
     }
@@ -71,7 +79,7 @@
       font-size: var(--text_sm) !important;
       line-height: 16px !important;
       letter-spacing: 0.02em !important;
-      color: var(--gray_1000) !important;
+      color: var(--gray_300) !important;
     }
 
     .conversionType {
@@ -84,9 +92,35 @@
       justify-content: center;
       align-items: center;
 
+      img {
+        filter: var(--button_disabled);
+      }
+
       &.activeConversion {
         background: var(--rose_500);
         border: none;
+
+        img {
+          filter: var(--button_active);
+        }
+      }
+    }
+
+    .currency {
+      display: flex;
+      gap: 5px;
+      label {
+        border: none;
+        padding: 0;
+        color: white;
+        border-color: unset;
+        border-right-color: white !important;
+        &:focus-within {
+          box-shadow: none;
+        }
+        &::before {
+          display: none;
+        }
       }
     }
   }

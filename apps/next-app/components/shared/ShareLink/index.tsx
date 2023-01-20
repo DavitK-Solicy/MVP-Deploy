@@ -2,6 +2,7 @@ import {
   FacebookShareButton,
   TwitterShareButton,
   WhatsappShareButton,
+  TelegramShareButton,
 } from 'react-share';
 import Icon from 'components/shared/icon';
 import WhiteBox from 'components/shared/whiteBox';
@@ -12,6 +13,8 @@ import { imagesSvg } from 'utils/constants/imagesSrc';
 import styles from './sharedLink.module.scss';
 
 export default function SharedLink(): JSX.Element {
+  const shareLink = 'random-mail@gmail.com';
+
   return (
     <div>
       <WhiteBox style={styles.whiteBox}>
@@ -21,23 +24,25 @@ export default function SharedLink(): JSX.Element {
             <span className={styles.divider}></span>
           </span>
           <div className={styles.iconBox}>
-            <FacebookShareButton url="/">
+            <FacebookShareButton url={shareLink}>
               <span className={styles.icon}>
                 <Icon width={50} height={50} src={imagesSvg.facebook} />
                 <p className={styles.iconText}>Facebook</p>
               </span>
             </FacebookShareButton>
-            <span className={styles.icon}>
-              <Icon width={50} height={50} src={imagesSvg.discord} />
-              <p className={styles.iconText}>Discord</p>
-            </span>
-            <TwitterShareButton url="/">
+            <TelegramShareButton url={shareLink}>
+              <span className={styles.icon}>
+                <Icon width={50} height={50} src={imagesSvg.telegram} />
+                <p className={styles.iconText}>Telegram</p>
+              </span>
+            </TelegramShareButton>
+            <TwitterShareButton url={shareLink}>
               <span className={styles.icon}>
                 <Icon width={50} height={50} src={imagesSvg.twitter} />
                 <p className={styles.iconText}>Twitter</p>
               </span>
             </TwitterShareButton>
-            <WhatsappShareButton url="/">
+            <WhatsappShareButton url={shareLink}>
               <span className={styles.icon}>
                 <Icon width={50} height={50} src={imagesSvg.whatsapp} />
                 <p className={styles.iconText}>Whatsapp</p>
@@ -47,13 +52,13 @@ export default function SharedLink(): JSX.Element {
           <p className={styles.label}>Link</p>
           <div className={styles.linkBox}>
             <div className={styles.link}>
-              <p>random-mail@gmail.com</p>
+              <p>{shareLink}</p>
             </div>
             <Button
               className={styles.button}
               img={imagesSvg.copy}
               text="Copy"
-              onClick={() => Notification('Link is copied to clipbord')}
+              onClick={() => Notification('Link is copied to clipboard')}
             />
           </div>
         </div>
