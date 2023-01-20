@@ -14,7 +14,7 @@ export default function Payment(): JSX.Element {
     <ContentLayout title="Payments" isClock={true}>
       <div className={styles.container}>
         <div className={styles.topSection}>
-          <BalanceCard balance="9999" />
+          <BalanceCard />
           <DashboardOverview />
         </div>
         <div className={styles.middleSection}>

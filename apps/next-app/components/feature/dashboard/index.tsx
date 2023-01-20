@@ -12,7 +12,7 @@ export default function Dashboard(): JSX.Element {
     <ContentLayout title="Good Evening" isClock={true}>
       <div className={styles.container}>
         <div className={styles.topSection}>
-          <BalanceCard balance="50.36" />
+          <BalanceCard />
           <DashboardOverview />
         </div>
         <div className={styles.bottomSection}>
