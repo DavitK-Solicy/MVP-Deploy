@@ -1,4 +1,4 @@
-import { GeneralResponse } from './user';
+import { GeneralResponse } from '.';
 
 export interface WalletResponse extends GeneralResponse {
   data?: Wallet;

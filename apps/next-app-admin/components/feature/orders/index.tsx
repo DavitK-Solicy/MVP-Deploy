@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { DatePicker, Form, Select } from 'antd';
+import moment from 'moment';
 import Modal from 'components/shared/modal';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
@@ -27,7 +28,6 @@ import {
 import { OrderData } from 'types/order';
 
 import styles from './order.module.scss';
-import moment from 'moment';
 
 export default function Order(): JSX.Element {
   const orderService = useContext(OrderServiceContext);

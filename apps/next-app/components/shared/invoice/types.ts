@@ -1,3 +1,8 @@
+export interface InvoiceProps {
+  setOpen: (item: boolean) => void;
+  setOpenParentModal: (item: boolean) => void;
+}
+
 export enum InvoiceCurrency {
   Rupee = 'Rupee',
   Dollar = 'Dollar',

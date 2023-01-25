@@ -21,7 +21,7 @@ export default function InvoiceModal({
       className={styles.container}
       closeIcon={<Icon src={imagesSvg.close} width={22} height={22} />}
     >
-      <Invoice />
+      <Invoice setOpenParentModal={setOpenParentModal} setOpen={setOpen} />
     </Modal>
   );
 }

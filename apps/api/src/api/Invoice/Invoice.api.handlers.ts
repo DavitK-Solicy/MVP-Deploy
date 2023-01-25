@@ -44,3 +44,20 @@ export const sendInvoice = async (req: Request, res: Response) => {
     res.json({ success: false, message: err.message });
   }
 };
+
+export const getAllInvoices = async (req: Request, res: Response) => {
+  try {
+    const limit = Number(req.query.limit);
+    const offset = Number(req.query.offset);
+
+    const count = await Invoice.collection.countDocuments();
+    const data = await Invoice.find()
+      .skip(offset)
+      .populate('sender')
+      .limit(limit);
+
+    return res.send({ success: true, data, count });
+  } catch (err) {
+    res.send({ success: false, error: err.message });
+  }
+};

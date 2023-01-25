@@ -1,9 +1,13 @@
 .whiteBox {
   padding: 20px 15px 20px 10px !important;
-  width: 30% !important;
+  width: 35% !important;
+  height: max-content;
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   max-width: 100%;
   height: 100%;
 
@@ -11,19 +15,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding-right: 70px;
+    width: 90%;
+    gap: 50px;
 
     .balance {
       display: flex;
       flex-direction: column;
+      gap: 12px;
 
       .balanceTitle {
         font-weight: 400;
         font-size: var(--text_tiny);
         line-height: 19px;
         color: var(--blue_900);
-        margin-bottom: 10px !important;
       }
 
       .balanceCount {
@@ -35,7 +39,6 @@
         line-height: 41px;
         display: flex;
         color: var(--blue_900);
-        margin-bottom: 10px !important;
 
         .balanceContainer {
           display: flex;
@@ -48,13 +51,24 @@
         }
       }
 
-      .updateDate {
-        font-weight: 500;
-        font-size: 11px;
-        line-height: 12px;
-        letter-spacing: 0.02em;
-        color: var(--gray_950);
-        margin-bottom: 25px !important;
+      .lastUpdated {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .updateDate {
+          font-weight: 500;
+          font-size: 11px;
+          line-height: 12px;
+          letter-spacing: 0.02em;
+          color: var(--gray_950);
+        }
+
+        .refresh {
+          color: var(--blue_700);
+          font-weight: 500;
+          cursor: pointer;
+        }
       }
     }
 
@@ -107,11 +121,10 @@
     width: 100%;
     display: flex;
     gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: space-between;
 
     button {
-      max-width: 210px;
+      max-width: 200px;
       border-radius: 40px !important;
       height: 50px !important;
       width: 100% !important;

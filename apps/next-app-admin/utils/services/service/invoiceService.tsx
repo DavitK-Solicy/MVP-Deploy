@@ -2,16 +2,10 @@ import { Context } from 'react';
 import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
-import { Invoice } from 'components/shared/invoice/types';
+import { InvoiceResponse } from 'types/invoice';
 
 export interface IInvoiceService {
-  sendInvoice(
-    invoice: Invoice
-  ): Promise<{
-    success: boolean;
-    message: string;
-    data?: Invoice;
-  }>;
+  getAllInvoices(limit: number, offset: number): Promise<InvoiceResponse>;
 }
 
 export const InvoiceServiceContext: Context<
@@ -23,18 +17,22 @@ export const useInvoiceServices = () =>
 
 export const InvoiceService = ({ children }: any) => {
   const invoiceService = {
-    async sendInvoice(
-      invoice: Invoice
-    ): Promise<{ success: boolean; message: string; data?: Invoice }> {
+    async getAllInvoices(
+      limit: number,
+      offset: number
+    ): Promise<InvoiceResponse> {
       try {
-        const response = await axiosInstance.post('/invoices/', invoice);
-
-        return response.data;
+        const res = await axiosInstance.get(
+          `/invoices?limit=${limit}&offset=${offset}`
+        );
+        
+        return res.data;
       } catch (err) {
         console.log(err);
       }
     },
   };
+
   return (
     <InvoiceServiceContext.Provider value={invoiceService}>
       {children}

@@ -1,4 +1,4 @@
-import { GeneralResponse } from './user';
+import { GeneralResponse } from '.';
 
 export enum CoinType {
   BITCOIN = 'bitcoin',

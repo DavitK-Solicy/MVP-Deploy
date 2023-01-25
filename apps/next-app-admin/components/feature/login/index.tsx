@@ -4,12 +4,12 @@ import { Form } from 'antd';
 import Image from 'components/shared/image';
 import Input from 'components/shared/input';
 import Button from 'components/shared/button';
-import NotificationCard from 'components/shared/notificationCard';
-import Modal from 'components/shared/modal';
 import { ButtonType } from 'components/shared/button/type';
+import Notification from 'components/feature/notification';
 import Icon from 'components/shared/icon';
 import { AuthServiceContext } from 'utils/services/service/authService';
 import { imagesPng, imagesSvg } from 'utils/constants/imagesSrc';
+import { notificationIcons } from 'utils/constants/buttons';
 
 import styles from './login.module.scss';
 
@@ -18,12 +18,7 @@ export default function Login(): JSX.Element {
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const [openNotificationModal, setOpenNotificationModal] = useState<boolean>(
-    false
-  );
-  const [error, setError] = useState<string>();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-
 
   const onFinish = async (): Promise<void> => {
     const { email, password } = form.getFieldsValue();
@@ -33,8 +28,7 @@ export default function Login(): JSX.Element {
       if (res?.success) {
         router.push('/');
       } else {
-        setOpenNotificationModal(true);
-        setError(res?.error);
+        Notification(res.error, notificationIcons.fail);
       }
     } catch (err) {
       console.log(err);
@@ -54,27 +48,6 @@ export default function Login(): JSX.Element {
 
   return (
     <div>
-      {openNotificationModal && (
-        <Modal
-          closable={false}
-          bodyStyle={{
-            paddingTop: 25,
-            paddingLeft: 30,
-            paddingBottom: 15,
-            paddingRight: 20,
-          }}
-          isModalVisible={openNotificationModal}
-          onCancel={() => setOpenNotificationModal(false)}
-          className={styles.modal}
-        >
-          <NotificationCard
-            title="error"
-            message={error}
-            setOpen={setOpenNotificationModal}
-            isModal
-          />
-        </Modal>
-      )}
       <div className={styles.loginPage}>
         <div className={styles.bannerImage}>
           <Image src={imagesPng.loginPageBanner} width="830" height="750" />

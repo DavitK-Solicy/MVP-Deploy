@@ -31,7 +31,7 @@ export default function NewPassword(): JSX.Element {
     const res = await authService.updateForgottenPassword(password, email);
 
     if (res?.success) {
-      Notification(res.message, warningModalContent.acceptModalIcon);
+      Notification(res?.message, warningModalContent.acceptModalIcon);
 
       router.push(navBarPaths.login);
     } else {

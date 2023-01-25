@@ -11,10 +11,14 @@ import {
 } from 'utils/constants/paymentsModal';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import { warningModalContent } from 'utils/constants/fakeData';
+import { InvoiceProps } from './types';
 
 import styles from './invoice.module.scss';
 
-export default function Invoice(): JSX.Element {
+export default function Invoice({
+  setOpen,
+  setOpenParentModal,
+}: InvoiceProps): JSX.Element {
   const invoiceService = useContext(InvoiceServiceContext);
   const [form] = Form.useForm();
 
@@ -44,6 +48,12 @@ export default function Invoice(): JSX.Element {
         ? warningModalContent.acceptModalIcon
         : warningModalContent.filedModalIcon
     );
+
+    if (res?.success) {
+      form.resetFields();
+      setOpenParentModal?.(true);
+      setOpen(false);
+    }
   };
 
   const changeCurrency = (type: InvoiceItemType): void => {

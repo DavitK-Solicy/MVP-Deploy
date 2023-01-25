@@ -6,6 +6,7 @@ export interface RedirectButtonItem {
 export const buttonPaths = {
   users: '/users',
   orders: '/orders',
+  invoices: '/invoices',
 };
 
 export const redirectButtons: Array<RedirectButtonItem> = [
@@ -17,4 +18,13 @@ export const redirectButtons: Array<RedirectButtonItem> = [
     text: 'Orders',
     link: buttonPaths.orders,
   },
+  {
+    text: 'Invoices',
+    link: buttonPaths.invoices,
+  },
 ];
+
+export const notificationIcons = {
+  success: 'success',
+  fail: 'fail',
+};

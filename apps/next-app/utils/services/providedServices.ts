@@ -4,4 +4,5 @@ export enum ProvidedServices {
   OrderService,
   WalletService,
   InvoiceService,
+  PaymentService
 }

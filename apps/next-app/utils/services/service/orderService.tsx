@@ -1,6 +1,6 @@
 import { Context } from 'react';
 import { OrderDataResponse } from 'types/orders';
-import { Contextualizer } from 'utils/services//contextualizer';
+import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
 

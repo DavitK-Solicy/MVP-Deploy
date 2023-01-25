@@ -8,6 +8,8 @@ export const imagesSvg = {
   deleteIcon: 'delete.svg',
   hiddenIcon: 'hidden.svg',
   websiteLogo: '/cryptoPool.svg',
+  closeNotification: 'closeNotification.svg',
+  fail: 'fail.svg',
 };
 
 export const imagesPng = {

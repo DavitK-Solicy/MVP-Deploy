@@ -6,6 +6,7 @@ import * as cookieParser from 'cookie-parser';
 import UserRouter from './api/User';
 import OrderRouter from './api/Order';
 import InvoiceRouter from './api/Invoice';
+import PaymentRouter from './api/Payment';
 import env from './util/constants/env';
 
 const app = express();
@@ -32,6 +33,7 @@ mongoose.connect(env.databaseConnectionUrl, {
 app.use('/users', UserRouter);
 app.use('/orders', OrderRouter);
 app.use('/invoices', InvoiceRouter);
+app.use('/payments', PaymentRouter);
 
 app.listen(env.port, () => {
   console.log(`Server running on port ${env.port}`);
