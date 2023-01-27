@@ -63,6 +63,9 @@ export const getCurrencyBalance = async (req: Request, res: Response) => {
       dollarBalance: amount,
     });
   } catch (err) {
-    res.json({ success: false, error: err.message });
+    res.json({
+      success: false,
+      error: err.message,
+    });
   }
 };

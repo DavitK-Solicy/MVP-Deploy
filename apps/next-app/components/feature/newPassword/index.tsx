@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
 import Button from 'components/shared/button';
@@ -68,6 +68,7 @@ export default function NewPassword(): JSX.Element {
               form={form}
               initialValues={{ remember: true }}
               onFinish={onFinish}
+              className={styles.form}
             >
               <div className={styles.passwordContainer}>
                 <div className={styles.formItem}>
@@ -82,7 +83,7 @@ export default function NewPassword(): JSX.Element {
                       }}
                     />
                   </div>
-                  <Form.Item name="password" className={styles.formItem}>
+                  <Form.Item name="password">
                     <Input
                       className={styles.formInput}
                       type={passwordVisible ? 'text' : 'password'}
@@ -104,7 +105,6 @@ export default function NewPassword(): JSX.Element {
                   </div>
                   <Form.Item
                     name="confirm"
-                    className={styles.formItem}
                     rules={[
                       {
                         required: true,
@@ -131,7 +131,7 @@ export default function NewPassword(): JSX.Element {
                   </Form.Item>
                 </div>
               </div>
-              <Form.Item shouldUpdate>
+              <Form.Item shouldUpdate className={styles.buttonItem}>
                 {() => (
                   <Button
                     className={styles.buttonContainer}

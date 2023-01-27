@@ -16,6 +16,7 @@ html:root {
   --blue_900: #202f56;
   --blue_500: #2f80ed;
   --blue_700: #4b48e8;
+  --blue_800: #5438dd;
   --yellow_700: #dfa95f;
   --purple_100: #b284eb;
   --purple_200: #dd84e3;
@@ -65,8 +66,10 @@ html:root {
   --shadow_black: 0px 4px 10px rgba(0, 0, 0, 0.1);
   --purple_gradient: linear-gradient(90deg, #b083eb 0%, #e184e3 100%);
   --modal_item_shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-  --button_active: invert(0%) sepia(0%) saturate(1295%) hue-rotate(31deg) brightness(209%) contrast(101%);
-  --button_disabled: invert(60%) sepia(100%) saturate(26%) hue-rotate(13deg) brightness(96%) contrast(105%);
+  --button_active: invert(0%) sepia(0%) saturate(1295%) hue-rotate(31deg)
+    brightness(209%) contrast(101%);
+  --button_disabled: invert(60%) sepia(100%) saturate(26%) hue-rotate(13deg)
+    brightness(96%) contrast(105%);
 }
 
 html:root {
@@ -74,14 +77,15 @@ html:root {
   --text_xsm: 10px;
   --text_xs: 12px;
   --text_sm: 14px;
+  --text_sl: 15px;
   --text_tiny: 16px;
   --text_m: 18px;
   --text_base: 20px;
   --text_lg: 24px;
+  --text_xm: 27px;
   --text_x: 30px;
   --text_xl: 32px;
   --text_xx: 35px;
-  --text_l: 55px;
 }
 
 html,

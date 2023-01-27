@@ -1,7 +1,10 @@
 .apiModal {
   div:nth-child(2) {
     border-radius: 30px;
-    max-width: 375px;
+  }
+
+  :global(.ant-modal-content) {
+    margin: 0 72px;
   }
 
   :global(.ant-modal-body) {

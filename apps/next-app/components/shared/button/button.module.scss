@@ -167,10 +167,36 @@
 
 .blue {
   color: var(--white_900) !important;
-  background-color: var(--blue_500) !important;
+  background-color: var(--blue_800) !important;
 
   &:hover {
     background-color: var(--button_hover_blue) !important;
     color: var(--white_900) !important;
+  }
+
+  &:active {
+    border-color: var(--black-300) !important;
+    background-color: var(--button_hover_dark) !important;
+  }
+
+  &:focus {
+    border-color: var(--black-300) !important;
+  }
+
+  &:disabled {
+    color: var(--white_900) !important;
+    background-color: var(--gray_700) !important;
+
+    &:hover {
+      color: var(--white_900) !important;
+      background-color: var(--gray_700) !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+    }
+
+    &:active {
+      transform: none;
+      background-color: none;
+    }
   }
 }

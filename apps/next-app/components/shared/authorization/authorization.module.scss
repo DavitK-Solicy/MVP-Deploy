@@ -2,14 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  .bannerImage {
-    margin-top: 30px;
-  }
+  padding: 30px 0 45px;
 
   .loginFormContainer {
     display: flex;
     flex-direction: column;
+    gap: 20px;
     max-width: 550px;
     width: 100%;
     background-color: var(--white_900);
@@ -20,43 +18,13 @@
     right: 150px;
 
     .linkSection {
+      margin-bottom: 20px;
+
       a {
         font-weight: 400;
-        font-size: 14px;
+        font-size: var(--text_sm);
         line-height: 16px;
         color: var(--purple_900);
-      }
-    }
-
-    .logoContainer {
-      margin: 0 auto;
-      margin-bottom: 40px;
-    }
-
-    .forgotPassword {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
-      a {
-        font-weight: 500;
-        font-size: var(--text_sm);
-        color: var(--black_300);
-      }
-
-      :global(.ant-checkbox-inner::after) {
-        border-color: var(--black_300) !important;
-      }
-
-      :global {
-        .ant-checkbox-inner {
-          border-color: var(--gray_800) !important;
-          background-color: var(--white_900) !important;
-        }
-
-        :global(.ant-checkbox-checked:after) {
-          border-color: var(--black_300) !important;
-        }
       }
     }
 
@@ -64,7 +32,6 @@
       max-width: 440px;
       width: 100% !important;
       border-radius: 20px !important;
-      margin-top: 40px;
 
       .black {
         background-color: var(--purple_900) !important;
@@ -83,13 +50,12 @@
       .formItem {
         max-width: 440px;
         width: 100%;
-        height: 25px;
-        margin-bottom: 60px;
+        position: relative;
 
         label {
           margin-bottom: 6px;
           font-weight: 500;
-          font-size: 15px;
+          font-size: var(--text_sl);
           line-height: 18px;
           color: var(--gray_600);
         }
@@ -111,9 +77,9 @@
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        position: relative;
-        top: 20px;
-  
+        position: absolute;
+        right: 0;
+
         .eye {
           z-index: 50 !important;
           cursor: pointer;
@@ -124,14 +90,6 @@
         border-radius: 10px;
         height: 40px;
         border: 1px solid var(--gray_600);
-      }
-
-      .recaptcha {
-        transform: scale(0.71);
-        -webkit-transform: scale(0.71);
-        transform-origin: 0 0;
-        -webkit-transform-origin: 0 0;
-        margin: 15px 80px 0 0;
       }
     }
 
@@ -157,130 +115,38 @@
 
     .moreInfo {
       font-weight: 400;
-      font-size: 12px;
+      font-size: var(--text_xs);
       line-height: 16px;
       color: var(--gray_600);
-      margin-top: 45px;
+      margin-top: 35px;
     }
 
-    .loginHeader {
-      color: var(--black_300);
+    .authHeader {
       display: flex;
-      margin-bottom: 25px;
-      font-size: var(--text_xl);
-      font-weight: 600;
-    }
-  }
-}
-
-.authButtonsContainer {
-  display: flex;
-  justify-content: center;
-  column-gap: 10px;
-}
-
-.authBtn {
-  padding: 10px;
-  background-color: var(--white_400);
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.authBtn {
-  transition: 0.3s;
-
-  div {
-    background-color: var(--white_400) !important;
-    width: 40px !important;
-    height: 40px !important;
-  }
-
-  &:hover {
-    transition: 0.3s;
-    box-shadow: var(--shadow_black);
-    cursor: pointer;
-  }
-
-  button {
-    box-shadow: none !important;
-
-    span {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
-    div {
-      margin: 0 !important;
-    }
-  }
-}
-
-@media screen and(max-width: 1240px) {
-  @media screen and(min-width: 700px) {
-    .loginFormContainer {
-      width: 300px;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
 
       .loginHeader {
-        margin-top: 30px;
-        margin-bottom: 20px;
-        font-size: var(--text_lg);
-      }
-
-      .inputsContainer {
-        .formItem {
-          width: 300px;
-          height: 25px;
-          margin-bottom: 40px;
-        }
-
-        .formEmailInput {
-          height: 30px;
-        }
-
-        .formInput {
-          height: 30px;
-        }
-      }
-
-      .loginButton {
-        height: 30px !important;
+        color: var(--black_300);
+        display: flex;
+        font-size: var(--text_x);
+        font-weight: 600;
       }
     }
   }
-}
 
-@media screen and(max-width: 700px) {
-  .loginFormContainer {
-    margin-top: 150px;
-  }
-}
+  @media screen and (max-height: 800px) {
+    .loginFormContainer {
+      gap: 10px;
 
-@media screen and(max-width: 425px) {
-  .loginHeader {
-    margin-bottom: 15px !important;
-  }
+      .buttonItem {
+        margin: 10px 0;
+      }
 
-  .inputsContainer {
-    max-width: 300px;
-    align-items: flex-start !important;
-
-    .formItem {
-      max-width: 300px;
+      .moreInfo {
+        margin-top: 10px;
+      }
     }
-  }
-
-  .forgotPassword {
-    max-width: 300px;
-  }
-
-  .loginButton {
-    max-width: 300px !important;
-  }
-
-  .signUp {
-    max-width: 300px;
   }
 }

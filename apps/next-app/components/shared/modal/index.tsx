@@ -20,7 +20,7 @@ export default function Modal({
         zIndex: 100,
       }}
       style={{
-        marginLeft: '200px',
+        marginLeft: '212px',
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Form } from 'antd';
 import Link from 'components/shared/link';
@@ -14,7 +14,7 @@ import localStorageKeys from 'utils/constants/localStorageKeys';
 import navBarPaths from 'utils/constants/navBarPaths';
 import { imagesPng, imagesSvg } from 'utils/constants/imagesSrc';
 import { warningModalContent } from 'utils/constants/fakeData';
-import { AuthorizationProps } from './types';
+import { AuthorizationProps, WindowSizes } from './types';
 
 import styles from './authorization.module.scss';
 
@@ -26,6 +26,10 @@ export default function Authorization({
   const router = useRouter();
 
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [dimensions, setDimensions] = useState<WindowSizes>({
+    width: typeof window !== 'undefined' ? window.innerWidth : null,
+    height: typeof window !== 'undefined' ? window.innerHeight : null,
+  });
 
   const isDisabled = (): boolean => {
     return (
@@ -59,6 +63,20 @@ export default function Authorization({
     }
   };
 
+  useEffect(() => {
+    function handleResize(): void {
+      setDimensions({
+        width: window?.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div>
       <div className={styles.loginPage}>
@@ -67,16 +85,18 @@ export default function Authorization({
             src={
               isLogin ? imagesPng.loginPageBanner : imagesPng.signupPageBanner
             }
-            width="830"
-            height="750"
+            width={dimensions.width / 2}
+            height={dimensions.height - 190}
           />
         </div>
         <div className={styles.loginFormContainer}>
-          <div className={styles.logoContainer}>
-            <Image src={imagesSvg.cryptoPoolLogo} width="260" height="100" />
-          </div>
-          <div className={styles.loginHeader}>
-            {isLogin ? 'Login' : 'Sign Up'}
+          <div className={styles.authHeader}>
+            <div className={styles.logoContainer}>
+              <Image src={imagesSvg.cryptoPoolLogo} width="150" height="50" />
+            </div>
+            <div className={styles.loginHeader}>
+              {isLogin ? 'Login' : 'Sign Up'}
+            </div>
           </div>
           <Form
             form={form}
@@ -135,9 +155,6 @@ export default function Authorization({
                   name="password"
                   className={styles.formItem}
                   rules={[
-                    {
-                      message: 'The input is not valid password!',
-                    },
                     { required: true, message: 'Please enter your password.' },
                   ]}
                 >
@@ -157,20 +174,20 @@ export default function Authorization({
                 />
               </div>
             )}
-            <Form.Item shouldUpdate>
+            <Form.Item shouldUpdate className={styles.buttonItem}>
               {() => (
                 <Button
                   className={styles.loginButton}
                   text={isLogin ? 'Log In' : 'Sign Up'}
                   htmlType="submit"
                   disabled={isDisabled()}
-                  btnType={ButtonType.black}
+                  btnType={ButtonType.blue}
                 />
               )}
             </Form.Item>
             <div className={styles.signUp}>
               <p>
-                {isLogin ? "Don't have a account" : 'Already have a account'}
+                {isLogin ? "Don't have an account" : 'Already have a account'}
               </p>
               <Link
                 href={isLogin ? navBarPaths.signUp : navBarPaths.login}

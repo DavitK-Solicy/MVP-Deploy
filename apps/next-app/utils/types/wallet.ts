@@ -22,9 +22,7 @@ export interface CoinItem {
   [key: string]: string;
 }
 
-export interface PaymentResponse {
-  success: boolean;
-  message?: string;
+export interface PaymentResponse extends GeneralResponse {
   data?: CoinsAmount;
   bitcoin?: number;
   dollarBalance?: number;

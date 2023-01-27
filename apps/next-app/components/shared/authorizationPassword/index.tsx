@@ -99,31 +99,36 @@ export default function AuthorizationPassword({
                   ? onFinishMail
                   : onFinishCode
               }
+              className={styles.form}
             >
-              <Form.Item
-                name={
-                  pageType === PageType.RESET_PASSWORD
-                    ? 'email'
-                    : 'emailVerificationCode'
-                }
-                className={styles.formItem}
-              >
-                <Input
-                  type={
-                    pageType === PageType.RESET_PASSWORD ? 'email' : 'number'
-                  }
-                  label={
+              <div>
+                <Form.Item
+                  name={
                     pageType === PageType.RESET_PASSWORD
-                      ? 'Email Address'
-                      : 'Code'
+                      ? 'email'
+                      : 'emailVerificationCode'
                   }
-                  className={styles.formInput}
-                />
-              </Form.Item>
-              {errorMessage && (
-                <span className={styles.errorMessage}>{errorMessage}</span>
-              )}
-              <Form.Item shouldUpdate>
+                  className={styles.formItem}
+                  rules={[{ required: true, message: errorMessage }]}
+                  validateStatus={errorMessage ? 'error' : ''}
+                >
+                  <Input
+                    type={
+                      pageType === PageType.RESET_PASSWORD ? 'email' : 'number'
+                    }
+                    label={
+                      pageType === PageType.RESET_PASSWORD
+                        ? 'Email Address'
+                        : 'Code'
+                    }
+                    className={styles.formInput}
+                  />
+                </Form.Item>
+                {errorMessage && (
+                  <span className={styles.errorMessage}>{errorMessage}</span>
+                )}
+              </div>
+              <Form.Item shouldUpdate className={styles.buttonItem}>
                 {() => (
                   <Button
                     className={styles.buttonContainer}
@@ -134,20 +139,18 @@ export default function AuthorizationPassword({
                     }
                     htmlType="submit"
                     disabled={isDisabled()}
-                    btnType={ButtonType.black}
+                    btnType={ButtonType.blue}
                   />
                 )}
               </Form.Item>
               <div className={styles.linkSection}>
-                <p>Don't have a account</p>
+                <p>Don't have an account</p>
                 <Link href={navBarPaths.signUp} text="Signup" />
               </div>
               <div className={styles.moreInfo}>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  aliquip ex ea commodo consequat.
-                </p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                aliquip ex ea commodo consequat.
               </div>
             </Form>
           </div>

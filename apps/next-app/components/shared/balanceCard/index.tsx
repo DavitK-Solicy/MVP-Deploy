@@ -6,6 +6,7 @@ import Button from 'components/shared/button';
 import PaymentModal from 'components/feature/paymentModal';
 import WithdrawModal from 'components/feature/withdrawModal';
 import WhiteBox from 'components/shared/whiteBox';
+import Notification from 'components/shared/notification';
 import { PaymentServiceContext } from 'utils/services/service/paymentService';
 import TransactionFeeModal from 'components/feature/transactionFeeModal';
 import * as localStorage from 'utils/services/localStorageService';
@@ -31,6 +32,7 @@ export default function BalanceCard(): JSX.Element {
   const [merchantBalance, setMerchantBalance] = useState<number>();
   const [refresh, setRefresh] = useState<boolean>(true);
   const [date, setDate] = useState<string>(moment().format('h:mm:ss a'));
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const iconUrl =
     conversion === ConversionItem.BITCOIN
@@ -46,6 +48,8 @@ export default function BalanceCard(): JSX.Element {
 
   const changeConversion = (type: ConversionItem): void => {
     setConversion(type);
+    setDisabled(true);
+    setTimeout(() => setDisabled(false), 3000);
   };
 
   const getWalletData = async (): Promise<void> => {
@@ -61,19 +65,33 @@ export default function BalanceCard(): JSX.Element {
           balance,
           ConvertTo.BTC
         );
-        availableBalance = Number(price?.data[coins.bitcoin.base].toFixed(4));
-        setMerchantBalance(availableBalance);
+        if (price?.success) {
+          availableBalance = Number(price?.data[coins.bitcoin.base].toFixed(4));
+          setMerchantBalance(availableBalance);
+        } else {
+          Notification(price?.error);
+        }
       } else {
         const price = await paymentService.getCurrencyBalance(
           [],
           balance,
           ConvertTo.USD
         );
-        availableBalance = Number(price?.dollarBalance.toFixed(2));
-        setMerchantBalance(availableBalance);
+        if (price?.success) {
+          availableBalance = Number(price?.dollarBalance.toFixed(2));
+          setMerchantBalance(availableBalance);
+        } else {
+          Notification(price?.error);
+        }
       }
       setDate(moment().format('h:mm:ss a'));
     }
+  };
+
+  const handleRefresh = (): void => {
+    setRefresh(!refresh);
+    setDisabled(true);
+    setTimeout(() => setDisabled(false), 3000);
   };
 
   useEffect(() => {
@@ -116,35 +134,38 @@ export default function BalanceCard(): JSX.Element {
               </div>
               <div className={styles.lastUpdated}>
                 <span className={styles.updateDate}>Last updated {date}</span>
-                <span
+                <button
                   className={styles.refresh}
-                  onClick={() => setRefresh(!refresh)}
+                  onClick={handleRefresh}
+                  disabled={disabled}
                 >
                   Refresh
-                </span>
+                </button>
               </div>
             </div>
             <div className={styles.conversion}>
               <p>Conversion</p>
               <div>
-                <div
+                <button
                   className={`${styles.conversionType} ${
                     ConversionItem.BITCOIN === conversion &&
                     styles.activeConversion
                   }`}
                   onClick={() => changeConversion(ConversionItem.BITCOIN)}
+                  disabled={ConversionItem.BITCOIN !== conversion && disabled}
                 >
                   <Icon width={25} height={25} src={imagesSvg.bitcoinCash} />
-                </div>
-                <div
+                </button>
+                <button
                   className={`${styles.conversionType} ${
                     ConversionItem.DOLLAR === conversion &&
                     styles.activeConversion
                   }`}
                   onClick={() => changeConversion(ConversionItem.DOLLAR)}
+                  disabled={ConversionItem.DOLLAR !== conversion && disabled}
                 >
                   <Icon width={11} height={20} src={imagesSvg.dollarIcon} />
-                </div>
+                </button>
               </div>
             </div>
           </div>

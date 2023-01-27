@@ -66,8 +66,16 @@
 
         .refresh {
           color: var(--blue_700);
+          border: none;
+          background: none;
           font-weight: 500;
           cursor: pointer;
+
+          &:disabled {
+            color: var(--black_500);
+            pointer-events: none;
+            opacity: 0.65;
+          }
         }
       }
     }
@@ -99,6 +107,11 @@
             filter: var(--button_active);
           }
         }
+
+        &:disabled {
+          pointer-events: none;
+          opacity: 0.65;
+        }
       }
 
       p {
@@ -124,7 +137,6 @@
     justify-content: space-between;
 
     button {
-      max-width: 200px;
       border-radius: 40px !important;
       height: 50px !important;
       width: 100% !important;

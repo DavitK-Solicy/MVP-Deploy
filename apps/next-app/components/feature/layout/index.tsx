@@ -15,7 +15,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
     <div className={styles.generalModeBg}>
       {isAuthPath && <SideBar />}
       <div className={styles.rightSection}>
-        {isAuthPath && <Header />}
+        <Header isAuthPath={isAuthPath} />
         <div className={styles.context}>{children}</div>
         <Footer />
       </div>
