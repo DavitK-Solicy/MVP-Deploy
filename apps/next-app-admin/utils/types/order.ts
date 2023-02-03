@@ -28,4 +28,5 @@ export interface OrderData {
   type: CoinType;
   status: OrderStatus;
   orderDate: Date;
+  userId: string;
 }

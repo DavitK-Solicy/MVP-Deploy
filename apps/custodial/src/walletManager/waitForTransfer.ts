@@ -1,5 +1,5 @@
 import { ContractInfo } from "../util/constants/contracts";
-import { getContract } from "./getContract";
+import { getContractWS } from "./getContractWS";
 import { Contract } from "web3-eth-contract"
 
 export interface TransferReturnValues {
@@ -14,9 +14,10 @@ export const waitForTransfer = (
   onSuccess: (TransferReturnValues) => unknown,
   onError: (any) => unknown,
 ): () => void => {
-  const contract: Contract | false = getContract(contractInfo);
-
-  if (contract === false) {
+  let contract: Contract;
+  try {
+    contract = getContractWS(contractInfo)[0];
+  } catch(e) {
     onError("Could not get contract");
     return;
   }

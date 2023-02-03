@@ -30,6 +30,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ethereumjs/tx": "^4.0.2",
     "@nrwl/next": "^12.3.6",
     "@react-oauth/google": "^0.2.4",
     "@types/body-parser": "^1.19.2",
@@ -46,6 +47,7 @@
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "document-register-element": "1.13.1",
+    "ethereumjs-tx": "^2.1.2",
     "ethers": "^5.7.2",
     "express": "^4.17.1",
     "google-auth-library": "^8.0.2",
@@ -61,7 +63,7 @@
     "shortid": "^2.2.16",
     "tslib": "^2.0.0",
     "web3": "^1.8.1",
-    "web3-eth-contract": "^1.8.1"
+    "web3-eth-contract": "^1.8.2"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",
@@ -102,5 +104,8 @@
     "ts-jest": "26.5.5",
     "ts-node": "~9.1.1",
     "typescript": "~4.2.4"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }

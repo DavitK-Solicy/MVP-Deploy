@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { Wallet } from '../../models/Wallet';
 import generateAndStoreWallet from '../../walletManager/entities/createWallet';
+import generateAndStoreTempWallet from '../../walletManager/entities/createTempWallet';
+import sendFundsToParent from '../../walletManager/sendFundsToParent';
+import { TempWallet } from '../../models/TempWallet';
+import getBalance from '../../util/helpers/getWalletBalance';
 
 export const getAllWallets = async (req: Request, res: Response) => {
   try {
@@ -8,9 +12,14 @@ export const getAllWallets = async (req: Request, res: Response) => {
     const offset = Number(req.query.offset);
 
     const walletsCount = await Wallet.collection.countDocuments();
-    const wallets = await Wallet.find().skip(offset).limit(limit);
+    const wallets = await Wallet.find().skip(offset).limit(limit).lean();
+    for (const wallet of wallets) {
+      wallet.balance = await getBalance(wallet);
+      delete wallet.mnemonic;
+      delete wallet.privateKey;
+    }
 
-    return res.send({ wallets, count: walletsCount });
+    return res.send({ success: true, data: wallets, count: walletsCount });
   } catch (err) {
     res.status(404);
     res.send({ success: false, error: err.message });
@@ -19,8 +28,20 @@ export const getAllWallets = async (req: Request, res: Response) => {
 
 export const createWallet = async (req: Request, res: Response) => {
   try {
-    const wallet = await generateAndStoreWallet();
+    const resObj = await generateAndStoreWallet();
 
+    if (!resObj)
+      throw "Could not create wallet";
+
+    const wallet = await resObj.toObject();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete wallet.mnemonic;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete wallet.privateKey;
+
+    res.status(201);
     return res.json({ success: true, data: wallet });
   } catch (err) {
     res.status(404);
@@ -32,9 +53,17 @@ export const getWallet = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const wallet = await Wallet.findById(id);
+    const wallet = await Wallet.findById(id).lean();
 
-    return res.send(wallet);
+    if (!wallet) {
+      res.status(404);
+      return res.send({ success: true, data: null });
+    }
+    wallet.balance = await getBalance(wallet);
+    delete wallet.privateKey;
+    delete wallet.mnemonic;
+
+    return res.send({ success: true, data: {wallet} });
   } catch (err) {
     res.send({ success: false, error: err.message });
   }
@@ -44,7 +73,108 @@ export const deleteWallet = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    await Wallet.deleteOne({ _id: id });
+    const wallet = await Wallet.findById(id);
+    if (!wallet) {
+      res.status(404);
+      res.send({ success: false, error: 'Wallet not found' });
+    }
+    await wallet.remove();
+
+    return res.send({ success: true });
+  } catch (err) {
+    res.status(400);
+    res.send({ success: false, error: err.message });
+  }
+};
+
+// -------------------------------- Child api handlers ------------------------------- //
+
+export const getAllChildWallets = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const limit = Number(req.query.limit);
+    const offset = Number(req.query.offset);
+
+    const wallets = await TempWallet.find({ parentWalletId: id })
+      .skip(offset)
+      .limit(limit)
+      .lean();
+
+    for (const wallet of wallets) {
+      wallet.balance = await getBalance(wallet);
+      delete wallet.mnemonic;
+      delete wallet.privateKey;
+    }
+
+    return res.send({ success: true, data: wallets, count: wallets.length });
+  } catch (err) {
+    res.status(404);
+    res.send({ success: false, error: err.message });
+  }
+};
+
+export const createChildWallet = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const resObj = await generateAndStoreTempWallet(id);
+    if (!resObj)
+      throw "Could not create wallet";
+    const wallet = await resObj.toObject();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete wallet.mnemonic;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete wallet.privateKey;
+
+    return res.json({ success: true, data: wallet });
+  } catch (err) {
+    res.status(404);
+    res.send({ success: false, error: err.message });
+  }
+};
+
+export const getChildWallet = async (req: Request, res: Response) => {
+  try {
+    const { childId } = req.params;
+
+    const wallet = await TempWallet.findById(childId).lean();
+
+    if (!wallet) {
+      res.status(404);
+      return res.send({ success: true, data: null });
+    }
+    wallet.balance = await getBalance(wallet);
+    delete wallet.mnemonic;
+    delete wallet.privateKey;
+
+    return res.send({ success: true, data: wallet });
+  } catch (err) {
+    res.send({ success: false, error: err.message });
+  }
+};
+
+export const deleteChildWallet = async (req: Request, res: Response) => {
+  try {
+    const { id, childId } = req.params;
+
+    const parentWallet = await Wallet.findById(id);
+    const childWallet = await TempWallet.findById(childId);
+
+    if (!parentWallet || !childWallet) {
+      res.status(404);
+      return res.send({ success: false, error: 'Wallets not found' });
+    }
+
+    await sendFundsToParent(
+      parentWallet.address,
+      childWallet.address,
+      childWallet.privateKey
+    );
+
+    await childWallet.remove();
 
     return res.send({ success: true });
   } catch (err) {

@@ -4,9 +4,8 @@ export interface EnvVariables {
 }
 
 const env: EnvVariables = {
-  databaseConnectionUrl:
-    process.env.DATABASE_CONNECTION_URL ?? 'mongodb://localhost:27017',
-  port: Number(process.env.PORT) ?? 8081,
+  databaseConnectionUrl: process.env.DATABASE_CONNECTION_URL,
+  port: Number(process.env.PORT),
 };
 
 export default env;

@@ -1,11 +1,12 @@
 import { ethers } from 'ethers';
-import { Wallet } from '../../models/Wallet';
+import { TempWallet } from "../../models/TempWallet";
 
-const createWallet = async () => {
+const createTempWallet = async (parentWalletId: string) => {
   try {
     const wallet = ethers.Wallet.createRandom();
 
-    return await Wallet.create({
+    return await TempWallet.create({
+      parentWalletId,
       address: wallet.address,
       mnemonic: wallet.mnemonic.phrase,
       privateKey: wallet.privateKey,
@@ -16,4 +17,4 @@ const createWallet = async () => {
   }
 };
 
-export default createWallet;
+export default createTempWallet;

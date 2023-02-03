@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
+import { User } from '../../models/User';
 import { Order } from '../../models/Order';
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
+    const isExists = await User.findById(req.body.userId);
+
+    if (!isExists) {
+      res.json({ success: false, error: "User doesn't exist" });
+    }
+
     const data = await Order.create({ ...req.body });
 
     return res.json({ success: true, data });
@@ -19,7 +26,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
     const count = await Order.collection.countDocuments();
     const data = await Order.find()
       .skip(offset)
-      .populate('sender')
+      .populate('userId')
       .limit(limit);
 
     return res.send({ success: true, data, count });

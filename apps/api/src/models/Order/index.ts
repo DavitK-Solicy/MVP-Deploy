@@ -40,6 +40,11 @@ const orderSchema = new Schema({
     type: Date,
     default: currentDate,
   },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 export const Order = mongoose.model('Order', orderSchema);

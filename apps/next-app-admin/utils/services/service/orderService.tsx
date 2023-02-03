@@ -2,11 +2,7 @@ import { Context } from 'react';
 import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
-import {
-  OrderData,
-  OrderResponse,
-  OrderUpdateResponse,
-} from 'types/order';
+import { OrderData, OrderResponse, OrderUpdateResponse } from 'types/order';
 
 export interface IOrderService {
   getAllOrders(limit?: number, offset?: number): Promise<OrderResponse>;
