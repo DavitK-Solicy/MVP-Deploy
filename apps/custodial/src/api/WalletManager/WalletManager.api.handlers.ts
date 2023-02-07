@@ -5,6 +5,7 @@ import generateAndStoreTempWallet from '../../walletManager/entities/createTempW
 import sendFundsToParent from '../../walletManager/sendFundsToParent';
 import { TempWallet } from '../../models/TempWallet';
 import getBalance from '../../util/helpers/getWalletBalance';
+import { getSenders } from "../../walletManager/getSenders";
 
 export const getAllWallets = async (req: Request, res: Response) => {
   try {
@@ -146,6 +147,7 @@ export const getChildWallet = async (req: Request, res: Response) => {
       res.status(404);
       return res.send({ success: true, data: null });
     }
+    wallet.senders = await getSenders(wallet.address);
     wallet.balance = await getBalance(wallet);
     delete wallet.mnemonic;
     delete wallet.privateKey;
