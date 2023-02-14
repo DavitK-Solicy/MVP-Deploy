@@ -21,12 +21,18 @@ import {
   updateForgottenPassword,
   loginForAdmin,
   updateEmbed,
+  getWalletBalance,
+  getUserInfoByIdentificationToken,
+  getPayWallet,
 } from './User.api.handlers';
 
 const router = Router();
 
 router.get('/admin', requireAuthAdmin, getAllUsers);
 router.get('/me', requireAuth, getCurrentUser);
+router.get('/child-wallet', getPayWallet);
+router.get('/wallet-balance', requireAuth, getWalletBalance);
+router.get('/:identificationToken', getUserInfoByIdentificationToken);
 router.post('/recover-password', sendRecoverPasswordEmail);
 router.post('/check-mail', checkVerificationCode);
 router.post('/admin', requireAuthAdmin, createUser);

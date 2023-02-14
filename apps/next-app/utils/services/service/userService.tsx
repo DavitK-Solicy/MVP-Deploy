@@ -2,8 +2,9 @@ import { Context } from 'react';
 import { Contextualizer } from '../contextualizer';
 import { ProvidedServices } from '../providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
-import { ContextProps } from 'types/user';
-import { User } from 'utils/model/user';
+import { BalanceResponse, ContextProps } from 'types/user';
+import { ChildWallet, User } from 'utils/model/user';
+import { Coins, ConvertTo } from 'components/shared/balanceCard/type';
 
 export interface IUserService {
   getCurrentUser(): Promise<{
@@ -11,12 +12,30 @@ export interface IUserService {
     success: boolean;
     data?: User;
   }>;
+  getWalletBalance(
+    coins: Array<Coins>,
+    currencyType?: string
+  ): Promise<BalanceResponse>;
   updateEmbed(
     embed: string
   ): Promise<{
     success: boolean;
     data: string;
     message: string;
+  }>;
+  getUserInfoByIdentificationToken(
+    identificationToken: string
+  ): Promise<{
+    error?: string;
+    success: boolean;
+    data?: User;
+  }>;
+  getPayWallet(
+    primaryWalletId: string
+  ): Promise<{
+    error?: string;
+    success: boolean;
+    childWallet?: ChildWallet;
   }>;
 }
 
@@ -43,6 +62,39 @@ export const UserService = ({ children }: ContextProps) => {
       }
     },
 
+    async getWalletBalance(
+      coins: Array<Coins> = [],
+      currencyType?: ConvertTo
+    ): Promise<BalanceResponse> {
+      try {
+        const response = await axiosInstance.get(
+          `/users/wallet-balance?coins=${coins}&currencyType=${currencyType}`
+        );
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async getPayWallet(
+      primaryWalletId: string
+    ): Promise<{
+      error?: string;
+      success: boolean;
+      childWallet?: ChildWallet;
+    }> {
+      try {
+        const response = await axiosInstance.get(
+          `/users/child-wallet?primaryWalletId=${primaryWalletId}`
+        );
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
     async updateEmbed(
       embed: string
     ): Promise<{
@@ -54,6 +106,24 @@ export const UserService = ({ children }: ContextProps) => {
         const response = await axiosInstance.put('/users/update-embed', {
           embed,
         });
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async getUserInfoByIdentificationToken(
+      identificationToken: string
+    ): Promise<{
+      error?: string;
+      success: boolean;
+      data?: User;
+    }> {
+      try {
+        const response = await axiosInstance.get(
+          `/users/${identificationToken}`
+        );
 
         return response.data;
       } catch (err) {

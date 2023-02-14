@@ -1,0 +1,16 @@
+.widgetPaymentModal {
+  :global(.ant-modal-content) {
+    margin: 0 auto;
+    border: 2px solid var(--purple_200);
+    max-width: 300px;
+  }
+
+  :global(.ant-modal-body) {
+    padding: 0;
+  }
+
+  div {
+    border-radius: 10px !important;
+    max-width: 405px;
+  }
+}

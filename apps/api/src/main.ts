@@ -7,6 +7,7 @@ import UserRouter from './api/User';
 import OrderRouter from './api/Order';
 import InvoiceRouter from './api/Invoice';
 import PaymentRouter from './api/Payment';
+import { initializeSockets } from './api/socket';
 import env from './util/constants/env';
 
 const app = express();
@@ -22,6 +23,18 @@ app.use(
 );
 app.use(cookieParser());
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const http = require('http').Server(app);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const io = require('socket.io')(http, {
+  cors: {
+    origin: env.deployedFrontendUrl,
+    methods: ['GET', 'POST'],
+  },
+});
+
+initializeSockets(io);
+
 mongoose.connect(env.databaseConnectionUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -35,6 +48,6 @@ app.use('/orders', OrderRouter);
 app.use('/invoices', InvoiceRouter);
 app.use('/payments', PaymentRouter);
 
-app.listen(env.port, () => {
+http.listen(env.port, () => {
   console.log(`Server running on port ${env.port}`);
 });

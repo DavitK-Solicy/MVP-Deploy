@@ -1,10 +1,14 @@
 import { Request, Response } from 'express';
+import * as CoinGecko from 'coingecko-api';
 import * as jwt from 'jsonwebtoken';
 import * as googleAuth from 'google-auth-library';
+import { Socket } from 'socket.io';
 import { AuthProviders, User, UserRoles } from '../../models/User';
 import { MailOptions, sendEmail } from '../../util/email/email.util.nodemailer';
 import { axiosInstance } from '../../util/custodial';
 import env from '../../util/constants/env';
+import { coinsAbbreviation } from '../../util/helpers';
+import { Coins, MerchantWallets } from '../../util/types';
 
 const googleClient = new googleAuth.OAuth2Client(env.clientId);
 
@@ -47,7 +51,7 @@ export const createUser = async (req: Request, res: Response) => {
       password,
       role,
       bankAccount,
-      primaryWalletId: response?.data?._id,
+      primaryWalletId: response?.data?.data?._id,
     });
 
     return res.json({
@@ -137,7 +141,8 @@ export const signup = async (req: Request, res: Response) => {
       fullName,
       email,
       password,
-      primaryWallet: response?.data?.data,
+      primaryWalletId: response?.data?.data?._id,
+      identificationToken: jwt.sign({ id: email, fullName }, SECRET_JWT_CODE),
     });
 
     const token = jwt.sign({ id: user._id, email }, SECRET_JWT_CODE);
@@ -539,5 +544,132 @@ export const updateEmbed = async (req: Request, res: Response) => {
     });
   } catch (err) {
     res.send({ success: false, message: err.message });
+  }
+};
+
+// need to refactor this API
+export const getWalletBalance = async (req: Request, res: Response) => {
+  try {
+    const currencyType = String(req.query.currencyType);
+    const coinTypes = String(req.query.coins);
+
+    const user = req['user'];
+    const CoinGeckoClient = new CoinGecko();
+
+    const wallet = await axiosInstance.get(`/wallets/${user.primaryWalletId}
+    `);
+
+    let walletBalance = Number(wallet.data.data.wallet.balance);
+
+    const coinsData = coinTypes.split(',');
+    if (!coinsData.includes('ethereum')) coinsData.push('ethereum');
+
+    const coinsBases = coinsAbbreviation(coinsData);
+
+    const data = await CoinGeckoClient.exchanges.fetchTickers('bitfinex', {
+      coin_ids: coinsData,
+    });
+
+    const coinList = {};
+    const coinData = data.data.tickers.filter((t) => t.target === Coins.USD);
+
+    const ethereum = coinData.filter((t) => t.base === Coins.ETH)[0].last;
+    walletBalance *= ethereum;
+
+    if (currencyType === Coins.USD) {
+      return res.send({
+        success: true,
+        data: coinList,
+        dollarBalance: walletBalance,
+      });
+    }
+
+    if (currencyType === Coins.BTC) {
+      [Coins.BTC].forEach((item: string) => {
+        const temp = coinData.filter((t) => t.base === item);
+        const res = temp.length === 0 ? [] : temp[0];
+        coinList[item] = walletBalance / res.last;
+      });
+      return res.send({
+        success: true,
+        data: coinList,
+        dollarBalance: walletBalance,
+      });
+    }
+
+    const bitcoin = coinData.filter((t) => t.base === Coins.BTC)[0].last;
+    coinsBases.forEach((item: string) => {
+      const temp = coinData.filter((t) => t.base === item);
+      const res = temp.length === 0 ? [] : temp[0];
+      coinList[item] = walletBalance / res.last;
+    });
+
+    return res.send({
+      success: true,
+      data: coinList,
+      bitcoin,
+      dollarBalance: walletBalance,
+    });
+  } catch (err) {
+    res.send({ success: false, message: err.message });
+  }
+};
+
+export const getUserInfoByIdentificationToken = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { identificationToken } = req.params;
+
+    if (!identificationToken)
+      return res.send({
+        success: false,
+        message: 'identificationToken is empty!',
+      });
+
+    const user = await User.findOne({ identificationToken });
+
+    if (!user) return res.send({ success: false, message: 'User not found!' });
+
+    return res.send({ success: true, data: user });
+  } catch (err) {
+    res.send({ success: false, message: err.message });
+  }
+};
+
+export const getPayWallet = async (req: Request, res: Response) => {
+  try {
+    const { primaryWalletId } = req.query;
+
+    const childWallet = await axiosInstance.post(
+      `/wallets/${primaryWalletId}/children`
+    );
+
+    return res.send({
+      success: true,
+      childWallet: childWallet.data.data,
+    });
+  } catch (err) {
+    res.send({ success: false, message: err.message });
+  }
+};
+
+export const checkChildWalletBalance = async (
+  socket: Socket,
+  data: MerchantWallets
+) => {
+  let response;
+  try {
+    response = await axiosInstance.get(
+      `/wallets/${data.parentId}/children/${data.childId}`
+    );
+
+    socket.emit('childWallet', {
+      success: response.data.data.balance >= data.orderAmount,
+    });
+  } catch (err) {
+    response = { success: false, error: err.message };
+    socket.emit('childWallet', response);
   }
 };

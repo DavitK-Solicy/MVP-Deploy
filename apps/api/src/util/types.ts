@@ -9,3 +9,9 @@ export enum Coins {
   USDT = 'USDT',
   USD = 'USD',
 }
+
+export interface MerchantWallets {
+  childId: string;
+  parentId: string;
+  orderAmount: number;
+}

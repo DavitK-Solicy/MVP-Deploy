@@ -4,13 +4,14 @@ import { Order } from '../../models/Order';
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const isExists = await User.findById(req.body.userId);
+    const { identificationToken } = req.body;
 
-    if (!isExists) {
-      res.json({ success: false, error: "User doesn't exist" });
-    }
+    const merchant = await User.findOne({ identificationToken });
 
-    const data = await Order.create({ ...req.body });
+    if (!merchant)
+      return res.json({ success: false, error: 'Merchant not found' });
+
+    const data = await Order.create({ ...req.body, merchantId: merchant.id });
 
     return res.json({ success: true, data });
   } catch (err) {
@@ -49,11 +50,20 @@ export const getOrderById = async (req: Request, res: Response) => {
 
 export const updateOrder = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id, identificationToken } = req.query;
 
-    const order = await Order.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const merchant = await User.findOne({ identificationToken });
+
+    if (!merchant)
+      return res.json({ success: false, error: 'Merchant not found' });
+
+    const order = await Order.findOneAndUpdate(
+      {
+        _id: id,
+        merchantId: merchant.id,
+      },
+      req.body
+    );
 
     return res.send({ success: true, data: order });
   } catch (err) {

@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 10px;
+
+  .congrats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+
+    .text {
+      padding: 0 10px;
+      font-size: var(--text_sm);
+      color: var(--gray_300);
+    }
+
+    .hands {
+      display: flex;
+
+      span {
+        font-size: var(--text_lg);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .buttonWrapper {
+    display: flex;
+    justify-content: center;
+
+    .gotoHome {
+      background-image: var(--modal_button_gradient);
+      display: block;
+      padding: 10px;
+      text-align: center;
+      transition: 0.5s;
+      background-size: 200% auto;
+      color: var(--white_900);
+      box-shadow: 0 0 20px var(--white_900);
+      border-radius: 30px !important;
+      font-size: var(--text_m);
+      font-weight: 500;
+      max-width: 200px;
+      height: unset !important;
+    }
+
+    .gotoHome:hover {
+      background-position: right center;
+      color: var(--white_900);
+      text-decoration: none;
+      border-color: unset !important;
+    }
+  }
+
+  .support {
+    text-align: center;
+
+    div {
+      font-size: var(--text_xsm);
+      a {
+        color: var(--blue_400);
+        font-size: var(--text_xsm);
+      }
+    }
+  }
+
+  .modalFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .infoSection {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        color: var(--blue_400);
+        font-size: var(--text_xsm);
+      }
+    }
+  }
+}

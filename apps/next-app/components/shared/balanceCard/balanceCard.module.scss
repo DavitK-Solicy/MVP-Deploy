@@ -43,6 +43,7 @@
         .balanceContainer {
           display: flex;
           align-items: center;
+          gap: 5px;
 
           .dollarIcon {
             filter: var(--blue_icon);

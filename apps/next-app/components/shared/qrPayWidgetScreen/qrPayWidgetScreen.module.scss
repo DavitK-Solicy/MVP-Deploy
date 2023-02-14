@@ -1,0 +1,166 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+
+  .goBack {
+    div {
+      cursor: pointer;
+    }
+  }
+
+  .price {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid var(--gray_450);
+    margin-top: 5px;
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .payMethods {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    .qrWrapper {
+      border: 1px solid var(--gray_400);
+      border-radius: 24px !important;
+      padding: 10px;
+    }
+
+    .title {
+      font-weight: 500;
+      color: var(--blue_900);
+      font-size: var(--text_tiny);
+    }
+
+    .walletAddress {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .addressWrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px 10px;
+      border: 1px solid var(--gray_450);
+
+      div {
+        border-radius: unset !important;
+      }
+
+      .address {
+        max-width: 165px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+
+    .copyBackground {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--copy_button_gradient);
+      padding: 2px;
+      cursor: pointer;
+
+      .copyWrapper {
+        background: var(--white_900);
+        display: flex;
+        flex-direction: column;
+        padding: 5px 15px;
+        border-radius: 8px !important;
+
+        div {
+          border-radius: unset !important;
+        }
+
+        span {
+          font-size: var(--text_min);
+        }
+      }
+    }
+  }
+
+  .buttonWrapper {
+    display: flex;
+    justify-content: center;
+
+    .gotoHome {
+      background-image: var(--modal_button_gradient);
+      display: block;
+      padding: 10px;
+      text-align: center;
+      transition: 0.5s;
+      background-size: 200% auto;
+      color: var(--white_900);
+      box-shadow: 0 0 20px var(--white_900);
+      border-radius: 30px !important;
+      font-size: var(--text_m);
+      font-weight: 500;
+      max-width: 200px;
+      height: unset !important;
+    }
+
+    .gotoHome:hover {
+      background-position: right center;
+      color: var(--white_900);
+      text-decoration: none;
+      border-color: unset !important;
+    }
+  }
+
+  .support {
+    text-align: center;
+
+    div {
+      font-size: var(--text_xsm);
+
+      a {
+        color: var(--blue_400);
+        font-size: var(--text_xsm);
+      }
+    }
+  }
+
+  .time {
+    display: flex;
+    gap: 5px;
+
+    .text {
+      display: flex;
+      font-size: var(--text_tiny);
+      color: var(--gray_500);
+      font-weight: 500;
+      span {
+        color: var(--green_700);
+      }
+    }
+  }
+
+  .modalFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .infoSection {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        color: var(--blue_400);
+        font-size: var(--text_xsm);
+      }
+    }
+  }
+}

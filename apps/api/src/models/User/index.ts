@@ -32,25 +32,6 @@ const bankAccountSchema = new Schema({
   },
 });
 
-const walletSchema = new Schema({
-  _id: {
-    type: Schema.Types.ObjectId,
-    default: null,
-  },
-  address: {
-    type: String,
-    default: null,
-  },
-  mnemonic: {
-    type: String,
-    default: null,
-  },
-  privateKey: {
-    type: String,
-    default: null,
-  },
-});
-
 const userSchema = new Schema({
   fullName: {
     type: String,
@@ -95,9 +76,14 @@ const userSchema = new Schema({
     type: String,
     default: embedType.otherPayment,
   },
-  primaryWallet: {
-    type: walletSchema,
+  primaryWalletId: {
+    type: String,
     default: null,
+  },
+  identificationToken: {
+    type: String,
+    unique: true,
+    required: true,
   },
 });
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button as AntdButton, Spin } from 'antd';
 import Icon from 'components/shared/icon';
+import Image from 'components/shared/image';
 import { returnsPromise } from 'utils';
 import ButtonProps, { ButtonType } from './type';
 
@@ -13,6 +14,7 @@ export default function Button({
   text,
   btnType,
   img,
+  widgetSrc,
   width = 21,
   height = 21,
   ...rest
@@ -55,7 +57,7 @@ export default function Button({
     }
   };
 
-  return (
+  return !widgetSrc ? (
     <AntdButton
       className={`${styles.btn} ${styles.light} ${className} ${getStyle(
         btnType
@@ -67,5 +69,12 @@ export default function Button({
       {img && <Icon width={width} height={height} src={img} />}
       {spinLoading ? <Spin /> : children}
     </AntdButton>
+  ) : (
+    <Image
+      width={width}
+      height={height}
+      src={widgetSrc}
+      onClick={handleButton}
+    />
   );
 }

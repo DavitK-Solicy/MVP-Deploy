@@ -5,7 +5,9 @@ import generateAndStoreTempWallet from '../../walletManager/entities/createTempW
 import sendFundsToParent from '../../walletManager/sendFundsToParent';
 import { TempWallet } from '../../models/TempWallet';
 import getBalance from '../../util/helpers/getWalletBalance';
-import { getSenders } from "../../walletManager/getSenders";
+import { getSenders } from '../../walletManager/getSenders';
+import { contracts } from '../../util/constants/contracts';
+import { createTransferTxURL } from '../../walletManager/createTransferTxURL';
 
 export const getAllWallets = async (req: Request, res: Response) => {
   try {
@@ -31,8 +33,7 @@ export const createWallet = async (req: Request, res: Response) => {
   try {
     const resObj = await generateAndStoreWallet();
 
-    if (!resObj)
-      throw "Could not create wallet";
+    if (!resObj) throw 'Could not create wallet';
 
     const wallet = await resObj.toObject();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -64,7 +65,7 @@ export const getWallet = async (req: Request, res: Response) => {
     delete wallet.privateKey;
     delete wallet.mnemonic;
 
-    return res.send({ success: true, data: {wallet} });
+    return res.send({ success: true, data: { wallet } });
   } catch (err) {
     res.send({ success: false, error: err.message });
   }
@@ -119,8 +120,7 @@ export const createChildWallet = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const resObj = await generateAndStoreTempWallet(id);
-    if (!resObj)
-      throw "Could not create wallet";
+    if (!resObj) throw 'Could not create wallet';
     const wallet = await resObj.toObject();
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -179,6 +179,38 @@ export const deleteChildWallet = async (req: Request, res: Response) => {
     await childWallet.remove();
 
     return res.send({ success: true });
+  } catch (err) {
+    res.status(404);
+    res.send({ success: false, error: err.message });
+  }
+};
+
+export const getTransactionURL = async (req: Request, res: Response) => {
+  try {
+    const { childId } = req.params;
+    const { price } = req.query;
+    const amount = Number(price);
+
+    const wallet = await TempWallet.findById(childId);
+
+    if (!wallet) {
+      res.status(404);
+      return res.send({ success: false, error: 'Wallet not found' });
+    }
+
+    if (!amount) {
+      res.status(404);
+      return res.send({ success: false, error: 'Amount is required' });
+    }
+
+    const url = createTransferTxURL(
+      contracts['MTK'].address,
+      wallet.address,
+      amount,
+      contracts['MTK'].chainId
+    );
+
+    return res.send({ success: true, data: url });
   } catch (err) {
     res.status(404);
     res.send({ success: false, error: err.message });

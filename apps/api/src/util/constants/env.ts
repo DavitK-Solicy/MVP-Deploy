@@ -6,6 +6,8 @@ export interface EnvVariables {
   clientId: string;
   port: number;
   custodialBaseUrl: string;
+  web3Provider: string;
+  deployedFrontendUrl: string;
 }
 
 const env: EnvVariables = {
@@ -19,6 +21,11 @@ const env: EnvVariables = {
   clientId: process.env.CLIENT_ID ?? '',
   custodialBaseUrl:
     process.env.NEXT_PUBLIC_CUSTODIAL_BASE_URL ?? 'http://localhost:8081',
+  web3Provider:
+    process.env.WEB3_PROVIDER ??
+    'https://eth-goerli.g.alchemy.com/v2/fhoMkdYwgRymdjo6RSWu-VDBkf0CCEtC',
+  deployedFrontendUrl:
+    process.env.DEPLOYED_FRONTEND_URL ?? 'http://localhost:4200',
 };
 
 export default env;

@@ -1,13 +1,4 @@
-import { GeneralResponse } from "./auth";
-
-export interface OrderType {
-  _id: string;
-  title: string;
-  amount: number;
-  type: CoinType;
-  status: OrderStatus;
-  orderDate: Date;
-}
+import { GeneralResponse } from './auth';
 
 export enum CoinType {
   BITCOIN = 'bitcoin',
@@ -23,14 +14,18 @@ export enum OrderStatus {
 }
 
 export interface OrderData {
-  _id: string;
-  title: string;
-  amount: number;
-  type: CoinType;
-  status: OrderStatus;
-  orderDate: Date;
+  _id?: string;
+  title?: string;
+  amount?: number;
+  type?: CoinType;
+  status?: OrderStatus;
+  orderDate?: Date;
 }
 
-export interface OrderDataResponse extends GeneralResponse{
+export interface OrdersDataResponse extends GeneralResponse {
   data?: Array<OrderData>;
+}
+
+export interface OrderDataResponse extends GeneralResponse {
+  data?: OrderData;
 }

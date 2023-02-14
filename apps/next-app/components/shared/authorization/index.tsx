@@ -53,10 +53,6 @@ export default function Authorization({
         localStorageKeys.EMAIL,
         res?.user?.email
       );
-      localStorage.setItemInLocalStorage(
-        localStorageKeys.WALLET,
-        res?.user?.primaryWallet?.address
-      );
       router.push('/');
     } else {
       Notification(res?.error, warningModalContent.filedModalIcon);

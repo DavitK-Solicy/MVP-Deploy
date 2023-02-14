@@ -4,7 +4,7 @@
   justify-content: flex-start;
   align-items: center;
   column-gap: 17px;
-  background: #ffffff;
+  background: var(--white_900);
   cursor: pointer;
   min-width: 171px;
   &.activeItem {

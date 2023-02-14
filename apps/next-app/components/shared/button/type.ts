@@ -6,9 +6,11 @@ export default interface ButtonProps extends AntdButtonProps {
   width?: number;
   height?: number;
   img?: string;
+  widgetSrc?: string;
   transparent?: boolean;
   btnType?: ButtonType;
 }
+
 export enum ButtonType {
   blue = 'blue',
   black = 'black',

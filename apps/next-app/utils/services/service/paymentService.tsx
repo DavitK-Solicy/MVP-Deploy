@@ -1,6 +1,6 @@
 import { Context } from 'react';
 import { Coins, ConvertTo } from 'components/shared/balanceCard/type';
-import { PaymentResponse } from 'types/wallet';
+import { ConvertResponse, PaymentResponse, PayWithQr } from 'types/wallet';
 import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
@@ -11,6 +11,15 @@ export interface IPaymentService {
     amount: number,
     currencyType?: string
   ): Promise<PaymentResponse>;
+  convertUsdToCoin(
+    coins: Array<Coins>,
+    amount: number
+  ): Promise<ConvertResponse>;
+  payWithQr(
+    parentWalletId: string,
+    childWalletId: string,
+    price: number
+  ): Promise<PayWithQr>;
 }
 
 export const PaymentServiceContext: Context<
@@ -33,6 +42,37 @@ export const PaymentService = ({ children }: any) => {
         );
 
         return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async convertUsdToCoin(
+      coins: Array<Coins> = [],
+      amount: number
+    ): Promise<PaymentResponse> {
+      try {
+        const response = await axiosInstance.get(
+          `/payments/convert-coin?coins=${coins}&amount=${amount}`
+        );
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async payWithQr(
+      parentWalletId: string,
+      childWalletId: string,
+      price: number
+    ): Promise<PayWithQr> {
+      try {
+        const response = await axiosInstance.get(
+          `/payments/pay-with-qr?parentWalletId=${parentWalletId}&childWalletId=${childWalletId}&price=${price}`
+        );
+
+        return response?.data?.data;
       } catch (err) {
         console.log(err);
       }

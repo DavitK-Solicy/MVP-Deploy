@@ -1,5 +1,3 @@
-import { Wallet } from 'types/wallet';
-
 export enum UserRoles {
   ADMIN = 'admin',
   MERCHANT = 'merchant',
@@ -23,7 +21,14 @@ export interface User {
   role: UserRoles;
   bankAccount: UserBankAccount;
   authProvider: AuthProviders;
-  primaryWalletId: Wallet;
+  primaryWalletId: string;
   referralCode: string;
   embed: string;
+}
+
+export interface ChildWallet {
+  _id: string;
+  address: string;
+  createdAt: string;
+  parentWalletId: string;
 }

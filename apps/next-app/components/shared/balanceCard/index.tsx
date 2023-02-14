@@ -1,5 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
-import Web3 from 'web3';
+import { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import Icon from 'components/shared/icon';
 import Button from 'components/shared/button';
@@ -7,19 +6,16 @@ import PaymentModal from 'components/feature/paymentModal';
 import WithdrawModal from 'components/feature/withdrawModal';
 import WhiteBox from 'components/shared/whiteBox';
 import Notification from 'components/shared/notification';
-import { PaymentServiceContext } from 'utils/services/service/paymentService';
 import TransactionFeeModal from 'components/feature/transactionFeeModal';
-import * as localStorage from 'utils/services/localStorageService';
-import localStorageKeys from 'utils/constants/localStorageKeys';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import { coins } from 'utils/constants/functions';
-import env from 'utils/constants/env';
+import { UserServiceContext } from 'utils/services/service/userService';
 import { Coins, ConversionItem, ConvertTo } from './type';
 
 import styles from './balanceCard.module.scss';
 
 export default function BalanceCard(): JSX.Element {
-  const paymentService = useContext(PaymentServiceContext);
+  const userService = useContext(UserServiceContext);
 
   const [openPaymentModal, setOpenPaymentModal] = useState<boolean>(false);
   const [openWithdrawModal, setOpenWithdrawModal] = useState<boolean>(false);
@@ -39,13 +35,6 @@ export default function BalanceCard(): JSX.Element {
       ? imagesSvg.bitcoin
       : imagesSvg.dollarIcon;
 
-  const wallet = useMemo(
-    () =>
-      typeof window !== 'undefined' &&
-      localStorage.getItemFromLocalStorage(localStorageKeys.WALLET).toString(),
-    []
-  );
-
   const changeConversion = (type: ConversionItem): void => {
     setConversion(type);
     setDisabled(true);
@@ -53,39 +42,24 @@ export default function BalanceCard(): JSX.Element {
   };
 
   const getWalletData = async (): Promise<void> => {
-    if (wallet) {
-      const web3 = await new Web3(env.web3Provider);
-      const walletBalance = await web3.eth.getBalance(wallet);
-      const balance = Number(web3.utils.fromWei(walletBalance, 'ether'));
+    let availableBalance;
+    const price = await userService.getWalletBalance(
+      conversion === ConversionItem.BITCOIN ? [Coins.BITCOIN] : [],
+      conversion === ConversionItem.BITCOIN ? ConvertTo.BTC : ConvertTo.USD
+    );
 
-      let availableBalance;
-      if (conversion === ConversionItem.BITCOIN) {
-        const price = await paymentService.getCurrencyBalance(
-          [Coins.BITCOIN],
-          balance,
-          ConvertTo.BTC
-        );
-        if (price?.success) {
-          availableBalance = Number(price?.data[coins.bitcoin.base].toFixed(4));
-          setMerchantBalance(availableBalance);
-        } else {
-          Notification(price?.error);
-        }
-      } else {
-        const price = await paymentService.getCurrencyBalance(
-          [],
-          balance,
-          ConvertTo.USD
-        );
-        if (price?.success) {
-          availableBalance = Number(price?.dollarBalance.toFixed(2));
-          setMerchantBalance(availableBalance);
-        } else {
-          Notification(price?.error);
-        }
-      }
-      setDate(moment().format('h:mm:ss a'));
+    if (price?.success) {
+      availableBalance = Number(
+        conversion === ConversionItem.BITCOIN
+          ? price?.data[coins.bitcoin.base].toFixed(4)
+          : price?.dollarBalance.toFixed(2)
+      );
+      setMerchantBalance(availableBalance);
+    } else {
+      Notification(price?.error);
     }
+
+    setDate(moment().format('h:mm:ss a'));
   };
 
   const handleRefresh = (): void => {

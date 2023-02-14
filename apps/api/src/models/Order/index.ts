@@ -3,7 +3,7 @@ import { dateParser } from '../../util/helpers';
 
 export enum CoinType {
   BITCOIN = 'bitcoin',
-  USD = 'usd',
+  USDT = 'usdt',
   ETHEREUM = 'ethereum',
   LITECOIN = 'liteCoin',
 }
@@ -25,7 +25,7 @@ const orderSchema = new Schema({
   type: {
     type: String,
     enum: CoinType,
-    required: true,
+    default: CoinType.USDT,
   },
   amount: {
     type: Number,
@@ -34,13 +34,13 @@ const orderSchema = new Schema({
   status: {
     type: String,
     enum: OrderStatus,
-    required: true,
+    default: OrderStatus.PENDING,
   },
   orderDate: {
     type: Date,
     default: currentDate,
   },
-  userId: {
+  merchantId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,

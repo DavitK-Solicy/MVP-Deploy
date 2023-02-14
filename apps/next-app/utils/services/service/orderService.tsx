@@ -1,11 +1,21 @@
 import { Context } from 'react';
-import { OrderDataResponse } from 'types/orders';
+import { OrderData, OrderDataResponse, OrdersDataResponse } from 'types/orders';
 import { Contextualizer } from 'utils/services/contextualizer';
 import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
 
 export interface IOrderService {
-  getAllOrders(limit?: number, offset?: number): Promise<OrderDataResponse>;
+  getAllOrders(limit?: number, offset?: number): Promise<OrdersDataResponse>;
+  createOrder(data: {
+    title: string;
+    amount: number;
+    identificationToken: string;
+  }): Promise<OrderDataResponse>;
+  updateOrder(
+    id: string,
+    identificationToken: string,
+    data: OrderData
+  ): Promise<OrderDataResponse>;
 }
 
 export const OrderServiceContext: Context<
@@ -20,7 +30,7 @@ export const OrderService = ({ children }: any) => {
     async getAllOrders(
       limit: number = 0,
       offset: number = 0
-    ): Promise<OrderDataResponse> {
+    ): Promise<OrdersDataResponse> {
       try {
         const response = await axiosInstance.get(
           `/orders?limit=${limit}&offset=${offset}`
@@ -31,7 +41,39 @@ export const OrderService = ({ children }: any) => {
         console.log(err);
       }
     },
+
+    async createOrder(data: {
+      title: string;
+      amount: number;
+      identificationToken: string;
+    }): Promise<OrderDataResponse> {
+      try {
+        const response = await axiosInstance.post(`/orders`, data);
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async updateOrder(
+      id: string,
+      identificationToken: string,
+      data: OrderData
+    ): Promise<OrderDataResponse> {
+      try {
+        const response = await axiosInstance.put(
+          `/orders?id=${id}&identificationToken=${identificationToken}`,
+          data
+        );
+
+        return response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
   };
+
   return (
     <OrderServiceContext.Provider value={orderService}>
       {children}
