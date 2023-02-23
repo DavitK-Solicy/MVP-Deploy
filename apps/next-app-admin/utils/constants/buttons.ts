@@ -5,8 +5,10 @@ export interface RedirectButtonItem {
 
 export const buttonPaths = {
   users: '/users',
+  admins: '/admins',
   orders: '/orders',
   invoices: '/invoices',
+  transactions: '/transactions',
 };
 
 export const redirectButtons: Array<RedirectButtonItem> = [
@@ -15,12 +17,20 @@ export const redirectButtons: Array<RedirectButtonItem> = [
     link: buttonPaths.users,
   },
   {
+    text: 'Admins',
+    link: buttonPaths.admins,
+  },
+  {
     text: 'Orders',
     link: buttonPaths.orders,
   },
   {
     text: 'Invoices',
     link: buttonPaths.invoices,
+  },
+  {
+    text: 'Transactions',
+    link: buttonPaths.transactions,
   },
 ];
 

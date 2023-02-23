@@ -1,34 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { TimerProps } from './types';
+import React, { useEffect, useMemo, useContext } from 'react';
+import { TimerServiceContext } from 'utils/services/service/timerService';
 
-const Timer = ({ setCheckTime, checkTime }: TimerProps): JSX.Element => {
-  const [minutes, setMinutes] = useState<number>(15);
-  const [seconds, setSeconds] = useState<number>(0);
+enum Colors {
+  Green = 'green',
+  Yellow = 'yellow',
+  Red = 'red',
+}
+
+const Timer = (): JSX.Element => {
+  const { minutes, seconds, setMinutes } = useContext(TimerServiceContext);
 
   useEffect(() => {
-    let intervalId = setInterval(() => {
-      if (checkTime) {
-        clearInterval(intervalId);
-        return;
-      }
-      if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(intervalId);
-          setCheckTime(true);
-          return;
-        }
-        setMinutes(minutes - 1);
-        setSeconds(59);
-      } else {
-        setSeconds(seconds - 1);
-      }
-    }, 1000);
+    if (!minutes && minutes !== 0) {
+      setMinutes(15);
+    }
+  }, []);
 
-    return () => clearInterval(intervalId);
-  }, [minutes, seconds]);
+  const colorStyle = useMemo(
+    () => ({
+      color:
+        minutes >= 10
+          ? Colors.Green
+          : 5 <= minutes && minutes < 10
+          ? Colors.Yellow
+          : Colors.Red,
+    }),
+    [minutes]
+  );
 
   return (
-    <span>
+    <span style={colorStyle}>
       {minutes}:{('0' + seconds).slice(-2)}
     </span>
   );

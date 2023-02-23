@@ -17,16 +17,12 @@ export interface OrderResponse extends GeneralResponse {
   data?: Array<OrderData>;
 }
 
-export interface OrderUpdateResponse extends GeneralResponse {
-  data?: OrderData;
-}
-
 export interface OrderData {
   _id: string;
   title: string;
   amount: number;
-  type: CoinType;
+  coinType: CoinType;
   status: OrderStatus;
-  orderDate: Date;
+  orderTime: Date;
   userId: string;
 }

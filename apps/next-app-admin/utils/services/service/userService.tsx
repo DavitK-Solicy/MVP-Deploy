@@ -1,7 +1,7 @@
 import { Context } from 'react';
 import { AuthResponse } from 'types/authResponse';
 import { UserRoles } from 'utils/constants/userRoles';
-import { User, UserBankAccount } from '../../model/user';
+import { User, UserBankAccount } from 'types/user';
 import { Contextualizer } from '../contextualizer';
 import { ProvidedServices } from '../providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
@@ -16,14 +16,12 @@ export interface IUserService {
     data: Array<User>;
     count: number;
   }>;
-  getCurrentUser(): Promise<UserResponse>;
   updateUser(user: User): Promise<UserResponse>;
   deleteUser(id: string): Promise<AuthResponse>;
   createUser(
     fullName: string,
     email: string,
     password: string,
-    role: UserRoles,
     bankAccount: UserBankAccount
   ): Promise<{
     success: boolean;
@@ -59,19 +57,12 @@ export const UserService = ({ children }: any) => {
       }
     },
 
-    async getCurrentUser(): Promise<UserResponse> {
-      const response = await axiosInstance.get(`/users/me`);
-
-      return response.data;
-    },
-
     async updateUser(user: User): Promise<UserResponse> {
       try {
         const response = await axiosInstance.put(
           `/users/admin/update-user/${user._id}`,
           {
             fullName: user.fullName,
-            role: user.role,
             email: user.email,
             bankAccount: user.bankAccount,
           }
@@ -96,7 +87,6 @@ export const UserService = ({ children }: any) => {
       fullName: string,
       email: string,
       password: string,
-      role: UserRoles,
       bankAccount: UserBankAccount
     ): Promise<{
       success: boolean;
@@ -108,7 +98,6 @@ export const UserService = ({ children }: any) => {
           fullName,
           email,
           password: hashPassword(password),
-          role,
           bankAccount,
         });
 

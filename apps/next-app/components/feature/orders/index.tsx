@@ -3,9 +3,9 @@ import DashboardTable from 'components/shared/table';
 import ContentLayout from 'components/feature/contentLayout';
 import ShareBar from 'components/shared/filterBar';
 import { OrderServiceContext } from 'utils/services/service/orderService';
+import { OrderData } from 'types/orders';
 
 import styles from './orders.module.scss';
-import { OrderData } from 'types/orders';
 
 export default function Orders(): JSX.Element {
   const orderService = useContext(OrderServiceContext);
@@ -15,8 +15,8 @@ export default function Orders(): JSX.Element {
   const [countOfPage, setCountOfPage] = useState<number>(0);
   const [orders, setOrders] = useState<Array<OrderData>>([]);
 
-  const getAllOrders = async (): Promise<void> => {
-    const res = await orderService.getAllOrders(
+  const getCurrentUserOrders = async (): Promise<void> => {
+    const res = await orderService.getCurrentUserOrders(
       limit,
       limit * (currentPage - 1)
     );
@@ -28,7 +28,7 @@ export default function Orders(): JSX.Element {
   };
 
   useEffect(() => {
-    getAllOrders();
+    getCurrentUserOrders();
   }, [currentPage]);
 
   return (

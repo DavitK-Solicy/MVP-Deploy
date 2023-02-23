@@ -4,7 +4,6 @@ import {
   deleteWallet,
   getAllWallets,
   getWallet,
-
   createChildWallet,
   deleteChildWallet,
   getAllChildWallets,

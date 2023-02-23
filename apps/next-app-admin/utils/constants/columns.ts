@@ -1,4 +1,4 @@
-import { User } from 'utils/model/user';
+import { User } from 'types/user';
 
 export const orderColumns = [
   {
@@ -27,8 +27,8 @@ export const orderColumns = [
   },
   {
     title: 'Date Order',
-    dataIndex: 'orderDate',
-    key: 'orderDate',
+    dataIndex: 'orderTime',
+    key: 'orderTime',
     ellipsis: true,
   },
 ];

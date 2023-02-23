@@ -1,8 +1,8 @@
-import { User } from 'utils/model/user';
+import { Admin } from './admin';
 
 export interface AuthResponse {
   success: boolean;
   token?: string;
   error?: string;
-  user?: User;
+  admin?: Admin;
 }

@@ -6,7 +6,7 @@ import { Coins, ConversionItem } from 'components/shared/balanceCard/type';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import { PaymentServiceContext } from 'utils/services/service/paymentService';
 import { coins } from 'utils/constants/functions';
-import { PayWidgetScreenProps } from './types';
+import { PaymentMethod, PayWidgetScreenProps } from './types';
 
 import styles from './payWidgetScreen.module.scss';
 
@@ -24,6 +24,9 @@ export default function PayWidgetScreen({
   const [usdtPrice, setUsdtPrice] = useState<number>(0);
   const [bitcoinValue, setBitcoinValue] = useState<number>();
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [paymentCurrency, setPaymentCurrency] = useState<string>(
+    PaymentMethod.BITCOIN
+  );
 
   const iconUrl =
     conversion === ConversionItem.BITCOIN
@@ -52,6 +55,10 @@ export default function PayWidgetScreen({
     } else {
       Notification(price?.error);
     }
+  };
+
+  const changePayment = (value: PaymentMethod): void => {
+    setPaymentCurrency(value);
   };
 
   useEffect(() => {
@@ -124,7 +131,10 @@ export default function PayWidgetScreen({
       <div className={styles.selectPayment}>
         <div className={styles.selectPaymentTitle}>Select Payment Currency</div>
         <div className={styles.allCurrencies}>
-          <div className={styles.currency}>
+          <div
+            className={styles.currency}
+            onClick={() => changePayment(PaymentMethod.USDT)}
+          >
             <Icon width={30} height={30} src={imagesSvg.usdtIcon} />
             <div className={styles.currencySection}>
               <div className={styles.coin}>USDT</div>
@@ -144,9 +154,10 @@ export default function PayWidgetScreen({
       </div>
       <div className={styles.buttonWrapper}>
         <Button
-          text="Pay with Bitcoin"
+          text={`Pay with ${paymentCurrency}`}
           className={styles.payButton}
           onClick={handleChangeModal}
+          disabled={paymentCurrency !== PaymentMethod.USDT}
         />
       </div>
       <div className={styles.creatorInfo}>

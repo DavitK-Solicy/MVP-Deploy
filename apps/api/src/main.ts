@@ -4,9 +4,11 @@ import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as cookieParser from 'cookie-parser';
 import UserRouter from './api/User';
+import AdminRouter from './api/Admin';
 import OrderRouter from './api/Order';
 import InvoiceRouter from './api/Invoice';
 import PaymentRouter from './api/Payment';
+import TransactionRouter from './api/Transaction';
 import { initializeSockets } from './api/socket';
 import env from './util/constants/env';
 
@@ -44,9 +46,11 @@ mongoose.connect(env.databaseConnectionUrl, {
 });
 
 app.use('/users', UserRouter);
+app.use('/admins', AdminRouter);
 app.use('/orders', OrderRouter);
 app.use('/invoices', InvoiceRouter);
 app.use('/payments', PaymentRouter);
+app.use('/transactions', TransactionRouter);
 
 http.listen(env.port, () => {
   console.log(`Server running on port ${env.port}`);

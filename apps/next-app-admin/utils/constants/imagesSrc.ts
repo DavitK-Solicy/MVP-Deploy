@@ -14,4 +14,5 @@ export const imagesSvg = {
 
 export const imagesPng = {
   loginPageBanner: '/loginPage-banner.png',
+  signupPageBanner: `/singupPage-banner.png`,
 };

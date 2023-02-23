@@ -1,5 +1,5 @@
-import Login from 'components/feature/login';
+import Authorization from 'components/shared/authorization';
 
 export default function LoginPage(): JSX.Element {
-  return <Login />;
+  return <Authorization />;
 }

@@ -1,5 +1,5 @@
 import Signup from 'components/feature/signup';
 
-export default function LoginPage(): JSX.Element {
+export default function SignupPage(): JSX.Element {
   return <Signup />;
 }

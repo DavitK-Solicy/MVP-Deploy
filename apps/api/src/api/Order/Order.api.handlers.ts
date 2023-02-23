@@ -1,15 +1,20 @@
 import { Request, Response } from 'express';
 import { User } from '../../models/User';
-import { Order } from '../../models/Order';
+import { Order, OrderStatus } from '../../models/Order';
 
-export const createOrder = async (req: Request, res: Response) => {
+export const registerOrder = async (req: Request, res: Response) => {
   try {
-    const { identificationToken } = req.body;
+    const { identificationToken, orderId } = req.body;
 
     const merchant = await User.findOne({ identificationToken });
 
     if (!merchant)
       return res.json({ success: false, error: 'Merchant not found' });
+
+    let isOrderExist;
+    if (orderId) isOrderExist = await Order.findById(orderId);
+
+    if (isOrderExist) return res.json({ success: true, data: isOrderExist });
 
     const data = await Order.create({ ...req.body, merchantId: merchant.id });
 
@@ -27,10 +32,35 @@ export const getAllOrders = async (req: Request, res: Response) => {
     const count = await Order.collection.countDocuments();
     const data = await Order.find()
       .skip(offset)
-      .populate('userId')
+      .populate('merchantId')
       .limit(limit);
 
     return res.send({ success: true, data, count });
+  } catch (err) {
+    res.send({ success: false, error: err.message });
+  }
+};
+
+export const getCurrentUserOrders = async (req: Request, res: Response) => {
+  try {
+    const user = req['user'];
+
+    const limit = Number(req.query.limit);
+    const offset = Number(req.query.offset);
+
+    const filter = {
+      merchantId: user.id,
+    };
+
+    const count = await Order.collection.countDocuments(filter);
+    const orders = await Order.find(filter)
+      .skip(offset)
+      .populate('merchantId')
+      .limit(limit);
+
+    if (!orders) res.send({ success: false, error: "Orders doesn't exist" });
+
+    return res.send({ success: true, data: orders, count });
   } catch (err) {
     res.send({ success: false, error: err.message });
   }
@@ -64,6 +94,11 @@ export const updateOrder = async (req: Request, res: Response) => {
       },
       req.body
     );
+
+    if (req.body.status !== OrderStatus.PENDING) {
+      order.walletId = undefined;
+      await order.save();
+    }
 
     return res.send({ success: true, data: order });
   } catch (err) {

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Form, Radio } from 'antd';
+import { Form, Tooltip } from 'antd';
 import Modal from 'components/shared/modal';
 import Input from 'components/shared/input';
 import Loader from 'components/shared/loader';
@@ -11,9 +11,8 @@ import { ButtonType } from 'components/shared/button/type';
 import { imagesSvg } from 'utils/constants/imagesSrc';
 import { acceptWarningModal, handelCancel } from 'utils/helpers';
 import { UserServiceContext } from 'utils/services/service/userService';
-import { User } from 'utils/model/user';
+import { User } from 'types/user';
 import { handleValidation, validator } from 'utils/constants/validation';
-import { UserRoles } from 'utils/constants/userRoles';
 import { isDisabled } from 'utils/constants/companyValidation';
 import { ModalType } from 'utils/constants/enum';
 
@@ -75,17 +74,23 @@ export default function Users(): JSX.Element {
       tooltip: true,
     },
     {
-      title: 'Role',
-      dataIndex: 'role',
-      key: 'role',
-      tooltip: true,
-      width: '100px',
-    },
-    {
       title: 'Auth Provider',
       dataIndex: 'authProvider',
       key: 'authProvider',
       tooltip: true,
+    },
+    {
+      title: 'Identification Token',
+      dataIndex: 'identificationToken',
+      key: 'identificationToken',
+      tooltip: true,
+      render: (token: string) => {
+        return (
+          <Tooltip placement="topLeft" title={token}>
+            <div className={styles.textSplit}>{token}</div>
+          </Tooltip>
+        );
+      },
     },
     {
       title: 'Bank Account',
@@ -181,7 +186,6 @@ export default function Users(): JSX.Element {
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
-      role: user.role,
       bankAccount: user.bankAccount,
       authProvider: user.authProvider,
       referralCode: user.referralCode,
@@ -191,7 +195,6 @@ export default function Users(): JSX.Element {
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
-      role: user.role,
       bankAccount: user.bankAccount,
       authProvider: user.authProvider,
       referralCode: user.referralCode,
@@ -210,7 +213,6 @@ export default function Users(): JSX.Element {
 
   const disableButton = useMemo((): boolean => {
     if (
-      defaultUser?.role === selectedUser?.role &&
       defaultUser?.fullName === selectedUser?.fullName &&
       defaultUser?.bankAccount === selectedUser?.bankAccount
     ) {
@@ -264,7 +266,6 @@ export default function Users(): JSX.Element {
       fullName,
       email,
       password,
-      role,
       accountNumber,
       cardNumber,
       ifscOrSwiftCode,
@@ -273,7 +274,6 @@ export default function Users(): JSX.Element {
       fullName,
       email,
       password,
-      role,
       {
         accountNumber,
         ifscOrSwiftCode,
@@ -362,7 +362,6 @@ export default function Users(): JSX.Element {
             initialValues={{
               fullName: selectedUser?.fullName,
               email: selectedUser?.email,
-              role: selectedUser?.role,
               accountNumber: selectedUser?.bankAccount?.accountNumber,
               cardNumber: selectedUser?.bankAccount?.cardNumber,
               ifscOrSwiftCode: selectedUser?.bankAccount?.ifscOrSwiftCode,
@@ -482,37 +481,6 @@ export default function Users(): JSX.Element {
                 }}
               />
             </Form.Item>
-            <Form.Item
-              label="Role"
-              name="role"
-              labelCol={{ span: 24 }}
-              className={styles.radioForm}
-            >
-              <Radio.Group>
-                <Radio
-                  value={UserRoles.MERCHANT}
-                  onChange={(e) => {
-                    setSelectedUser({
-                      ...selectedUser,
-                      role: e.target.value,
-                    });
-                  }}
-                >
-                  Merchant
-                </Radio>
-                <Radio
-                  value={UserRoles.ADMIN}
-                  onChange={(e) => {
-                    setSelectedUser({
-                      ...selectedUser,
-                      role: e.target.value,
-                    });
-                  }}
-                >
-                  Admin
-                </Radio>
-              </Radio.Group>
-            </Form.Item>
             <Form.Item>
               <div className={styles.modalButtonsContainer}>
                 <Button
@@ -538,7 +506,6 @@ export default function Users(): JSX.Element {
             form={createForm}
             initialValues={{
               remember: true,
-              role: UserRoles.MERCHANT,
             }}
             onFinish={handleCreateUser}
           >
@@ -649,12 +616,6 @@ export default function Users(): JSX.Element {
                   />
                 </Form.Item>
               </div>
-              <Form.Item label="Role" name="role" labelCol={{ span: 24 }}>
-                <Radio.Group>
-                  <Radio value={UserRoles.MERCHANT}>Merchant</Radio>
-                  <Radio value={UserRoles.ADMIN}>Admin</Radio>
-                </Radio.Group>
-              </Form.Item>
             </div>
             <div className={styles.buttonSection}>
               <Form.Item shouldUpdate>

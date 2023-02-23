@@ -6,6 +6,7 @@ export const initializeSockets = (io): void => {
     console.log('A user connected');
 
     socket.on('childWallet', (data): void => {
+     //TO DO make interval 60000
       setInterval(() => {
         checkChildWalletBalance(socket, data);
       }, 6000);

@@ -52,7 +52,8 @@ const userSchema = new Schema({
   role: {
     type: String,
     default: UserRoles.MERCHANT,
-    enum: UserRoles,
+    required: true,
+    immutable: true,
   },
   bankAccount: {
     type: bankAccountSchema,
@@ -64,8 +65,7 @@ const userSchema = new Schema({
     enum: AuthProviders,
   },
   emailVerificationCode: {
-    type: String,
-    default: null,
+    type: Schema.Types.Mixed,
   },
   referralCode: {
     type: String,

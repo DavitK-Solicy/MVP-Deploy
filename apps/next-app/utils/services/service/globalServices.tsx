@@ -3,6 +3,7 @@ import { OrderService } from './orderService';
 import { UserService } from './userService';
 import { InvoiceService } from './invoiceService';
 import { PaymentService } from './paymentService';
+import { TimerService } from './timerService';
 
 export const GlobalServices = ({ children }): JSX.Element => {
   return (
@@ -10,7 +11,9 @@ export const GlobalServices = ({ children }): JSX.Element => {
       <AuthService>
         <PaymentService>
           <OrderService>
-            <InvoiceService>{children}</InvoiceService>
+            <InvoiceService>
+              <TimerService>{children}</TimerService>
+            </InvoiceService>
           </OrderService>
         </PaymentService>
       </AuthService>

@@ -3,12 +3,14 @@ import * as CoinGecko from 'coingecko-api';
 import * as jwt from 'jsonwebtoken';
 import * as googleAuth from 'google-auth-library';
 import { Socket } from 'socket.io';
-import { AuthProviders, User, UserRoles } from '../../models/User';
+import { AuthProviders, User } from '../../models/User';
+import { Order } from '../../models/Order';
 import { MailOptions, sendEmail } from '../../util/email/email.util.nodemailer';
 import { axiosInstance } from '../../util/custodial';
 import env from '../../util/constants/env';
 import { coinsAbbreviation } from '../../util/helpers';
 import { Coins, MerchantWallets } from '../../util/types';
+import { checkTransactions } from '../Transaction/Transactions.api.handlers';
 
 const googleClient = new googleAuth.OAuth2Client(env.clientId);
 
@@ -52,6 +54,7 @@ export const createUser = async (req: Request, res: Response) => {
       role,
       bankAccount,
       primaryWalletId: response?.data?.data?._id,
+      identificationToken: jwt.sign({ id: email, fullName }, SECRET_JWT_CODE),
     });
 
     return res.json({
@@ -176,48 +179,6 @@ export const login = async (req: Request, res: Response) => {
       return res.json({
         success: false,
         error: `Account with ${email} doesn't exist`,
-      });
-    }
-
-    if (password !== user.password) {
-      return res.json({ success: false, error: 'Wrong password' });
-    }
-
-    user.password = undefined;
-    const token = jwt.sign(
-      { id: user._id, email: user.email, role: user.role },
-      SECRET_JWT_CODE
-    );
-
-    return res.json({ success: true, token, user });
-  } catch (err) {
-    res.json({ success: false, error: err });
-  }
-};
-
-export const loginForAdmin = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.json({
-      success: false,
-      error: 'Submit all required parameters',
-    });
-  }
-
-  try {
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.json({
-        success: false,
-        error: `Account with ${email} doesn't exist`,
-      });
-    }
-
-    if (user.role !== UserRoles.ADMIN) {
-      return res.json({
-        success: false,
-        error: `Only admin can log in to the Admin dashboard`,
       });
     }
 
@@ -479,14 +440,13 @@ export const checkVerificationCode = async (req: Request, res: Response) => {
       email,
     });
 
-    if (user.emailVerificationCode === emailVerificationCode) {
+    if (user.emailVerificationCode == emailVerificationCode)
       return res.json({ success: true, user });
-    } else {
+    else
       return res.json({
         success: false,
         message: 'Entered code is not correct, please try again',
       });
-    }
   } catch (err) {
     res.json({ success: false, error: err.message });
   }
@@ -515,7 +475,7 @@ export const updateForgottenPassword = async (req: Request, res: Response) => {
     }
 
     user.password = newPassword;
-    user.emailVerificationCode = null;
+    user.emailVerificationCode = undefined;
 
     await user.save();
     user.password = undefined;
@@ -640,11 +600,19 @@ export const getUserInfoByIdentificationToken = async (
 
 export const getPayWallet = async (req: Request, res: Response) => {
   try {
-    const { primaryWalletId } = req.query;
+    const { primaryWalletId, orderId } = req.query;
+    let order;
+    if (orderId) order = await Order.findById(orderId);
 
-    const childWallet = await axiosInstance.post(
-      `/wallets/${primaryWalletId}/children`
-    );
+    let childWallet;
+    if (!order)
+      childWallet = await axiosInstance.post(
+        `/wallets/${primaryWalletId}/children`
+      );
+    else
+      childWallet = await axiosInstance.get(
+        `/wallets/${primaryWalletId}/children/${order.walletId}`
+      );
 
     return res.send({
       success: true,
@@ -665,8 +633,12 @@ export const checkChildWalletBalance = async (
       `/wallets/${data.parentId}/children/${data.childId}`
     );
 
+    checkTransactions(response.data.transactions);
+
+    const balance = response.data.data.balance / 10 ** 18;
+
     socket.emit('childWallet', {
-      success: response.data.data.balance >= data.orderAmount,
+      success: balance >= data.orderAmount,
     });
   } catch (err) {
     response = { success: false, error: err.message };

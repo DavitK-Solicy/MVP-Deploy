@@ -3,5 +3,6 @@ export enum ProvidedServices {
   UserService,
   OrderService,
   InvoiceService,
-  PaymentService
+  PaymentService,
+  TimerService,
 }

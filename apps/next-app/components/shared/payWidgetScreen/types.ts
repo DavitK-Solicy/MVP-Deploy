@@ -3,3 +3,8 @@ export interface PayWidgetScreenProps {
   setModal: (value: number) => void;
   payAmount: number;
 }
+
+export enum PaymentMethod {
+  USDT = 'USDT',
+  BITCOIN = 'Bitcoin',
+}

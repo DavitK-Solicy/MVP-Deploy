@@ -11,6 +11,7 @@ interface AuthProviderProps {
 
 const withoutAuthRoutes: Array<string> = [
   navBarPaths.login,
+  navBarPaths.signUp,
   navBarPaths.recoverPassword,
 ];
 

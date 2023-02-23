@@ -1,7 +1,17 @@
+import { EventData } from 'web3-eth-contract';
 import { getContractRPC } from './getContractRPC';
 import { contracts } from '../util/constants/contracts';
 
-export const getSenders = async (address: string) => {
+interface Senders {
+  [key: string]: number;
+}
+
+export const getSenders = async (
+  address: string
+): Promise<{
+  senders: Senders;
+  transactions: Array<EventData>;
+}> => {
   const [usdtContract] = getContractRPC(contracts['MTK']);
 
   const transactions = await usdtContract.getPastEvents('Transfer', {
@@ -10,7 +20,7 @@ export const getSenders = async (address: string) => {
     toBlock: 'latest',
   });
 
-  if (!transactions) return false;
+  if (!transactions) return;
 
   const senders = {};
   transactions.map((t) => {
@@ -21,5 +31,5 @@ export const getSenders = async (address: string) => {
     }
   });
 
-  return senders;
+  return { senders, transactions };
 };

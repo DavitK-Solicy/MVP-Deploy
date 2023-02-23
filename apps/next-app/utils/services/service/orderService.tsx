@@ -5,11 +5,16 @@ import { ProvidedServices } from 'utils/services/providedServices';
 import { axiosInstance } from 'utils/services/service/axiosService';
 
 export interface IOrderService {
-  getAllOrders(limit?: number, offset?: number): Promise<OrdersDataResponse>;
-  createOrder(data: {
+  getCurrentUserOrders(
+    limit?: number,
+    offset?: number
+  ): Promise<OrdersDataResponse>;
+  registerOrder(data: {
+    orderId: string;
     title: string;
     amount: number;
     identificationToken: string;
+    walletId: string;
   }): Promise<OrderDataResponse>;
   updateOrder(
     id: string,
@@ -27,13 +32,13 @@ export const useOrderServices = () =>
 
 export const OrderService = ({ children }: any) => {
   const orderService = {
-    async getAllOrders(
+    async getCurrentUserOrders(
       limit: number = 0,
       offset: number = 0
     ): Promise<OrdersDataResponse> {
       try {
         const response = await axiosInstance.get(
-          `/orders?limit=${limit}&offset=${offset}`
+          `/orders/current-user-orders?limit=${limit}&offset=${offset}`
         );
 
         return response.data;
@@ -42,10 +47,12 @@ export const OrderService = ({ children }: any) => {
       }
     },
 
-    async createOrder(data: {
+    async registerOrder(data: {
+      orderId: string;
       title: string;
       amount: number;
       identificationToken: string;
+      walletId: string;
     }): Promise<OrderDataResponse> {
       try {
         const response = await axiosInstance.post(`/orders`, data);

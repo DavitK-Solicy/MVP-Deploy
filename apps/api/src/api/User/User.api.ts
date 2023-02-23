@@ -19,7 +19,6 @@ import {
   sendRecoverPasswordEmail,
   checkVerificationCode,
   updateForgottenPassword,
-  loginForAdmin,
   updateEmbed,
   getWalletBalance,
   getUserInfoByIdentificationToken,
@@ -37,7 +36,6 @@ router.post('/recover-password', sendRecoverPasswordEmail);
 router.post('/check-mail', checkVerificationCode);
 router.post('/admin', requireAuthAdmin, createUser);
 router.post('/logout', requireAuth, logout);
-router.post('/login/admin', loginForAdmin);
 router.put('/', requireAuth, updateCurrentUser);
 router.put('/admin/update-user/:id', requireAuthAdmin, updateUserById);
 router.put('/update-embed', requireAuth, updateEmbed);

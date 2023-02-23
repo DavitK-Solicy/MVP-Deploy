@@ -17,9 +17,9 @@ export interface OrderData {
   _id?: string;
   title?: string;
   amount?: number;
-  type?: CoinType;
+  coinType?: CoinType;
   status?: OrderStatus;
-  orderDate?: Date;
+  orderTime?: Date;
 }
 
 export interface OrdersDataResponse extends GeneralResponse {

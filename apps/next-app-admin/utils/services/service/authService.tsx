@@ -10,6 +10,11 @@ import { ProvidedServices } from 'utils/services/providedServices';
 
 export interface IAuthService {
   login(email: string, password: string): Promise<AuthResponse>;
+  signup(
+    fullName: string,
+    email: string,
+    password: string
+  ): Promise<AuthResponse>;
   logout(): Promise<{
     success: boolean;
     message?: string;
@@ -28,7 +33,7 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
   const authService = {
     async login(email: string, password: string): Promise<AuthResponse> {
       try {
-        const response = await axiosInstance.post('/users/login/admin', {
+        const response = await axiosInstance.post('/admins/login', {
           email,
           password: hashPassword(password),
         });
@@ -45,6 +50,32 @@ export const AuthService = ({ children }: ContextProps): JSX.Element => {
         throw new Error(err);
       }
     },
+
+    async signup(
+      fullName: string,
+      email: string,
+      password: string
+    ): Promise<AuthResponse> {
+      try {
+        const response = await axiosInstance.post('/admins/signup', {
+          fullName,
+          email,
+          password: hashPassword(password),
+        });
+
+        if (response.data.success && response.data.token) {
+          localStorage.setItemInLocalStorage(
+            localStorageKeys.TOKEN_KEY,
+            response.data.token
+          );
+        }
+
+        return response.data;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+
     async logout(): Promise<{
       success: boolean;
       message?: string;

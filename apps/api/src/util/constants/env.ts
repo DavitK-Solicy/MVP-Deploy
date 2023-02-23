@@ -8,6 +8,8 @@ export interface EnvVariables {
   custodialBaseUrl: string;
   web3Provider: string;
   deployedFrontendUrl: string;
+  etherscanApiUrl: string;
+  etherscanApiKey: string;
 }
 
 const env: EnvVariables = {
@@ -26,6 +28,11 @@ const env: EnvVariables = {
     'https://eth-goerli.g.alchemy.com/v2/fhoMkdYwgRymdjo6RSWu-VDBkf0CCEtC',
   deployedFrontendUrl:
     process.env.DEPLOYED_FRONTEND_URL ?? 'http://localhost:4200',
+  etherscanApiUrl:
+    process.env.ETHERSCAN_API_URL ??
+    'https://api.etherscan.io/api?apikey=2UPTKBWZHZ946WGGSB55AVSHJ8Q4RN4RVS',
+  etherscanApiKey:
+    process.env.ETHERSCAN_API_KEY ?? '2UPTKBWZHZ946WGGSB55AVSHJ8Q4RN4',
 };
 
 export default env;

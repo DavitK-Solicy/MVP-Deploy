@@ -22,7 +22,7 @@ const orderSchema = new Schema({
     type: String,
     required: true,
   },
-  type: {
+  coinType: {
     type: String,
     enum: CoinType,
     default: CoinType.USDT,
@@ -36,7 +36,7 @@ const orderSchema = new Schema({
     enum: OrderStatus,
     default: OrderStatus.PENDING,
   },
-  orderDate: {
+  orderTime: {
     type: Date,
     default: currentDate,
   },
@@ -44,6 +44,9 @@ const orderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  walletId: {
+    type: Schema.Types.Mixed,
   },
 });
 

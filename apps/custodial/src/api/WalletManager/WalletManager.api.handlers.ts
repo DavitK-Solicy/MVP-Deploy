@@ -147,12 +147,15 @@ export const getChildWallet = async (req: Request, res: Response) => {
       res.status(404);
       return res.send({ success: true, data: null });
     }
-    wallet.senders = await getSenders(wallet.address);
+
+    const { senders, transactions } = await getSenders(wallet.address);
     wallet.balance = await getBalance(wallet);
+    wallet.senders = senders;
+
     delete wallet.mnemonic;
     delete wallet.privateKey;
 
-    return res.send({ success: true, data: wallet });
+    return res.send({ success: true, data: wallet, transactions });
   } catch (err) {
     res.send({ success: false, error: err.message });
   }

@@ -31,7 +31,8 @@ export interface IUserService {
     data?: User;
   }>;
   getPayWallet(
-    primaryWalletId: string
+    primaryWalletId: string,
+    orderId: string
   ): Promise<{
     error?: string;
     success: boolean;
@@ -78,7 +79,8 @@ export const UserService = ({ children }: ContextProps) => {
     },
 
     async getPayWallet(
-      primaryWalletId: string
+      primaryWalletId: string,
+      orderId: string
     ): Promise<{
       error?: string;
       success: boolean;
@@ -86,7 +88,7 @@ export const UserService = ({ children }: ContextProps) => {
     }> {
       try {
         const response = await axiosInstance.get(
-          `/users/child-wallet?primaryWalletId=${primaryWalletId}`
+          `/users/child-wallet?primaryWalletId=${primaryWalletId}&orderId=${orderId}`
         );
 
         return response.data;

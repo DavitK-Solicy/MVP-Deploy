@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Header from 'components/feature/header';
 import navBarPaths from 'utils/constants/navBarPaths';
-import { UserServiceContext } from 'utils/services/service/userService';
+import { AdminServiceContext } from 'utils/services/service/adminService';
 import { getItemFromLocalStorage } from 'utils/services/localStorageService';
 import localStorageKeys from 'utils/constants/localStorageKeys';
 import * as localStorage from 'utils/services/localStorageService';
@@ -13,7 +13,7 @@ import styles from './layout.module.scss';
 export default function Layout({ children }: LayoutProps): JSX.Element {
   const router = useRouter();
 
-  const userService = useContext(UserServiceContext);
+  const adminService = useContext(AdminServiceContext);
 
   const token = useMemo(
     () =>
@@ -27,7 +27,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
       localStorageKeys.TOKEN_KEY
     ).toString();
     if (token) {
-      const res = await userService.getCurrentUser();
+      const res = await adminService.getCurrentAdmin();
       if (res?.error) {
         localStorage.clearLocalStorage();
         router.push(navBarPaths.login);

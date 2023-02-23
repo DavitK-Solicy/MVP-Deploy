@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 20px;
   padding: 10px 10px 15px;
-  
+
   .balanceSection {
     display: flex;
     justify-content: space-between;
@@ -146,6 +146,7 @@
         border-radius: 5px !important;
         border: 1px solid var(--gray_250);
         padding: 5px 10px;
+        cursor: pointer;
 
         .currencySection {
           display: flex;

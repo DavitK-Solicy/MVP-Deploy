@@ -45,6 +45,10 @@
       justify-content: space-between;
       gap: 10px;
       width: 100%;
+
+      :nth-child(3) > div {
+        padding: 5px;
+      }
     }
 
     .addressWrapper {
@@ -58,8 +62,12 @@
         border-radius: unset !important;
       }
 
+      div:first-child {
+        width: 20px;
+      }
+
       .address {
-        max-width: 165px;
+        max-width: 100px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -72,14 +80,18 @@
       justify-content: center;
       background: var(--copy_button_gradient);
       padding: 2px;
+      border-radius: 5px !important;
       cursor: pointer;
+      width: 52px;
 
       .copyWrapper {
         background: var(--white_900);
         display: flex;
         flex-direction: column;
-        padding: 5px 15px;
-        border-radius: 8px !important;
+        align-items: center;
+        padding: 5px;
+        border-radius: 4px !important;
+        width: 50px;
 
         div {
           border-radius: unset !important;
@@ -144,6 +156,7 @@
       font-weight: 500;
       span {
         color: var(--green_700);
+        margin: 0 5px;
       }
     }
   }

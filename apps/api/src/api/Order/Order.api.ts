@@ -4,18 +4,20 @@ import {
   requireAuthAdmin,
 } from '../../middleware/auth.middleware';
 import {
-  createOrder,
-  deleteOrder,
   getAllOrders,
+  getCurrentUserOrders,
   getOrderById,
+  registerOrder,
   updateOrder,
+  deleteOrder,
 } from './Order.api.handlers';
 
 const router = Router();
 
-router.get('/', requireAuth, getAllOrders);
-router.get('/:id', requireAuth, getOrderById);
-router.post('/', requireAuth, createOrder);
+router.get('/', requireAuthAdmin, getAllOrders);
+router.get('/current-user-orders', requireAuth, getCurrentUserOrders);
+router.get('/:id', requireAuthAdmin, getOrderById);
+router.post('/', requireAuth, registerOrder);
 router.put('/', updateOrder);
 router.delete('/:id', requireAuthAdmin, deleteOrder);
 

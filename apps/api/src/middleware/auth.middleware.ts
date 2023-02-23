@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { Admin } from '../models/Admin';
 import { User, UserRoles } from '../models/User';
 import { decodeJwtToken, TokenTypes } from '../util/token/token.util';
 
@@ -68,15 +69,15 @@ export const requireAuthHOFAdmin = (tokenType: TokenTypes) => async (
     const decodedToken = await decodeJwtToken(token, tokenType);
 
     req['decodedToken'] = decodedToken;
-    req['user'] = await User.findById(decodedToken.id);
+    req['admin'] = await Admin.findById(decodedToken.id);
 
-    if (!req['user']) {
+    if (!req['admin']) {
       // token considered invalid if no user can be found
       // in the database that is associated to it
       return res.send({ success: false, error: 'User does not exist!' });
     }
 
-    if (req['user'].role !== UserRoles.ADMIN) {
+    if (req['admin'].role !== UserRoles.ADMIN) {
       return res.send({
         success: false,
         error:

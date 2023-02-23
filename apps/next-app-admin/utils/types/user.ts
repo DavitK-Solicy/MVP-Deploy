@@ -1,9 +1,28 @@
 import { ReactNode } from 'react';
-import { User } from 'utils/model/user';
 import { GeneralResponse } from '.';
 
 export interface ContextProps {
   [key: string]: string | ReactNode;
+}
+
+export interface UserBankAccount {
+  accountNumber: string;
+  ifscOrSwiftCode: string;
+  cardNumber: string;
+}
+
+export enum AuthProviders {
+  BASIC = 'basic',
+  GOOGLE = 'google',
+}
+
+export interface User {
+  _id: string;
+  fullName: string;
+  email: string;
+  bankAccount: UserBankAccount;
+  authProvider: AuthProviders;
+  referralCode: string;
 }
 
 export interface UserResponse extends GeneralResponse {

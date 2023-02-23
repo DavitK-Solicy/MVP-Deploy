@@ -85,4 +85,5 @@ export const imagesSvg = {
   wallet: 'wallet.svg',
   timer: 'timer.svg',
   usdtIcon: 'usdtIcon.svg',
+  metamask: 'metamask.svg',
 };

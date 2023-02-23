@@ -5,6 +5,7 @@ import Icon from 'components/shared/icon';
 import Timer from 'components/shared/timer';
 import { useSocketContext } from 'utils/context/socket/context';
 import { OrderServiceContext } from 'utils/services/service/orderService';
+import { TimerServiceContext } from 'utils/services/service/timerService';
 import { PaymentServiceContext } from 'utils/services/service/paymentService';
 import { UserServiceContext } from 'utils/services/service/userService';
 import * as localStorage from 'utils/services/localStorageService';
@@ -17,6 +18,12 @@ import { OrderDataResponse, OrderStatus } from 'types/orders';
 
 import styles from './qrPayWidgetScreen.module.scss';
 
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 export default function QrPayWidgetScreen({
   setModal,
   orderDetails,
@@ -27,6 +34,7 @@ export default function QrPayWidgetScreen({
   const userService = useContext(UserServiceContext);
   const paymentService = useContext(PaymentServiceContext);
   const orderService = useContext(OrderServiceContext);
+  const { checkTime } = useContext(TimerServiceContext);
   const { socket } = useSocketContext();
 
   const identificationToken = router.asPath.split('=')[1];
@@ -35,7 +43,6 @@ export default function QrPayWidgetScreen({
   const [qrDataUrl, setQrDataUrl] = useState(null);
   const [listenerSet, setListenerSet] = useState<boolean>(false);
   const [qrContent, setQrContent] = useState<string>();
-  const [timePassed, setTimePassed] = useState<boolean>(false);
 
   const handleCopy = async (): Promise<void> => {
     await handleCopyText(childWallet.address);
@@ -50,11 +57,17 @@ export default function QrPayWidgetScreen({
     setModal(1);
   };
 
-  const createOrder = async (): Promise<OrderDataResponse> => {
-    return await orderService.createOrder({
+  const registerOrder = async (
+    walletId: string
+  ): Promise<OrderDataResponse> => {
+    return await orderService.registerOrder({
+      orderId: localStorage
+        .getItemFromLocalStorage(localStorageKeys.ORDER_ID)
+        .toString(),
       title: orderDetails.product.name,
       amount: orderDetails.total,
       identificationToken,
+      walletId,
     });
   };
 
@@ -76,7 +89,10 @@ export default function QrPayWidgetScreen({
   };
 
   const getChildWalletForPay = async (): Promise<void> => {
-    const wallet = await userService.getPayWallet(primaryWalletId);
+    const wallet = await userService.getPayWallet(
+      primaryWalletId,
+      localStorage.getItemFromLocalStorage(localStorageKeys.ORDER_ID).toString()
+    );
 
     if (wallet?.success) {
       const url = await paymentService.payWithQr(
@@ -86,7 +102,7 @@ export default function QrPayWidgetScreen({
       );
 
       if (url) {
-        const createdOrder = await createOrder();
+        const createdOrder = await registerOrder(wallet.childWallet._id);
 
         if (!createdOrder?.success) {
           console.log('createdOrder error: ', createdOrder.error);
@@ -127,7 +143,7 @@ export default function QrPayWidgetScreen({
   }, [qrContent]);
 
   const checkPaymentStatus = async (): Promise<void> => {
-    if (timePassed) {
+    if (checkTime) {
       socket.disconnect();
       return;
     }
@@ -149,16 +165,36 @@ export default function QrPayWidgetScreen({
   };
 
   const checkPassedTime = async (): Promise<void> => {
-    if (timePassed) await updateOrder(OrderStatus.FAILED);
+    if (checkTime) await updateOrder(OrderStatus.FAILED);
+  };
+
+  const payInMetamask = (): void => {
+    if (typeof window.ethereum !== 'undefined') {
+      const provider = window.ethereum;
+      if (provider) {
+        provider
+          .request({ method: 'eth_requestAccounts' })
+          .then(() => {
+            Notification('It is already opened on browser, check extension.');
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        console.error('No provider found.');
+      }
+    } else {
+      window.open('https://metamask.io/download.html', '_blank');
+    }
   };
 
   useEffect(() => {
     checkPaymentStatus();
-  }, [listenerSet, timePassed]);
+  }, [listenerSet, checkTime]);
 
   useEffect(() => {
     checkPassedTime();
-  }, [timePassed]);
+  }, [checkTime]);
 
   return (
     <div className={styles.container}>
@@ -191,13 +227,19 @@ export default function QrPayWidgetScreen({
               <span>Copy</span>
             </div>
           </div>
+          <div className={styles.copyBackground}>
+            <div className={styles.copyWrapper} onClick={payInMetamask}>
+              <Icon src={imagesSvg.metamask} width={20} height={20} />
+              <span>Metamask</span>
+            </div>
+          </div>
         </div>
       </div>
       <div className={styles.time}>
         <Icon src={imagesSvg.timer} width={20} height={20} />
         <div className={styles.text}>
           Payment expires in
-          <Timer setCheckTime={setTimePassed} checkTime={timePassed} /> Minutes
+          <Timer /> Minutes
         </div>
       </div>
 
