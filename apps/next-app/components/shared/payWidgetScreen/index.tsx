@@ -20,13 +20,12 @@ export default function PayWidgetScreen({
   const [conversion, setConversion] = useState<ConversionItem>(
     ConversionItem.DOLLAR
   );
+  const commission = 3;
   const [productsPrice, setProductsPrice] = useState<number>();
   const [usdtPrice, setUsdtPrice] = useState<number>(0);
   const [bitcoinValue, setBitcoinValue] = useState<number>();
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [paymentCurrency, setPaymentCurrency] = useState<string>(
-    PaymentMethod.BITCOIN
-  );
+  const [paymentCurrency, setPaymentCurrency] = useState<string>();
 
   const iconUrl =
     conversion === ConversionItem.BITCOIN
@@ -48,9 +47,11 @@ export default function PayWidgetScreen({
           ? price?.data[coins.bitcoin.base].toFixed(4)
           : payAmount
       );
-      setUsdt(Number(price?.data[coins.tether.base].toFixed(4)));
+      setUsdt(Number(price?.data[coins.tether.base].toFixed(4)) + commission);
       setBitcoinValue(price?.bitcoin);
-      setUsdtPrice(Number(price?.data[coins.tether.base].toFixed(4)));
+      setUsdtPrice(
+        Number(price?.data[coins.tether.base].toFixed(4)) + commission
+      );
       setProductsPrice(availableBalance);
     } else {
       Notification(price?.error);
@@ -154,7 +155,7 @@ export default function PayWidgetScreen({
       </div>
       <div className={styles.buttonWrapper}>
         <Button
-          text={`Pay with ${paymentCurrency}`}
+          text={`Pay${paymentCurrency ? ' with ' + paymentCurrency : ''}`}
           className={styles.payButton}
           onClick={handleChangeModal}
           disabled={paymentCurrency !== PaymentMethod.USDT}

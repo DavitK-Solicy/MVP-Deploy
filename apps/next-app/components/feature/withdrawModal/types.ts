@@ -3,5 +3,4 @@ export interface WithdrawModalProps {
   setOpen: (item: boolean) => void;
   setOpenChild: (item: boolean) => void;
   bunkNumber: number;
-  balance: number;
 }

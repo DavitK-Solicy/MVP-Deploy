@@ -2,6 +2,7 @@
   padding: 10px 15px 15px 15px !important;
   width: 20%;
   height: max-content !important;
+  min-width: 200px;
 }
 
 .verticalWhiteBox {
@@ -31,26 +32,54 @@
   }
 
   .conversion {
-    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    height: 35px;
+    align-items: center;
+    padding-right: 10px;
+    gap: 5px;
 
-    p {
-      font-weight: 400;
-      font-size: var(--text_tiny);
-      color: var(--blue_900);
-      height: 100%;
+    .conversionType {
+      width: 35px;
+      height: 35px;
+      background: var(--white_900);
+      border: 1px solid var(--gray_250);
+      border-radius: 5px;
       display: flex;
       justify-content: center;
-      margin: 0px !important;
       align-items: center;
+      cursor: pointer;
+
+      img {
+        filter: var(--button_disabled);
+      }
+
+      &.activeConversion {
+        background: var(--rose_500);
+        border: none;
+
+        img {
+          filter: var(--button_active);
+        }
+      }
+
+      &:disabled {
+        pointer-events: none;
+        opacity: 0.65;
+      }
     }
 
-    .iconBox {
+    p {
+      font-weight: 500;
+      font-size: var(--text_xs);
+      line-height: 18px;
+      letter-spacing: 0.02em;
+      color: var(-blue_100);
+      margin-bottom: 5px !important;
+    }
+
+    div {
       display: flex;
-      gap: 10px;
+      gap: 5px;
     }
   }
 

@@ -9,5 +9,6 @@ export interface ContextProps {
 export interface BalanceResponse extends GeneralResponse {
   data?: CoinsAmount;
   bitcoin?: number;
+  ethereum?: number;
   dollarBalance?: number;
 }

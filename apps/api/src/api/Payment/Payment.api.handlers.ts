@@ -131,3 +131,24 @@ export const payWithQr = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const transferBackToUsers = async (req: Request, res: Response) => {
+  try {
+    const { childId } = req.params;
+    const chainId = req.query.chainId;
+
+    const response = await axiosInstance.get(
+      `/wallets/transfer-to-back/${childId}?chainId=${chainId}`
+    );
+
+    return res.send({
+      success: true,
+      data: response.data,
+    });
+  } catch (err) {
+    res.json({
+      success: false,
+      error: err.message,
+    });
+  }
+};

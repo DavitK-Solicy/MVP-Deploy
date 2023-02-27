@@ -9,6 +9,7 @@ import {
   getAllChildWallets,
   getChildWallet,
   getTransactionURL,
+  transferBackToUsers,
 } from './WalletManager.api.handlers';
 
 const router = Router();
@@ -23,5 +24,6 @@ router.post('/:id/children/', createChildWallet);
 router.get('/:id/children/:childId', getChildWallet);
 router.get('/:id/children/:childId/transaction-url', getTransactionURL);
 router.delete('/:id/children/:childId', deleteChildWallet);
+router.get('/transfer-back/:childId',transferBackToUsers);
 
 export default router;

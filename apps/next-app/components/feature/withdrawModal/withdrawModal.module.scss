@@ -33,9 +33,18 @@
     }
 
     h1 {
+      display: flex;
+      gap: 5px;
+      align-items: center;
       font-weight: 600;
       font-size: 30px;
       line-height: 35px;
+      margin-bottom: 0;
+
+      .dollarIcon {
+        filter: var(--blue_icon);
+        margin-top: 1px !important;
+      }
     }
 
     .informationSection {
@@ -50,7 +59,7 @@
         line-height: 12px;
         color: var(--gray_950);
       }
-      
+
       .warning {
         display: flex;
         padding: 10px 20px 10px 0;
@@ -59,10 +68,14 @@
     }
 
     .rightSection {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 12px;
+
       p {
         font-weight: 500;
         font-size: 12px;
-        line-height: 15px;
         margin-bottom: 0px;
       }
 
@@ -82,9 +95,22 @@
           justify-content: center;
           align-items: center;
 
+          img {
+            filter: var(--button_disabled);
+          }
+
           &.activeConversion {
             background: var(--rose_500);
             border: none;
+
+            img {
+              filter: var(--button_active);
+            }
+          }
+
+          &:disabled {
+            pointer-events: none;
+            opacity: 0.65;
           }
         }
       }
@@ -92,16 +118,21 @@
   }
 
   .secondSection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
     h1 {
       font-weight: 500;
       font-size: 16px;
       line-height: 16px;
-      margin-bottom: 20px;
       color: var(--black_550);
     }
 
     .successWalletSelector {
       position: relative;
+      border: none;
+      cursor: pointer;
 
       .successIcon {
         position: absolute;
@@ -115,14 +146,13 @@
       font-size: 10px;
       line-height: 12px;
       color: var(--gray_950);
-      margin-bottom: 20px;
     }
 
     h2 {
       font-weight: 500;
       font-size: 15px;
       line-height: 16px;
-      margin: 20px 0px;
+      margin: 15px 0px;
     }
 
     p {
@@ -143,7 +173,6 @@
       justify-content: center;
       align-items: center;
       padding: 10px;
-      margin-bottom: 10px;
       column-gap: 5px;
       border-radius: 5px;
 
@@ -152,7 +181,11 @@
         font-weight: 500;
         font-size: 20px;
         line-height: 23px;
-        color: var(--gray_500);
+        color: var(--gray_600);
+      }
+
+      img {
+        filter: var(--button_disabled);
       }
 
       &.activeWithdrawSelector {
@@ -161,6 +194,10 @@
 
         h1 {
           color: var(--white_900);
+        }
+
+        img {
+          filter: brightness(1.5);
         }
       }
     }

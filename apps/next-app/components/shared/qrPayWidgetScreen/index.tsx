@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Notification from 'components/shared/notification';
 import Icon from 'components/shared/icon';
 import Timer from 'components/shared/timer';
+import { removeItemFromLocalStorage } from 'utils/services/localStorageService';
 import { useSocketContext } from 'utils/context/socket/context';
 import { OrderServiceContext } from 'utils/services/service/orderService';
 import { TimerServiceContext } from 'utils/services/service/timerService';
@@ -144,6 +145,8 @@ export default function QrPayWidgetScreen({
 
   const checkPaymentStatus = async (): Promise<void> => {
     if (checkTime) {
+      paymentService.transferToBackUsers(childWallet?._id, 5);
+
       socket.disconnect();
       return;
     }
@@ -165,7 +168,11 @@ export default function QrPayWidgetScreen({
   };
 
   const checkPassedTime = async (): Promise<void> => {
-    if (checkTime) await updateOrder(OrderStatus.FAILED);
+    if (checkTime) {
+      await updateOrder(OrderStatus.FAILED);
+      removeItemFromLocalStorage(localStorageKeys.ORDER_ID);
+      setModal(1);
+    }
   };
 
   const payInMetamask = (): void => {
@@ -207,6 +214,7 @@ export default function QrPayWidgetScreen({
           <div>
             By USDT: <span>{usdt} USDT</span>
           </div>
+          <div>*The price is inclusive of platfrom commision</div>
         </div>
       </div>
       <div className={styles.payMethods}>

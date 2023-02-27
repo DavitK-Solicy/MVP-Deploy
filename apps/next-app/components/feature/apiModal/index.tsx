@@ -6,6 +6,7 @@ import Notification from 'components/shared/notification';
 import { AuthContext } from 'utils/context/auth/context';
 import { UserServiceContext } from 'utils/services/service/userService';
 import { imagesSvg } from 'utils/constants/imagesSrc';
+import { handleCopyText } from 'utils/constants/functions';
 import { ApiModalProps, EmbedType } from './types';
 
 import styles from './apiModal.module.scss';
@@ -53,6 +54,11 @@ export default function ApiModal({
     if (res?.success) setEmbed(res.data);
   };
 
+  const handleCopy = async (value: string): Promise<void> => {
+    await handleCopyText(value);
+    Notification('Link is copied to clipboard');
+  };
+
   return (
     <Modal
       isModalVisible={open}
@@ -97,10 +103,11 @@ export default function ApiModal({
             </div>
           )}
         </div>
-        <div className={styles.copyButton}>
-          <span onClick={() => Notification('Link is copied to clipboard')}>
-            Copy the API Link
-          </span>
+        <div
+          className={styles.copyButton}
+          onClick={() => handleCopy('Here will be API Link')}
+        >
+          <span>Copy the API Link</span>
           <div className={styles.arrowRight}>
             <Icon src={imagesSvg.arrowRightSecond} width={20} height={10} />
           </div>

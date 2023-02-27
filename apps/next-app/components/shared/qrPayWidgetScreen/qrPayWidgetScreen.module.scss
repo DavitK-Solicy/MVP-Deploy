@@ -11,6 +11,11 @@
   }
 
   .price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
     text-align: center;
     padding: 10px;
     border: 1px solid var(--gray_450);
@@ -18,6 +23,13 @@
 
     span {
       font-weight: 500;
+    }
+
+    div:nth-last-child(1) {
+      font-size: var(--text_min);
+      color: var(--gray_300);
+      line-height: 9px;
+      letter-spacing: 0.02em;
     }
   }
 

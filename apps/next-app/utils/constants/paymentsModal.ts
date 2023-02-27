@@ -1,3 +1,4 @@
+import { ConversionItem } from 'components/shared/balanceCard/type';
 import { imagesSvg } from './imagesSrc';
 
 export interface PaymentsModalProps {
@@ -12,7 +13,7 @@ export interface PaymentsModalProps {
 export interface ConversionTypeProps {
   icon: string;
   title?: string;
-  active: boolean;
+  type: ConversionItem;
 }
 
 export interface InvoiceItem {
@@ -61,13 +62,13 @@ export const paymentsModal: Array<PaymentsModalProps> = [
 export const conversionType: Array<ConversionTypeProps> = [
   {
     icon: imagesSvg.bitcoinCash,
-    active: false,
     title: 'Bitcoin',
+    type: ConversionItem.BITCOIN,
   },
   {
     icon: imagesSvg.dollarIcon,
-    active: true,
     title: 'Dollars',
+    type: ConversionItem.DOLLAR,
   },
 ];
 

@@ -1,12 +1,19 @@
-import { useState } from 'react';
-import TransactionFeeModal from 'components/feature/transactionFeeModal';
+import { useContext, useEffect, useState } from 'react';
 import Modal from 'components/shared/modal';
 import Icon from 'components/shared/icon';
+import Notification from 'components/shared/notification';
 import {
   conversionType,
   ConversionTypeProps,
 } from 'utils/constants/paymentsModal';
+import {
+  Coins,
+  ConversionItem,
+  ConvertTo,
+} from 'components/shared/balanceCard/type';
+import { UserServiceContext } from 'utils/services/service/userService';
 import { imagesSvg } from 'utils/constants/imagesSrc';
+import { coins } from 'utils/constants/functions';
 import { WithdrawModalProps } from './types';
 
 import styles from './withdrawModal.module.scss';
@@ -15,9 +22,52 @@ export default function WithdrawModal({
   open,
   setOpen,
   bunkNumber,
-  balance,
   setOpenChild,
 }: WithdrawModalProps): JSX.Element {
+  const userService = useContext(UserServiceContext);
+
+  const [conversion, setConversion] = useState<ConversionItem>(
+    ConversionItem.DOLLAR
+  );
+  const [disabled, setDisabled] = useState<boolean>(false);
+  const [merchantBalance, setMerchantBalance] = useState<number>();
+  const [withdrawalCurrency, setWithdrawalCurrency] = useState(
+    ConversionItem.DOLLAR
+  );
+
+  const iconUrl =
+    conversion === ConversionItem.BITCOIN
+      ? imagesSvg.bitcoin
+      : imagesSvg.dollarIcon;
+
+  const getWalletData = async (): Promise<void> => {
+    let availableBalance;
+    const price = await userService.getWalletBalance(
+      conversion === ConversionItem.BITCOIN ? [Coins.BITCOIN] : [],
+      conversion === ConversionItem.BITCOIN ? ConvertTo.BTC : ConvertTo.USD
+    );
+
+    if (price?.success) {
+      availableBalance = Number(
+        conversion === ConversionItem.BITCOIN
+          ? price?.data[coins.bitcoin.base].toFixed(4)
+          : price?.dollarBalance.toFixed(2)
+      );
+      setMerchantBalance(availableBalance);
+    } else {
+      Notification(price?.error);
+    }
+  };
+
+  useEffect(() => {
+    getWalletData();
+  }, [conversion]);
+
+  const changeConversion = (type: ConversionItem): void => {
+    setConversion(type);
+    setDisabled(true);
+    setTimeout(() => setDisabled(false), 3000);
+  };
   return (
     <Modal
       isModalVisible={open}
@@ -33,7 +83,17 @@ export default function WithdrawModal({
         <div className={styles.firstSection}>
           <div>
             <h3>Balance</h3>
-            <h1>${balance}*</h1>
+            <h1>
+              <Icon
+                width={20}
+                height={34}
+                src={iconUrl}
+                className={
+                  conversion === ConversionItem.DOLLAR && styles.dollarIcon
+                }
+              />
+              {merchantBalance}*
+            </h1>
             <div className={styles.informationSection}>
               <p>*Transaction fees are included</p>
               <span className={styles.warning}>
@@ -51,14 +111,16 @@ export default function WithdrawModal({
             <div className={styles.conversionContainer}>
               {conversionType.map(
                 (e: ConversionTypeProps, index: number): JSX.Element => (
-                  <div
+                  <button
                     key={index}
                     className={`${styles.conversionType} ${
-                      e.active && styles.activeConversion
+                      e.type === conversion && styles.activeConversion
                     }`}
+                    onClick={() => changeConversion(e.type)}
+                    disabled={e.type !== conversion && disabled}
                   >
                     <Icon src={e.icon} width={25} height={25} />
-                  </div>
+                  </button>
                 )
               )}
             </div>
@@ -69,21 +131,26 @@ export default function WithdrawModal({
           {conversionType
             .map(
               (e: ConversionTypeProps, index: number): JSX.Element => (
-                <div key={index} className={styles.successWalletSelector}>
-                  {e.active && (
+                <button
+                  key={index}
+                  className={styles.successWalletSelector}
+                  onClick={() => setWithdrawalCurrency(e.type)}
+                >
+                  {e.type === withdrawalCurrency && (
                     <div className={styles.successIcon}>
                       <Icon src={imagesSvg.success} width={25} height={25} />
                     </div>
                   )}
                   <div
                     className={`${styles.withdrawSelector} ${
-                      e.active && styles.activeWithdrawSelector
+                      e.type === withdrawalCurrency &&
+                      styles.activeWithdrawSelector
                     }`}
                   >
                     <Icon src={e.icon} width={20} height={20} />
                     <h1>{e.title}</h1>
                   </div>
-                </div>
+                </button>
               )
             )
             .reverse()}

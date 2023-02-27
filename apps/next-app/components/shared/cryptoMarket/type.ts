@@ -9,5 +9,10 @@ export enum Status {
 
 export enum Conversion {
   DOLLAR = 'dollar',
-  RUPEE = 'Rupee',
+  BITCOIN = 'bitcoin',
+}
+
+export interface CoinsData {
+  bitcoin?: number;
+  ethereum?: number;
 }

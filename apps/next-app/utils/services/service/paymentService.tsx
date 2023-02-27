@@ -20,6 +20,7 @@ export interface IPaymentService {
     childWalletId: string,
     price: number
   ): Promise<PayWithQr>;
+  transferToBackUsers(childWalletId: string, chainId: number): Promise<any>;
 }
 
 export const PaymentServiceContext: Context<
@@ -70,6 +71,21 @@ export const PaymentService = ({ children }: any) => {
       try {
         const response = await axiosInstance.get(
           `/payments/pay-with-qr?parentWalletId=${parentWalletId}&childWalletId=${childWalletId}&price=${price}`
+        );
+
+        return response?.data?.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    async transferToBackUsers(
+      childWalletId: string,
+      chainId: number
+    ): Promise<any> {
+      try {
+        const response = await axiosInstance.get(
+          `/payments/transfer-back-to-users/${childWalletId}?chainId=${chainId}`
         );
 
         return response?.data?.data;

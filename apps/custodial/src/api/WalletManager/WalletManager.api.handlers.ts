@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Wallet } from '../../models/Wallet';
 import generateAndStoreWallet from '../../walletManager/entities/createWallet';
 import generateAndStoreTempWallet from '../../walletManager/entities/createTempWallet';
-import sendFundsToParent from '../../walletManager/sendFundsToParent';
+import sendFunds, { Status } from '../../walletManager/sendFunds';
 import { TempWallet } from '../../models/TempWallet';
 import getBalance from '../../util/helpers/getWalletBalance';
 import { getSenders } from '../../walletManager/getSenders';
@@ -173,15 +173,22 @@ export const deleteChildWallet = async (req: Request, res: Response) => {
       return res.send({ success: false, error: 'Wallets not found' });
     }
 
-    await sendFundsToParent(
+    const result = await sendFunds(
       parentWallet.address,
       childWallet.address,
       childWallet.privateKey
     );
 
-    await childWallet.remove();
-
-    return res.send({ success: true });
+    switch (result.status) {
+      case Status.SUCCESS:
+      case Status.ZERO_BALANCE:
+        await childWallet.remove();
+        return res.send({ success: true, data: result });
+      case Status.FAIL:
+      case Status.CONTRACT_ERROR:
+      case Status.AMOUNT_GREATER_THAN_BALANCE:
+        return res.send({ success: false, data: result.data });
+    }
   } catch (err) {
     res.status(404);
     res.send({ success: false, error: err.message });
@@ -216,6 +223,49 @@ export const getTransactionURL = async (req: Request, res: Response) => {
     return res.send({ success: true, data: url });
   } catch (err) {
     res.status(404);
+    res.send({ success: false, error: err.message });
+  }
+};
+
+export const transferBackToUsers = async (req: Request, res: Response) => {
+  try {
+    const { childId } = req.params;
+    const wallet = await TempWallet.findById(childId).lean();
+
+    if (!wallet) {
+      res.status(404);
+      return res.send({ success: true, data: null });
+    }
+
+    const { senders } = await getSenders(wallet.address);
+    wallet.balance = await getBalance(wallet);
+
+    const resData = {};
+
+    if (senders) {
+      for (const [recipientAddress, value] of Object.entries(senders)) {
+        const result = await sendFunds(
+          recipientAddress,
+          wallet.address,
+          wallet.privateKey,
+          Number(value),
+        );
+
+        switch (result.status) {
+          case Status.SUCCESS:
+          case Status.ZERO_BALANCE:
+            resData[recipientAddress] = { success: true };
+            break;
+          case Status.CONTRACT_ERROR:
+          case Status.FAIL:
+          case Status.AMOUNT_GREATER_THAN_BALANCE:
+            resData[recipientAddress] = { success: false, data: result.data };
+            break;
+        }
+      }
+    }
+    res.send({ success: true, data: resData });
+  } catch (err) {
     res.send({ success: false, error: err.message });
   }
 };

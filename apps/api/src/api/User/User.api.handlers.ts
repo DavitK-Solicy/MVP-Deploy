@@ -568,6 +568,7 @@ export const getWalletBalance = async (req: Request, res: Response) => {
       success: true,
       data: coinList,
       bitcoin,
+      ethereum,
       dollarBalance: walletBalance,
     });
   } catch (err) {
@@ -643,5 +644,30 @@ export const checkChildWalletBalance = async (
   } catch (err) {
     response = { success: false, error: err.message };
     socket.emit('childWallet', response);
+  }
+};
+
+export const getChildWalletBalance = async (req: Request, res: Response) => {
+  try {
+    const { primaryWalletId, orderId } = req.query;
+    let order;
+    if (orderId) order = await Order.findById(orderId);
+
+    let childWallet;
+    if (!order)
+      childWallet = await axiosInstance.post(
+        `/wallets/${primaryWalletId}/children`
+      );
+    else
+      childWallet = await axiosInstance.get(
+        `/wallets/${primaryWalletId}/children/${order.walletId}`
+      );
+
+    return res.send({
+      success: true,
+      childWallet: childWallet.data.data,
+    });
+  } catch (err) {
+    res.send({ success: false, message: err.message });
   }
 };

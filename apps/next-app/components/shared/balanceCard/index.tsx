@@ -80,7 +80,6 @@ export default function BalanceCard(): JSX.Element {
         setOpen={setOpenWithdrawModal}
         setOpenChild={setOpenTransactionModal}
         bunkNumber={374}
-        balance={758}
       />
       <TransactionFeeModal
         open={openTransactionModal}
