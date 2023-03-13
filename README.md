@@ -11,7 +11,7 @@
 
 - `yarn start next-app`
 
-### Front end (next-app-admin)
+### Front end (next-app-admin) 
 
 - `yarn start next-app-admin`
 
