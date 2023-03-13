@@ -1,17 +1,26 @@
 service: MVP
-provider:
-  name: aws
-  runtime: nodejs18.x
-  region: ${opt:region, 'us-east-1'}
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - 'lambda:InvokeFunction'
-      Resource: '*'
-functions:
-  my-function:
-    handler: handler.handler
-    events:
-      - http:
-          path: /
-          method: any
+
+plugins:
+  - serverless-plugin-monorepo
+
+custom:
+  monorepo:
+    include:
+      - apps/api/**
+
+# Service 1 configuration
+api:
+  service: api
+  app: MVP
+  stage: dev
+  region: us-east-1
+  provider:
+    name: aws
+    runtime: nodejs18.x
+  functions:
+    hello:
+      handler: handler.hello
+      events:
+        - http:
+            path: 
+            method: get
